@@ -1,0 +1,38 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <img src="logo.png" alt="Moneta Logo" class="login-logo">
+      <h2>Créer un compte</h2>
+      <p>Rejoignez Moneta pour explorer l'histoire archéologique.</p>
+    </div>
+
+    <form (submit)="onSubmit()">
+      <div class="form-group">
+        <label for="name">Nom Complet</label>
+        <input type="text" id="name" placeholder="Votre nom et prénom" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Adresse E-mail</label>
+        <input type="email" id="email" placeholder="nom@exemple.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" placeholder="••••••••" required>
+      </div>
+
+      <div class="form-group">
+        <label for="confirm-password">Confirmer le mot de passe</label>
+        <input type="password" id="confirm-password" placeholder="••••••••" required>
+      </div>
+
+      <button type="submit" class="login-button">S'inscrire</button>
+    </form>
+
+    <div class="login-footer">
+      <p>Déjà membre ? <a routerLink="/login" class="red-link">Se connecter</a></p>
+      <a routerLink="/" class="back-home">← Retour à l'accueil</a>
+    </div>
+  </div>
+</div>

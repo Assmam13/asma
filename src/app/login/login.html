@@ -1,0 +1,37 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <img src="logo.png" alt="Moneta Logo" class="login-logo">
+      <h2>Connexion à Moneta</h2>
+      <p>Veuillez entrer vos identifiants pour accéder à votre espace.</p>
+    </div>
+
+    <form>
+      <div class="form-group">
+        <label for="email">Adresse E-mail</label>
+        <input type="email" id="email" placeholder="nom@entreprise.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" placeholder="••••••••" required>
+      </div>
+
+      <div class="form-options">
+        <label class="remember-me">
+          <input type="checkbox"> Se souvenir de moi
+        </label>
+        <a routerLink="/forgot-password" class="red-link">Mot de passe oublié ?</a>
+      </div>
+
+      <button type="submit" class="login-button">Se connecter</button>
+    </form>
+
+    <div class="login-footer">
+      <p>Vous n'avez pas de compte ? 
+        <a routerLink="/request" class="red-link">Demander l'accès</a>
+      </p>
+      <a routerLink="/" class="back-home">← Retour à l'accueil</a>
+    </div>
+  </div>
+</div>

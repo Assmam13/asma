@@ -1,0 +1,113 @@
+<div class="dashboard-wrapper">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <img src="logo.png" alt="Moneta Logo" class="sidebar-logo">
+      <span class="brand-name">Moneta</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="menu-category">Exploration</div>
+      <a routerLink="/cartes" routerLinkActive="active" class="nav-item">
+        <span class="icon">📍</span> Carte Interactive
+      </a>
+      <a routerLink="/sites" routerLinkActive="active" class="nav-item">
+        <span class="icon">🏛️</span> Sites Archéologiques
+      </a>
+      <a routerLink="/monnaie" routerLinkActive="active" class="nav-item">
+        <span class="icon">🪙</span> Monnaies
+      </a>
+      
+      <div class="menu-category">Administration</div>
+      <a routerLink="/users" routerLinkActive="active" class="nav-item">
+        <span class="icon">👥</span> Gestion Utilisateurs
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a routerLink="/login" class="logout-btn">
+        <span class="icon">👤</span> Connexion
+      </a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-filter-area">
+      <div class="filter-card">
+        <div class="filter-card-header">
+          <span class="filter-title">🔍 Filtres de Recherche Avancés</span>
+          
+          <div class="smart-search-container" [class.ai-active]="isAIMode">
+            <div class="search-input-wrapper">
+              <span class="search-main-icon">🔍</span>
+              <input 
+                type="text" 
+                [placeholder]="isAIMode ? 'Recherche IA Moneta activée...' : 'Recherche...'"
+                class="search-input"
+                (focus)="onSearchFocus()"
+                (blur)="onSearchBlur()"
+              >
+              <button 
+                type="button" 
+                class="ai-toggle-btn" 
+                (click)="toggleAIMode()" 
+                title="Moneta Intelligence Archéologique">
+                <span class="ai-icon">✨</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="filter-actions">
+            <button class="btn-reset">Réinitialiser</button>
+            <button class="btn-filter">Appliquer</button>
+          </div>
+        </div>
+
+        <div class="filter-grid">
+          <div class="filter-group">
+            <label>Période Historique</label>
+            <select>
+              <option>Antique</option>
+              <option>Romaine</option>
+              <option>Byzantine</option>
+              <option>Islamique</option>
+              <option>Médiévale</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Matériau</label>
+            <select>
+              <option>Or</option>
+              <option>Argent</option>
+              <option>Bronze</option>
+              <option>Cuivre</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Lieu / Région</label>
+            <input type="text" placeholder="Ex: Carthage...">
+          </div>
+
+          <div class="filter-group">
+            <label>Intervalle d'Années</label>
+            <div class="range-inputs">
+              <input type="number" placeholder="De">
+              <input type="number" placeholder="À">
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="content-view">
+      <router-outlet></router-outlet>
+      <div class="welcome-banner">
+        <div class="banner-content">
+          <h1>Plateforme de Gestion Moneta</h1>
+          <p>Utilisez le menu latéral pour naviguer et les filtres pour affiner vos données.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

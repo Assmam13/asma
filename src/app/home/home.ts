@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -13,7 +13,7 @@ export class HomeComponent {
   isAIMode: boolean = false;
   isSearchFocused: boolean = false;
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   toggleAIMode(): void {
     this.isAIMode = !this.isAIMode;
@@ -31,5 +31,11 @@ export class HomeComponent {
 
   onSearchBlur(): void {
     this.isSearchFocused = false;
+  }
+
+  // This checks if the user is on the main dashboard page
+  isWelcomeVisible(): boolean {
+    // If URL is just / or /home, show banner. Otherwise (like /cartes), hide it.
+    return this.router.url === '/' || this.router.url === '/home';
   }
 }

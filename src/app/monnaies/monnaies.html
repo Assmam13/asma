@@ -1,21 +1,14 @@
-<!-- ============================================================
-     monnaies.html  —  Angular 21  —  Projet MONETA
-     Galerie 2 colonnes + décoration archéologique
-     ============================================================ -->
-
 <div class="monnaies-page">
 
-  <!-- ── EN-TÊTE DÉCORATIF ── -->
   <div class="page-hero">
     <div class="hero-decoration left">
       <div class="deco-line"></div>
-      <span class="deco-ornement">✦</span>
+      <span class="deco-ornement"> ✦ </span>
       <div class="deco-line"></div>
     </div>
 
     <div class="hero-center">
-      <img src="logo.jpg" alt="Moneta Logo" class="hero-logo"
-           onerror="this.style.display='none'"/>
+      <img src="logo.jpg" alt="Moneta Logo" class="hero-logo" onerror="this.style.display='none'"/>
       <div class="hero-text">
         <h1 class="hero-titre">MONETA</h1>
         <p class="hero-sous-titre">Galerie des Monnaies Archéologiques</p>
@@ -26,31 +19,29 @@
         </div>
         <p class="hero-stats">
           <span class="stat-badge">{{ totalMonnaies }} monnaies référencées</span>
-          <span class="stat-badge source">🔗 Source : Wikidata</span>
+          <span class="stat-badge source"> 🔗  Source : Wikidata</span>
         </p>
       </div>
     </div>
 
     <div class="hero-decoration right">
       <div class="deco-line"></div>
-      <span class="deco-ornement">✦</span>
+      <span class="deco-ornement"> ✦ </span>
       <div class="deco-line"></div>
     </div>
   </div>
 
-  <!-- ── PANNEAU DE FILTRES ── -->
   <div class="filtres-panel">
     <div class="filtres-titre">
-      <span class="filtre-icon">⚗</span>
-      Filtres de recherche
-      <button class="btn-reset" (click)="reinitialiserFiltres()">✕ Réinitialiser</button>
+      <span class="filtre-icon"> ⚗ </span> Filtres de recherche
+      <button class="btn-reset" (click)="reinitialiserFiltres()"> ✕  Réinitialiser</button>
     </div>
 
     <div class="filtres-grid">
       <div class="filtre-group full-width">
         <label>Recherche libre</label>
         <div class="search-input-wrap">
-          <span class="search-icon">🔍</span>
+          <span class="search-icon"> 🔍 </span>
           <input type="text" placeholder="Ex: Denier romain, Carthage..."
             [(ngModel)]="filtres.recherche" (ngModelChange)="appliquerFiltres()"/>
         </div>
@@ -84,18 +75,15 @@
 
       <div class="filtre-group">
         <label>Région / Lieu</label>
-        <input type="text" placeholder="Ex: Carthage, Rome..."
-          [(ngModel)]="filtres.region" (ngModelChange)="appliquerFiltres()"/>
+        <input type="text" placeholder="Ex: Carthage, Rome..." [(ngModel)]="filtres.region" (ngModelChange)="appliquerFiltres()"/>
       </div>
 
       <div class="filtre-group">
         <label>Intervalle d'années</label>
         <div class="annees-wrap">
-          <input type="number" placeholder="De"
-            [(ngModel)]="filtres.anneeMin" (ngModelChange)="appliquerFiltres()"/>
+          <input type="number" placeholder="De" [(ngModel)]="filtres.anneeMin" (ngModelChange)="appliquerFiltres()"/>
           <span class="annees-sep">→</span>
-          <input type="number" placeholder="À"
-            [(ngModel)]="filtres.anneeMax" (ngModelChange)="appliquerFiltres()"/>
+          <input type="number" placeholder="À" [(ngModel)]="filtres.anneeMax" (ngModelChange)="appliquerFiltres()"/>
         </div>
       </div>
     </div>
@@ -103,25 +91,18 @@
     @if (hasFiltresActifs()) {
       <div class="tags-actifs">
         @if (filtres.periode) {
-          <span class="tag-actif" (click)="filtres.periode=''; appliquerFiltres()">
-            {{ filtres.periode }} ✕
-          </span>
+          <span class="tag-actif" (click)="filtres.periode=''; appliquerFiltres()">{{ filtres.periode }}  ✕</span>
         }
         @if (filtres.materiau) {
-          <span class="tag-actif" (click)="filtres.materiau=''; appliquerFiltres()">
-            {{ filtres.materiau }} ✕
-          </span>
+          <span class="tag-actif" (click)="filtres.materiau=''; appliquerFiltres()">{{ filtres.materiau }}  ✕</span>
         }
         @if (filtres.region) {
-          <span class="tag-actif" (click)="filtres.region=''; appliquerFiltres()">
-            {{ filtres.region }} ✕
-          </span>
+          <span class="tag-actif" (click)="filtres.region=''; appliquerFiltres()">{{ filtres.region }}  ✕</span>
         }
       </div>
     }
   </div>
 
-  <!-- ── CHARGEMENT ── -->
   @if (chargement) {
     <div class="loading-state">
       <div class="coin-spinner">🪙</div>
@@ -129,9 +110,7 @@
     </div>
   }
 
-  <!-- ── GALERIE ── -->
   @if (!chargement && !erreur) {
-
     <div class="resultats-bar">
       <span class="resultats-count">{{ monnaiesFiltrees.length }} monnaie(s) trouvée(s)</span>
       <div class="tri-select">
@@ -146,56 +125,34 @@
 
     @if (monnaiesFiltrees.length === 0) {
       <div class="vide-state">
-        <span>🔍</span>
+        <span> 🔍 </span>
         <p>Aucune monnaie ne correspond à vos filtres.</p>
       </div>
     }
 
-    <!-- ✅ GRILLE 2 COLONNES -->
     <div class="monnaies-grid">
       @for (m of monnaiesFiltrees; track m.wikidataId; let i = $index) {
-        <div class="monnaie-card" [style.animation-delay]="i * 80 + 'ms'"
-             (click)="ouvrirDetail(m)">
-
-          <!-- Image centrée -->
+        <div class="monnaie-card" [style.animation-delay]="i * 80 + 'ms'" (click)="ouvrirDetail(m)">
           <div class="card-image-wrap">
             <div class="card-image-ring">
-              <img [src]="m.image || 'coin-placeholder.png'"
-                   [alt]="m.nom" class="card-img"
-                   (error)="onImgError($event)"/>
+              <img [src]="m.image || 'coin-placeholder.png'" [alt]="m.nom" class="card-img" (error)="onImgError($event)"/>
             </div>
-            <span class="card-badge" [class]="'mat-' + (m.materiau | lowercase)">
-              {{ m.materiau || '?' }}
-            </span>
+            <span class="card-badge" [class]="'mat-' + (m.materiau | lowercase)">{{ m.materiau || '?' }}</span>
           </div>
 
-          <!-- Infos -->
           <div class="card-body">
             <h3 class="card-nom">{{ m.nom || 'Nom inconnu' }}</h3>
             <p class="card-annee">{{ formatAnnee(m.annee) }}</p>
-
             <div class="card-tags">
-              @if (m.region) {
-                <span class="card-tag">📍 {{ m.region }}</span>
-              }
-              @if (m.periode) {
-                <span class="card-tag">🏛 {{ m.periode }}</span>
-              }
+              @if (m.region) { <span class="card-tag"> 📍  {{ m.region }}</span> }
+              @if (m.periode) { <span class="card-tag"> 🏛  {{ m.periode }}</span> }
             </div>
-
-            <p class="card-desc">
-              {{ ((m.description || '') | slice:0:90) }}{{ (m.description && m.description.length > 90) ? '...' : '' }}
-            </p>
-
+            <p class="card-desc">{{ ((m.description || '') | slice:0:90) }}{{ (m.description && m.description.length > 90) ? '...' : '' }}</p>
             <div class="card-footer">
               <span class="card-id">{{ m.wikidataId }}</span>
-              <button class="btn-voir" (click)="ouvrirDetail(m); $event.stopPropagation()">
-                Voir détails →
-              </button>
+              <button class="btn-voir" (click)="ouvrirDetail(m); $event.stopPropagation()">Voir détails →</button>
             </div>
           </div>
-
-          <!-- Décoration coin carte -->
           <div class="card-deco-tl"></div>
           <div class="card-deco-br"></div>
         </div>
@@ -212,136 +169,112 @@
       </div>
     }
   }
-
 </div>
 
-<!-- ══════════════════════════════════════════
-     MODAL DÉTAILS
-══════════════════════════════════════════ -->
 @if (monnaieSelectionnee) {
   <div class="modal-overlay" (click)="fermerDetail()">
     <div class="modal-card" (click)="$event.stopPropagation()">
-
       <div class="modal-header-deco">
-        <span class="modal-deco-text">— MONETA —</span>
+        <span class="modal-deco-text">{{ isEditing ? '— ÉDITION DE LA FICHE —' : '— MONETA —' }}</span>
       </div>
 
-      <button class="modal-close" (click)="fermerDetail()">✕</button>
+      <button class="modal-close" (click)="fermerDetail()"> ✕ </button>
 
       <div class="modal-body">
-
-        <!-- Col image + flip -->
         <div class="modal-image-col">
-
           <div class="coin-flip-container" [class.flipped]="isFlipped">
             <div class="coin-face front">
-              <img [src]="monnaieSelectionnee.image || 'assets/coin-placeholder.svg'"
-                   [alt]="monnaieSelectionnee.nom" class="modal-img"
-                   (error)="onImgError($event)"/>
-              <span class="face-label">⬆ Avers</span>
+              <img [src]="monnaieSelectionnee.image || 'assets/coin-placeholder.svg'" [alt]="monnaieSelectionnee.nom" class="modal-img" (error)="onImgError($event)"/>
+              <span class="face-label"> ⬆  Avers</span>
             </div>
             <div class="coin-face back">
-              <img [src]="monnaieSelectionnee.imageRevers || monnaieSelectionnee.image || 'assets/coin-placeholder.png'"
-                   [alt]="monnaieSelectionnee.nom" class="modal-img"
-                   (error)="onImgError($event)"/>
-              <span class="face-label">⬇ Revers</span>
+              <img [src]="monnaieSelectionnee.imageRevers || monnaieSelectionnee.image || 'assets/coin-placeholder.png'" [alt]="monnaieSelectionnee.nom" class="modal-img" (error)="onImgError($event)"/>
+              <span class="face-label"> ⬇  Revers</span>
             </div>
           </div>
 
           <button class="btn-flip" (click)="isFlipped = !isFlipped">
-            🔄 {{ isFlipped ? 'Voir la face' : 'Voir le dos' }}
+            🔄  {{ isFlipped ? 'Voir la face' : 'Voir le dos' }}
           </button>
 
           <div class="modal-badge-mat" [class]="'mat-' + (monnaieSelectionnee.materiau | lowercase)">
             {{ monnaieSelectionnee.materiau || 'Matériau inconnu' }}
           </div>
 
-          @if (monnaieSelectionnee.wikidataId) {
-            <a [href]="'https://www.wikidata.org/wiki/' + monnaieSelectionnee.wikidataId"
-               target="_blank" class="btn-wikidata">
-              🔗 Voir sur Wikidata
+          @if (monnaieSelectionnee.wikidataId && !isEditing) {
+            <a [href]="'https://www.wikidata.org/wiki/' + monnaieSelectionnee.wikidataId" target="_blank" class="btn-wikidata">
+              🔗  Voir sur Wikidata
             </a>
           }
-        </div>
 
-        <!-- Col infos -->
-        <div class="modal-info-col">
-          <h2 class="modal-titre">{{ monnaieSelectionnee.nom || 'Nom inconnu' }}</h2>
-          <p class="modal-wikid">{{ monnaieSelectionnee.wikidataId }}</p>
-          <p class="modal-desc">{{ monnaieSelectionnee.description || 'Aucune description disponible.' }}</p>
-
-          <div class="modal-details-grid">
-            @if (monnaieSelectionnee.periode) {
-              <div class="detail-item">
-                <span class="detail-label">🏛 Période</span>
-                <span class="detail-value">{{ monnaieSelectionnee.periode }}</span>
-              </div>
-            }
-            @if (monnaieSelectionnee.annee) {
-              <div class="detail-item">
-                <span class="detail-label">📅 Année</span>
-                <span class="detail-value">{{ formatAnnee(monnaieSelectionnee.annee) }}</span>
-              </div>
-            }
-            @if (monnaieSelectionnee.region) {
-              <div class="detail-item">
-                <span class="detail-label">📍 Région</span>
-                <span class="detail-value">{{ monnaieSelectionnee.region }}</span>
-              </div>
-            }
-            @if (monnaieSelectionnee.atelier) {
-              <div class="detail-item">
-                <span class="detail-label">⚒ Atelier</span>
-                <span class="detail-value">{{ monnaieSelectionnee.atelier }}</span>
-              </div>
-            }
-            @if (monnaieSelectionnee.diametre) {
-              <div class="detail-item">
-                <span class="detail-label">📏 Diamètre</span>
-                <span class="detail-value">{{ monnaieSelectionnee.diametre }} mm</span>
-              </div>
-            }
-            @if (monnaieSelectionnee.poids) {
-              <div class="detail-item">
-                <span class="detail-label">⚖ Poids</span>
-                <span class="detail-value">{{ monnaieSelectionnee.poids }} g</span>
-              </div>
-            }
-            @if (monnaieSelectionnee.materiau) {
-              <div class="detail-item">
-                <span class="detail-label">🔩 Matériau</span>
-                <span class="detail-value">{{ monnaieSelectionnee.materiau }}</span>
-              </div>
-            }
-            @if (monnaieSelectionnee.collection) {
-              <div class="detail-item">
-                <span class="detail-label">🏦 Collection</span>
-                <span class="detail-value">{{ monnaieSelectionnee.collection }}</span>
-              </div>
+          <div class="admin-actions-vertical">
+            @if (!isEditing) {
+              <button class="btn-admin edit" (click)="activerEdition()">✏️ Modifier</button>
+              <button class="btn-admin delete" (click)="supprimerMonnaie(monnaieSelectionnee)">🗑️ Supprimer</button>
+            } @else {
+              <button class="btn-admin save" (click)="sauvegarderModification()">💾 Enregistrer</button>
+              <button class="btn-admin cancel" (click)="annulerEdition()">✕ Annuler</button>
             }
           </div>
+        </div>
 
-          @if (monnaieSelectionnee.avers || monnaieSelectionnee.revers) {
-            <div class="avers-revers">
-              @if (monnaieSelectionnee.avers) {
-                <div class="ar-block">
-                  <span class="ar-label">⬆ Avers</span>
-                  <p>{{ monnaieSelectionnee.avers }}</p>
+        <div class="modal-info-col">
+          @if (isEditing) {
+            <div class="edit-form-wrap">
+              <div class="edit-group">
+                <label>Nom de la monnaie</label>
+                <input type="text" [(ngModel)]="monnaieSelectionnee.nom" class="edit-input title-edit">
+              </div>
+
+              <div class="edit-group">
+                <label>Description Historique</label>
+                <textarea [(ngModel)]="monnaieSelectionnee.description" class="edit-input area-edit"></textarea>
+              </div>
+
+              <div class="modal-details-grid">
+                <div class="edit-group"><label>Période</label><input type="text" [(ngModel)]="monnaieSelectionnee.periode" class="edit-input"></div>
+                <div class="edit-group"><label>Année</label><input type="number" [(ngModel)]="monnaieSelectionnee.annee" class="edit-input"></div>
+                <div class="edit-group"><label>Région</label><input type="text" [(ngModel)]="monnaieSelectionnee.region" class="edit-input"></div>
+                <div class="edit-group">
+                  <label>Matériau</label>
+                  <select [(ngModel)]="monnaieSelectionnee.materiau" class="edit-input">
+                    <option value="Or">Or</option>
+                    <option value="Argent">Argent</option>
+                    <option value="Bronze">Bronze</option>
+                    <option value="Cuivre">Cuivre</option>
+                  </select>
                 </div>
-              }
-              @if (monnaieSelectionnee.revers) {
-                <div class="ar-block">
-                  <span class="ar-label">⬇ Revers</span>
-                  <p>{{ monnaieSelectionnee.revers }}</p>
-                </div>
-              }
+                <div class="edit-group"><label>Atelier</label><input type="text" [(ngModel)]="monnaieSelectionnee.atelier" class="edit-input"></div>
+                <div class="edit-group"><label>Collection</label><input type="text" [(ngModel)]="monnaieSelectionnee.collection" class="edit-input"></div>
+              </div>
             </div>
-          }
+          } @else {
+            <h2 class="modal-titre">{{ monnaieSelectionnee.nom || 'Nom inconnu' }}</h2>
+            <p class="modal-wikid">{{ monnaieSelectionnee.wikidataId }}</p>
+            <p class="modal-desc">{{ monnaieSelectionnee.description || 'Aucune description disponible.' }}</p>
 
-          <button class="btn-ia" routerLink="/classification"
-            [queryParams]="{id: monnaieSelectionnee.wikidataId}">
-            🤖 Classifier avec l'IA
-          </button>
+            <div class="modal-details-grid">
+              @if (monnaieSelectionnee.periode) { <div class="detail-item"><span class="detail-label"> 🏛  Période</span><span class="detail-value">{{ monnaieSelectionnee.periode }}</span></div> }
+              @if (monnaieSelectionnee.annee) { <div class="detail-item"><span class="detail-label"> 📅  Année</span><span class="detail-value">{{ formatAnnee(monnaieSelectionnee.annee) }}</span></div> }
+              @if (monnaieSelectionnee.region) { <div class="detail-item"><span class="detail-label"> 📍  Région</span><span class="detail-value">{{ monnaieSelectionnee.region }}</span></div> }
+              @if (monnaieSelectionnee.atelier) { <div class="detail-item"><span class="detail-label"> ⚒  Atelier</span><span class="detail-value">{{ monnaieSelectionnee.atelier }}</span></div> }
+              @if (monnaieSelectionnee.diametre) { <div class="detail-item"><span class="detail-label"> 📏  Diamètre</span><span class="detail-value">{{ monnaieSelectionnee.diametre }} mm</span></div> }
+              @if (monnaieSelectionnee.poids) { <div class="detail-item"><span class="detail-label"> ⚖  Poids</span><span class="detail-value">{{ monnaieSelectionnee.poids }} g</span></div> }
+              @if (monnaieSelectionnee.materiau) { <div class="detail-item"><span class="detail-label"> 🔩  Matériau</span><span class="detail-value">{{ monnaieSelectionnee.materiau }}</span></div> }
+              @if (monnaieSelectionnee.collection) { <div class="detail-item"><span class="detail-label"> 🏦  Collection</span><span class="detail-value">{{ monnaieSelectionnee.collection }}</span></div> }
+            </div>
+
+            @if (monnaieSelectionnee.avers || monnaieSelectionnee.revers) {
+              <div class="avers-revers">
+                @if (monnaieSelectionnee.avers) { <div class="ar-block"><span class="ar-label"> ⬆  Avers</span><p>{{ monnaieSelectionnee.avers }}</p></div> }
+                @if (monnaieSelectionnee.revers) { <div class="ar-block"><span class="ar-label"> ⬇  Revers</span><p>{{ monnaieSelectionnee.revers }}</p></div> }
+              </div>
+            }
+
+            <button class="btn-ia" routerLink="/classification" [queryParams]="{id: monnaieSelectionnee.wikidataId}">
+              🤖 Classifier avec l'IA
+            </button>
+          }
         </div>
       </div>
     </div>

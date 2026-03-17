@@ -7,6 +7,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable }             from 'rxjs';
 // ✅ PAS d'import environment — URL directe ci-dessous
 
+
 // ── Modèle Monnaie ────────────────────────────────────────
 export interface Monnaie {
   wikidataId:  string;
@@ -38,7 +39,7 @@ export interface MonnaiesResponse {
 export class MonnaiesService {
 
   // ✅ URL directe — change le port si besoin (8080 = défaut Spring Boot)
-  private apiUrl = 'http://localhost:9092/api/monnaies';
+  private apiUrl = 'http://localhost:8084/api/monnaies';
 
   constructor(private http: HttpClient) {}
 
@@ -67,6 +68,18 @@ export class MonnaiesService {
   getMonnaieById(wikidataId: string): Observable<Monnaie> {
     return this.http.get<Monnaie>(`${this.apiUrl}/${wikidataId}`);
   }
+
+  // ── UPDATE (Modifier) ────────────────────────────────────
+updateMonnaie(wikidataId: string, monnaie: Monnaie): Observable<Monnaie> {
+  // L'URL DOIT utiliser le port 8083 pour parler à Eclipse
+  return this.http.put<Monnaie>(`http://localhost:8083/api/monnaies/${wikidataId}`, monnaie);
+}
+
+ // ── DELETE (Supprimer) ────────────────────────────────────
+deleteMonnaie(wikidataId: string): Observable<void> {
+  // Changement de 8084 à 8083
+  return this.http.delete<void>(`http://localhost:8083/api/monnaies/${wikidataId}`);
+}
 
   // ── Recherche dans le backend ─────────────────────────────
   rechercherMonnaies(query: string): Observable<Monnaie[]> {

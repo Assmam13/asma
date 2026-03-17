@@ -1,0 +1,114 @@
+<!-- Bouton flottant -->
+<div class="chatbot-trigger" (click)="toggleChat()">
+  <div class="trigger-glow"></div>
+  <img src="chatbot-icon.jpg" alt="MONETA IA" class="trigger-icon"/>
+  <span class="trigger-overlay-x" *ngIf="isOpen">✕</span>
+  <div class="notification-dot" *ngIf="!isOpen && hasNewMessage"></div>
+</div>
+
+<!-- Fenêtre de chat -->
+<div class="chatbot-window" [class.open]="isOpen">
+
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="header-avatar">
+      <img src="chatbot-icon.jpg" alt="MONETA IA"/>
+    </div>
+    <div class="header-info">
+      <h3>MONETA IA</h3>
+      <div class="header-subtitle">
+        <span class="status-dot"></span>
+        <span class="status-text">Assistant monnaies tunisiennes</span>
+      </div>
+    </div>
+    <button class="header-close" (click)="toggleChat()">✕</button>
+  </div>
+
+  <!-- Messages -->
+  <div class="chat-messages" #messagesContainer>
+
+    <!-- Formulaire prénom -->
+    <div class="welcome-form" *ngIf="showWelcomeForm">
+      <div class="bot-message">
+        <div class="message-avatar">
+          <img src="chatbot-icon.jpg" alt="bot"/>
+        </div>
+        <div class="message-bubble bot-bubble">
+          <p>Bienvenue sur <strong>MONETA</strong> ! 🪙<br/>
+          Je suis votre assistant expert en monnaies tunisiennes.<br/><br/>
+          Pour commencer, quel est votre prénom ?</p>
+        </div>
+      </div>
+      <div class="welcome-inputs">
+        <input
+          type="text"
+          placeholder="Votre prénom..."
+          [(ngModel)]="userPrenom"
+          (keyup.enter)="submitWelcome()"
+          class="welcome-input"
+        />
+        <button class="welcome-btn" (click)="submitWelcome()">→</button>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div *ngFor="let msg of messages" class="message-wrapper">
+
+      <div class="bot-message" *ngIf="msg.role === 'bot'">
+        <div class="message-avatar">
+          <img src="chatbot-icon.jpg" alt="bot"/>
+        </div>
+        <div class="message-bubble bot-bubble">
+          <p [innerHTML]="msg.content"></p>
+          <span class="message-time">{{ msg.time }}</span>
+        </div>
+      </div>
+
+      <div class="user-message" *ngIf="msg.role === 'user'">
+        <div class="message-bubble user-bubble">
+          <p>{{ msg.content }}</p>
+          <span class="message-time">{{ msg.time }}</span>
+        </div>
+        <div class="user-avatar">{{ userPrenom[0]?.toUpperCase() }}</div>
+      </div>
+
+    </div>
+
+    <!-- Typing -->
+    <div class="bot-message" *ngIf="isTyping">
+      <div class="message-avatar">
+        <img src="chatbot-icon.jpg" alt="bot"/>
+      </div>
+      <div class="message-bubble bot-bubble">
+        <div class="typing-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Suggestions -->
+  <div class="quick-suggestions" *ngIf="showSuggestions && !showWelcomeForm">
+    <button class="suggestion-chip" *ngFor="let s of suggestions" (click)="sendSuggestion(s)">
+      {{ s }}
+    </button>
+  </div>
+
+  <!-- Input -->
+  <div class="chat-input-area">
+    <input
+      type="text"
+      [(ngModel)]="currentMessage"
+      (keyup.enter)="sendMessage()"
+      placeholder="Posez votre question..."
+      class="chat-input"
+      [disabled]="isTyping || showWelcomeForm"
+    />
+    <button class="send-btn" (click)="sendMessage()"
+      [disabled]="isTyping || showWelcomeForm || !currentMessage.trim()">
+      ➤
+    </button>
+  </div>
+
+</div>

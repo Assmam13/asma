@@ -1,5 +1,6 @@
 <div class="monnaies-page">
 
+  <!-- ── HERO ── -->
   <div class="page-hero">
     <div class="hero-decoration left">
       <div class="deco-line"></div>
@@ -31,6 +32,7 @@
     </div>
   </div>
 
+  <!-- ── FILTRES ── -->
   <div class="filtres-panel">
     <div class="filtres-titre">
       <span class="filtre-icon"> ⚗ </span> Filtres de recherche
@@ -75,7 +77,8 @@
 
       <div class="filtre-group">
         <label>Région / Lieu</label>
-        <input type="text" placeholder="Ex: Carthage, Rome..." [(ngModel)]="filtres.region" (ngModelChange)="appliquerFiltres()"/>
+        <input type="text" placeholder="Ex: Carthage, Rome..."
+          [(ngModel)]="filtres.region" (ngModelChange)="appliquerFiltres()"/>
       </div>
 
       <div class="filtre-group">
@@ -91,18 +94,154 @@
     @if (hasFiltresActifs()) {
       <div class="tags-actifs">
         @if (filtres.periode) {
-          <span class="tag-actif" (click)="filtres.periode=''; appliquerFiltres()">{{ filtres.periode }}  ✕</span>
+          <span class="tag-actif" (click)="filtres.periode=''; appliquerFiltres()">{{ filtres.periode }} ✕</span>
         }
         @if (filtres.materiau) {
-          <span class="tag-actif" (click)="filtres.materiau=''; appliquerFiltres()">{{ filtres.materiau }}  ✕</span>
+          <span class="tag-actif" (click)="filtres.materiau=''; appliquerFiltres()">{{ filtres.materiau }} ✕</span>
         }
         @if (filtres.region) {
-          <span class="tag-actif" (click)="filtres.region=''; appliquerFiltres()">{{ filtres.region }}  ✕</span>
+          <span class="tag-actif" (click)="filtres.region=''; appliquerFiltres()">{{ filtres.region }} ✕</span>
         }
       </div>
     }
   </div>
 
+  <!-- ── BOUTON AJOUTER ── -->
+  <div class="actions-bar">
+    <button class="btn-ouvrir-ajout" [class.ouvert]="showAddForm" (click)="showAddForm = !showAddForm">
+      {{ showAddForm ? '✕  Fermer' : '🪙  Ajouter une monnaie' }}
+    </button>
+  </div>
+
+  <!-- ── FORMULAIRE D'AJOUT INLINE ── -->
+  @if (showAddForm) {
+    <div class="ajout-panel">
+      <div class="ajout-panel-header">
+        <span>🪙</span>
+        <span class="ajout-panel-titre">NOUVELLE MONNAIE ARCHÉOLOGIQUE</span>
+        <button class="ajout-panel-close" (click)="showAddForm = false">✕</button>
+      </div>
+
+      <div class="ajout-form-grid">
+
+        <div class="ajout-separateur">✦ Identité</div>
+
+        <div class="ajout-group">
+          <label>ID Wikidata *</label>
+          <input class="ajout-input" type="text" [(ngModel)]="nouvelleMonnaie.wikidataId"
+            placeholder="Ex: TUN021" />
+        </div>
+        <div class="ajout-group">
+          <label>Nom de la monnaie *</label>
+          <input class="ajout-input" type="text" [(ngModel)]="nouvelleMonnaie.nom"
+            placeholder="Ex: Dinar d'Or Hafside" />
+        </div>
+
+        <div class="ajout-separateur">✦ Historique</div>
+
+        <div class="ajout-group">
+          <label>Période historique</label>
+          <select class="ajout-input" [(ngModel)]="nouvelleMonnaie.periode">
+            <option value="">— Choisir —</option>
+            <option value="Punique">Punique</option>
+            <option value="Numide">Numide</option>
+            <option value="Romaine">Romaine</option>
+            <option value="Byzantine">Byzantine</option>
+            <option value="Islamique - Aghlabide">Islamique - Aghlabide</option>
+            <option value="Islamique - Fatimide">Islamique - Fatimide</option>
+            <option value="Islamique - Hafside">Islamique - Hafside</option>
+          </select>
+        </div>
+        <div class="ajout-group">
+          <label>Année (négatif = av. J.-C.)</label>
+          <input class="ajout-input" type="number" [(ngModel)]="nouvelleMonnaie.annee"
+            placeholder="Ex: -300" />
+        </div>
+        <div class="ajout-group">
+          <label>Région / Lieu</label>
+          <input class="ajout-input" type="text" [(ngModel)]="nouvelleMonnaie.region"
+            placeholder="Ex: Carthage" />
+        </div>
+        <div class="ajout-group">
+          <label>Atelier de frappe</label>
+          <input class="ajout-input" type="text" [(ngModel)]="nouvelleMonnaie.atelier"
+            placeholder="Ex: Kairouan" />
+        </div>
+
+        <div class="ajout-separateur">✦ Caractéristiques physiques</div>
+
+        <div class="ajout-group">
+          <label>Matériau</label>
+          <select class="ajout-input" [(ngModel)]="nouvelleMonnaie.materiau">
+            <option value="">— Choisir —</option>
+            <option value="Or">Or</option>
+            <option value="Argent">Argent</option>
+            <option value="Bronze">Bronze</option>
+            <option value="Cuivre">Cuivre</option>
+            <option value="Électrum">Électrum</option>
+            <option value="Plomb">Plomb</option>
+          </select>
+        </div>
+        <div class="ajout-group">
+          <label>Poids (grammes)</label>
+          <input class="ajout-input" type="number" step="0.01" [(ngModel)]="nouvelleMonnaie.poids"
+            placeholder="Ex: 4.25" />
+        </div>
+        <div class="ajout-group">
+          <label>Diamètre (mm)</label>
+          <input class="ajout-input" type="number" step="0.1" [(ngModel)]="nouvelleMonnaie.diametre"
+            placeholder="Ex: 19.0" />
+        </div>
+        <div class="ajout-group">
+          <label>Collection / Musée</label>
+          <input class="ajout-input" type="text" [(ngModel)]="nouvelleMonnaie.collection"
+            placeholder="Ex: Musée du Bardo" />
+        </div>
+
+        <div class="ajout-separateur">✦ Iconographie</div>
+
+        <div class="ajout-group">
+          <label>Description de l'Avers</label>
+          <input class="ajout-input" type="text" [(ngModel)]="nouvelleMonnaie.avers"
+            placeholder="Ex: Tête de Tanit couronnée" />
+        </div>
+        <div class="ajout-group">
+          <label>Description du Revers</label>
+          <input class="ajout-input" type="text" [(ngModel)]="nouvelleMonnaie.revers"
+            placeholder="Ex: Cheval au galop" />
+        </div>
+        <div class="ajout-group span2">
+          <label>URL Image (Avers)</label>
+          <input class="ajout-input" type="url" [(ngModel)]="nouvelleMonnaie.image"
+            placeholder="https://upload.wikimedia.org/..." />
+        </div>
+        <div class="ajout-group span2">
+          <label>URL Image (Revers)</label>
+          <input class="ajout-input" type="url" [(ngModel)]="nouvelleMonnaie.imageRevers"
+            placeholder="https://..." />
+        </div>
+
+        <div class="ajout-separateur">✦ Description</div>
+
+        <div class="ajout-group span2">
+          <label>Description archéologique</label>
+          <textarea class="ajout-input textarea" [(ngModel)]="nouvelleMonnaie.description"
+            placeholder="Décrivez l'histoire et la signification de cette monnaie..."></textarea>
+        </div>
+      </div>
+
+      <div class="ajout-footer">
+        <button class="btn-annuler-ajout" (click)="annulerAjout()">✕ Annuler</button>
+        <button class="btn-soumettre-ajout"
+          [disabled]="!nouvelleMonnaie.wikidataId || !nouvelleMonnaie.nom"
+          (click)="ajouterMonnaie()">
+          🪙 Enregistrer dans la base
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- ── CHARGEMENT ── -->
   @if (chargement) {
     <div class="loading-state">
       <div class="coin-spinner">🪙</div>
@@ -110,6 +249,7 @@
     </div>
   }
 
+  <!-- ── RÉSULTATS ── -->
   @if (!chargement && !erreur) {
     <div class="resultats-bar">
       <span class="resultats-count">{{ monnaiesFiltrees.length }} monnaie(s) trouvée(s)</span>
@@ -169,8 +309,10 @@
       </div>
     }
   }
+
 </div>
 
+<!-- ── MODAL DÉTAIL ── -->
 @if (monnaieSelectionnee) {
   <div class="modal-overlay" (click)="fermerDetail()">
     <div class="modal-card" (click)="$event.stopPropagation()">

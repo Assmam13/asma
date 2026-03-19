@@ -5,7 +5,7 @@
   min-height: 100vh;
   background-color: #f0f2f5;
   font-family: 'Segoe UI', sans-serif;
-  padding: 20px; /* Ajout d'un padding pour mobile */
+  padding: 20px;
 }
 
 .login-card {
@@ -14,7 +14,7 @@
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 450px; /* Légèrement plus large pour les 4 champs */
+  max-width: 450px;
 }
 
 .login-header {
@@ -23,7 +23,7 @@
 }
 
 .login-logo {
-  height: 80px;      /* Taille contrôlée */
+  height: 80px;
   width: 80px;
   border-radius: 50%;
   object-fit: cover;
@@ -43,9 +43,37 @@
   font-size: 14px;
 }
 
-.form-group {
-  margin-bottom: 15px;
+/* ── Messages ── */
+.erreur-message {
+  background: #fff0f0;
+  border: 1px solid #ffcccc;
+  border-left: 4px solid #dd0031;
+  color: #c0392b;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  animation: fadeIn 0.3s ease;
 }
+
+.succes-message {
+  background: #f0fff4;
+  border: 1px solid #c3e6cb;
+  border-left: 4px solid #28a745;
+  color: #155724;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.form-group { margin-bottom: 15px; }
 
 .form-group label {
   display: block;
@@ -62,6 +90,7 @@
   border-radius: 6px;
   box-sizing: border-box;
   font-size: 15px;
+  transition: border-color 0.2s;
 }
 
 .form-group input:focus {
@@ -84,14 +113,18 @@
   transition: background 0.3s;
 }
 
-.login-button:hover {
-  background-color: #b30027;
+.login-button:hover:not(:disabled) { background-color: #b30027; }
+
+.login-button:disabled {
+  background-color: #e8a0a8;
+  cursor: not-allowed;
 }
 
 .login-footer {
   margin-top: 20px;
   text-align: center;
   font-size: 14px;
+  color: #606770;
 }
 
 .red-link {
@@ -100,9 +133,7 @@
   font-weight: 600;
 }
 
-.red-link:hover {
-  text-decoration: underline;
-}
+.red-link:hover { text-decoration: underline; }
 
 .back-home {
   display: block;
@@ -110,3 +141,5 @@
   color: #606770;
   text-decoration: none;
 }
+
+.back-home:hover { color: #1c1e21; }

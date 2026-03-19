@@ -7,7 +7,6 @@
       <span class="deco-ornement"> ✦ </span>
       <div class="deco-line"></div>
     </div>
-
     <div class="hero-center">
       <img src="logo.jpg" alt="Moneta Logo" class="hero-logo" onerror="this.style.display='none'"/>
       <div class="hero-text">
@@ -24,7 +23,6 @@
         </p>
       </div>
     </div>
-
     <div class="hero-decoration right">
       <div class="deco-line"></div>
       <span class="deco-ornement"> ✦ </span>
@@ -38,7 +36,6 @@
       <span class="filtre-icon"> ⚗ </span> Filtres de recherche
       <button class="btn-reset" (click)="reinitialiserFiltres()"> ✕  Réinitialiser</button>
     </div>
-
     <div class="filtres-grid">
       <div class="filtre-group full-width">
         <label>Recherche libre</label>
@@ -48,7 +45,6 @@
             [(ngModel)]="filtres.recherche" (ngModelChange)="appliquerFiltres()"/>
         </div>
       </div>
-
       <div class="filtre-group">
         <label>Période historique</label>
         <select [(ngModel)]="filtres.periode" (ngModelChange)="appliquerFiltres()">
@@ -62,7 +58,6 @@
           <option value="punique">Punique</option>
         </select>
       </div>
-
       <div class="filtre-group">
         <label>Matériau</label>
         <select [(ngModel)]="filtres.materiau" (ngModelChange)="appliquerFiltres()">
@@ -74,13 +69,11 @@
           <option value="electrum">Électrum</option>
         </select>
       </div>
-
       <div class="filtre-group">
         <label>Région / Lieu</label>
         <input type="text" placeholder="Ex: Carthage, Rome..."
           [(ngModel)]="filtres.region" (ngModelChange)="appliquerFiltres()"/>
       </div>
-
       <div class="filtre-group">
         <label>Intervalle d'années</label>
         <div class="annees-wrap">
@@ -90,9 +83,9 @@
         </div>
       </div>
     </div>
-
     @if (hasFiltresActifs()) {
       <div class="tags-actifs">
+<<<<<<< HEAD
         @if (filtres.periode) {
           <span class="tag-actif" (click)="filtres.periode=''; appliquerFiltres()">{{ filtres.periode }} ✕</span>
         }
@@ -102,6 +95,11 @@
         @if (filtres.region) {
           <span class="tag-actif" (click)="filtres.region=''; appliquerFiltres()">{{ filtres.region }} ✕</span>
         }
+=======
+        @if (filtres.periode) { <span class="tag-actif" (click)="filtres.periode=''; appliquerFiltres()">{{ filtres.periode }}  ✕</span> }
+        @if (filtres.materiau) { <span class="tag-actif" (click)="filtres.materiau=''; appliquerFiltres()">{{ filtres.materiau }}  ✕</span> }
+        @if (filtres.region) { <span class="tag-actif" (click)="filtres.region=''; appliquerFiltres()">{{ filtres.region }}  ✕</span> }
+>>>>>>> 0ec953e445ab7863a94bcffbc4885075e0f7a60e
       </div>
     }
   </div>
@@ -262,14 +260,12 @@
         </select>
       </div>
     </div>
-
     @if (monnaiesFiltrees.length === 0) {
       <div class="vide-state">
         <span> 🔍 </span>
         <p>Aucune monnaie ne correspond à vos filtres.</p>
       </div>
     }
-
     <div class="monnaies-grid">
       @for (m of monnaiesFiltrees; track m.wikidataId; let i = $index) {
         <div class="monnaie-card" [style.animation-delay]="i * 80 + 'ms'" (click)="ouvrirDetail(m)">
@@ -279,7 +275,6 @@
             </div>
             <span class="card-badge" [class]="'mat-' + (m.materiau | lowercase)">{{ m.materiau || '?' }}</span>
           </div>
-
           <div class="card-body">
             <h3 class="card-nom">{{ m.nom || 'Nom inconnu' }}</h3>
             <p class="card-annee">{{ formatAnnee(m.annee) }}</p>
@@ -298,7 +293,6 @@
         </div>
       }
     </div>
-
     @if (totalPages > 1) {
       <div class="pagination">
         <button [disabled]="pageCourante === 1" (click)="changerPage(pageCourante - 1)">‹</button>
@@ -319,25 +313,27 @@
       <div class="modal-header-deco">
         <span class="modal-deco-text">{{ isEditing ? '— ÉDITION DE LA FICHE —' : '— MONETA —' }}</span>
       </div>
-
       <button class="modal-close" (click)="fermerDetail()"> ✕ </button>
 
       <div class="modal-body">
         <div class="modal-image-col">
+
+          <!-- FLIP 2D -->
           <div class="coin-flip-container" [class.flipped]="isFlipped">
             <div class="coin-face front">
-              <img [src]="monnaieSelectionnee.image || 'assets/coin-placeholder.svg'" [alt]="monnaieSelectionnee.nom" class="modal-img" (error)="onImgError($event)"/>
-              <span class="face-label"> ⬆  Avers</span>
+              <img [src]="monnaieSelectionnee.image || 'coin-placeholder.svg'" [alt]="monnaieSelectionnee.nom" class="modal-img" (error)="onImgError($event)"/>
+              <span class="face-label">⬆ Avers</span>
             </div>
             <div class="coin-face back">
-              <img [src]="monnaieSelectionnee.imageRevers || monnaieSelectionnee.image || 'assets/coin-placeholder.png'" [alt]="monnaieSelectionnee.nom" class="modal-img" (error)="onImgError($event)"/>
-              <span class="face-label"> ⬇  Revers</span>
+              <img [src]="monnaieSelectionnee.imageRevers || monnaieSelectionnee.image || 'coin-placeholder.svg'" [alt]="monnaieSelectionnee.nom" class="modal-img" (error)="onImgError($event)"/>
+              <span class="face-label">⬇ Revers</span>
             </div>
           </div>
 
-          <button class="btn-flip" (click)="isFlipped = !isFlipped">
-            🔄  {{ isFlipped ? 'Voir la face' : 'Voir le dos' }}
-          </button>
+          <div class="flip-btns">
+            <button class="btn-flip" [class.active]="!isFlipped" (click)="isFlipped = false">⬆ Avers</button>
+            <button class="btn-flip" [class.active]="isFlipped"  (click)="isFlipped = true">⬇ Revers</button>
+          </div>
 
           <div class="modal-badge-mat" [class]="'mat-' + (monnaieSelectionnee.materiau | lowercase)">
             {{ monnaieSelectionnee.materiau || 'Matériau inconnu' }}
@@ -367,12 +363,10 @@
                 <label>Nom de la monnaie</label>
                 <input type="text" [(ngModel)]="monnaieSelectionnee.nom" class="edit-input title-edit">
               </div>
-
               <div class="edit-group">
                 <label>Description Historique</label>
                 <textarea [(ngModel)]="monnaieSelectionnee.description" class="edit-input area-edit"></textarea>
               </div>
-
               <div class="modal-details-grid">
                 <div class="edit-group"><label>Période</label><input type="text" [(ngModel)]="monnaieSelectionnee.periode" class="edit-input"></div>
                 <div class="edit-group"><label>Année</label><input type="number" [(ngModel)]="monnaieSelectionnee.annee" class="edit-input"></div>
@@ -394,7 +388,6 @@
             <h2 class="modal-titre">{{ monnaieSelectionnee.nom || 'Nom inconnu' }}</h2>
             <p class="modal-wikid">{{ monnaieSelectionnee.wikidataId }}</p>
             <p class="modal-desc">{{ monnaieSelectionnee.description || 'Aucune description disponible.' }}</p>
-
             <div class="modal-details-grid">
               @if (monnaieSelectionnee.periode) { <div class="detail-item"><span class="detail-label"> 🏛  Période</span><span class="detail-value">{{ monnaieSelectionnee.periode }}</span></div> }
               @if (monnaieSelectionnee.annee) { <div class="detail-item"><span class="detail-label"> 📅  Année</span><span class="detail-value">{{ formatAnnee(monnaieSelectionnee.annee) }}</span></div> }
@@ -405,14 +398,12 @@
               @if (monnaieSelectionnee.materiau) { <div class="detail-item"><span class="detail-label"> 🔩  Matériau</span><span class="detail-value">{{ monnaieSelectionnee.materiau }}</span></div> }
               @if (monnaieSelectionnee.collection) { <div class="detail-item"><span class="detail-label"> 🏦  Collection</span><span class="detail-value">{{ monnaieSelectionnee.collection }}</span></div> }
             </div>
-
             @if (monnaieSelectionnee.avers || monnaieSelectionnee.revers) {
               <div class="avers-revers">
                 @if (monnaieSelectionnee.avers) { <div class="ar-block"><span class="ar-label"> ⬆  Avers</span><p>{{ monnaieSelectionnee.avers }}</p></div> }
                 @if (monnaieSelectionnee.revers) { <div class="ar-block"><span class="ar-label"> ⬇  Revers</span><p>{{ monnaieSelectionnee.revers }}</p></div> }
               </div>
             }
-
             <button class="btn-ia" routerLink="/classification" [queryParams]="{id: monnaieSelectionnee.wikidataId}">
               🤖 Classifier avec l'IA
             </button>

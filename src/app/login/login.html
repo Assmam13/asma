@@ -1,20 +1,42 @@
 <div class="login-container">
   <div class="login-card">
+
     <div class="login-header">
-      <img src="logo.png" alt="Moneta Logo" class="login-logo">
+      <img src="logo.png" alt="Moneta Logo" class="login-logo" onerror="this.style.display='none'">
       <h2>Connexion à Moneta</h2>
       <p>Veuillez entrer vos identifiants pour accéder à votre espace.</p>
     </div>
 
-    <form>
+    <!-- Message d'erreur -->
+    @if (erreur) {
+      <div class="erreur-message">
+        ⚠️ {{ erreur }}
+      </div>
+    }
+
+    <form (ngSubmit)="seConnecter()">
       <div class="form-group">
-        <label for="email">Adresse E-mail</label>
-        <input type="email" id="email" placeholder="nom@entreprise.com" required>
+        <label for="username">Nom d'utilisateur</label>
+        <input
+          type="text"
+          id="username"
+          placeholder="Votre nom d'utilisateur"
+          [(ngModel)]="username"
+          name="username"
+          required
+          autocomplete="username"/>
       </div>
 
       <div class="form-group">
         <label for="password">Mot de passe</label>
-        <input type="password" id="password" placeholder="••••••••" required>
+        <input
+          type="password"
+          id="password"
+          placeholder="••••••••"
+          [(ngModel)]="password"
+          name="password"
+          required
+          autocomplete="current-password"/>
       </div>
 
       <div class="form-options">
@@ -24,14 +46,21 @@
         <a routerLink="/forgot-password" class="red-link">Mot de passe oublié ?</a>
       </div>
 
-      <button type="submit" class="login-button">Se connecter</button>
+      <button type="submit" class="login-button" [disabled]="chargement">
+        @if (chargement) {
+          ⏳ Connexion en cours...
+        } @else {
+          Se connecter
+        }
+      </button>
     </form>
 
     <div class="login-footer">
-      <p>Vous n'avez pas de compte ? 
+      <p>Vous n'avez pas de compte ?
         <a routerLink="/request" class="red-link">Demander l'accès</a>
       </p>
       <a routerLink="/" class="back-home">← Retour à l'accueil</a>
     </div>
+
   </div>
 </div>

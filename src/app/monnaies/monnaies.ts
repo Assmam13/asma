@@ -32,7 +32,6 @@ export class MonnaiesComponent implements OnInit, OnDestroy {
   isEditing = false;
   backupMonnaie: Monnaie | null = null;
 
-  // ✅ chargement = false dès le début — jamais de spinner bloquant
   chargement    = false;
   erreur:          string | null = null;
   totalMonnaies = 0;
@@ -49,14 +48,16 @@ export class MonnaiesComponent implements OnInit, OnDestroy {
   totalPages   = 1;
   pages:         number[] = [];
 
+  // ── Formulaire d'ajout ──
+  showAddForm = false;
+  nouvelleMonnaie: Monnaie = this.formulaireVide();
+
   private destroy$ = new Subject<void>();
 
   constructor(private monnaiesService: MonnaiesService) {}
 
   ngOnInit(): void {
-    // ✅ Charge mock data immédiatement — pas d'attente
     this.chargerMockData();
-    // Essaie le backend en arrière-plan
     this.monnaiesService.getMonnaies()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -67,7 +68,7 @@ export class MonnaiesComponent implements OnInit, OnDestroy {
             this.appliquerFiltres();
           }
         },
-        error: () => {} // mock data déjà affichées
+        error: () => {}
       });
   }
 
@@ -99,7 +100,6 @@ export class MonnaiesComponent implements OnInit, OnDestroy {
   // ── Actions Administrateur (Modifier / Supprimer) ───────────
   activerEdition(): void {
     this.isEditing = true;
-    // Crée une copie de sauvegarde pour annuler si besoin
     this.backupMonnaie = JSON.parse(JSON.stringify(this.monnaieSelectionnee));
   }
 
@@ -115,27 +115,20 @@ export class MonnaiesComponent implements OnInit, OnDestroy {
 
     console.log("Données envoyées pour modification :", this.monnaieSelectionnee);
 
-    // On utilise l'ID (wikidataId) pour savoir quelle ligne modifier dans MariaDB
     this.monnaiesService.updateMonnaie(this.monnaieSelectionnee.wikidataId, this.monnaieSelectionnee)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (updatedCoin) => {
-          // 1. Mettre à jour la liste principale localement
           const index = this.toutesMonnaies.findIndex(m => m.wikidataId === updatedCoin.wikidataId);
           if (index !== -1) {
             this.toutesMonnaies[index] = { ...updatedCoin };
           }
-          
-          // 2. Désactiver le mode édition et rafraîchir l'affichage
           this.isEditing = false;
           this.appliquerFiltres();
-          
           alert("✅ Modifications enregistrées avec succès dans MariaDB.");
         },
         error: (err) => {
           console.error("Erreur détaillée du serveur :", err);
-          
-          // Si l'erreur est 404, c'est souvent parce qu'on essaie de modifier une Mock Data
           if (err.status === 404) {
             alert("❌ Erreur : Cette monnaie n'existe pas dans la base de données (c'est peut-être une donnée de test).");
           } else {
@@ -153,22 +146,15 @@ export class MonnaiesComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: () => {
-            // 1. Retire la monnaie de la liste source
             this.toutesMonnaies = this.toutesMonnaies.filter(m => m.wikidataId !== monnaie.wikidataId);
-            
-            // 2. Met à jour la liste affichée (filtres + pagination)
             this.appliquerFiltres();
-            
-            // 3. Ferme la fenêtre de détails si elle était ouverte
             this.fermerDetail();
-            
             alert("🗑️ Monnaie supprimée avec succès de la base de données.");
           },
           error: (err) => {
             console.error("Erreur lors de la suppression", err);
             if (err.status === 404) {
               alert("Info : Cette monnaie n'existe plus dans MariaDB.");
-              // Même en cas de 404, on la retire de l'écran car elle est déjà partie
               this.toutesMonnaies = this.toutesMonnaies.filter(m => m.wikidataId !== monnaie.wikidataId);
               this.appliquerFiltres();
             } else {
@@ -177,6 +163,57 @@ export class MonnaiesComponent implements OnInit, OnDestroy {
           }
         });
     }
+  }
+
+  // ── Formulaire d'ajout ────────────────────────────────────
+  private formulaireVide(): Monnaie {
+    return {
+      wikidataId: '',
+      nom:        '',
+      description:'',
+      image:      null,
+      imageRevers:null,
+      periode:    '',
+      materiau:   '',
+      region:     '',
+      atelier:    '',
+      annee:      null,
+      diametre:   null,
+      poids:      null,
+      avers:      '',
+      revers:     '',
+      collection: ''
+    };
+  }
+
+  annulerAjout(): void {
+    this.showAddForm    = false;
+    this.nouvelleMonnaie = this.formulaireVide();
+  }
+
+  ajouterMonnaie(): void {
+    if (!this.nouvelleMonnaie.wikidataId?.trim() || !this.nouvelleMonnaie.nom?.trim()) return;
+
+    this.monnaiesService.createMonnaie(this.nouvelleMonnaie)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (monnaieCreee) => {
+          this.toutesMonnaies.unshift(monnaieCreee);
+          this.totalMonnaies = this.toutesMonnaies.length;
+          this.appliquerFiltres();
+          this.showAddForm     = false;
+          this.nouvelleMonnaie = this.formulaireVide();
+          alert('✨ Monnaie ajoutée avec succès dans la base de données !');
+        },
+        error: (err) => {
+          console.error("Erreur d'ajout", err);
+          if (err.status === 409) {
+            alert('❌ Cet ID Wikidata existe déjà dans la base.');
+          } else {
+            alert("❌ Erreur lors de l'ajout. Vérifiez la console (F12).");
+          }
+        }
+      });
   }
 
   // ── Mock data tunisiennes ─────────────────────────────────
@@ -265,10 +302,10 @@ export class MonnaiesComponent implements OnInit, OnDestroy {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // ── Modal ─────────────────────────────────────────────────
+  // ── Modal détail ──────────────────────────────────────────
   ouvrirDetail(m: Monnaie): void {
     this.monnaieSelectionnee     = m;
-    this.isEditing               = false; // Réinitialise l'édition à chaque ouverture
+    this.isEditing               = false;
     this.isFlipped               = false;
     document.body.style.overflow = 'hidden';
   }

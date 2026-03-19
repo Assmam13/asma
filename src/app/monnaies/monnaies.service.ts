@@ -5,8 +5,6 @@
 import { Injectable }             from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable }             from 'rxjs';
-// ✅ PAS d'import environment — URL directe ci-dessous
-
 
 // ── Modèle Monnaie ────────────────────────────────────────
 export interface Monnaie {
@@ -14,7 +12,7 @@ export interface Monnaie {
   nom:         string;
   description: string;
   image:       string | null;
-  imageRevers: string | null;   // ✅ image du dos
+  imageRevers: string | null;
   periode:     string;
   materiau:    string;
   region:      string;
@@ -38,20 +36,20 @@ export interface MonnaiesResponse {
 @Injectable({ providedIn: 'root' })
 export class MonnaiesService {
 
-  // ✅ URL directe — change le port si besoin (8080 = défaut Spring Boot)
-  private apiUrl = 'http://localhost:8084/api/monnaies';
+  // ✅ Un seul port — modifiez ici si besoin
+  private apiUrl = 'http://localhost:8083/api/monnaies';
 
   constructor(private http: HttpClient) {}
 
   // ── GET toutes les monnaies ───────────────────────────────
   getMonnaies(params?: {
-    periode?:   string;
-    materiau?:  string;
-    region?:    string;
-    anneeMin?:  number;
-    anneeMax?:  number;
-    page?:      number;
-    parPage?:   number;
+    periode?:  string;
+    materiau?: string;
+    region?:   string;
+    anneeMin?: number;
+    anneeMax?: number;
+    page?:     number;
+    parPage?:  number;
   }): Observable<Monnaie[]> {
     let httpParams = new HttpParams();
     if (params) {
@@ -69,17 +67,20 @@ export class MonnaiesService {
     return this.http.get<Monnaie>(`${this.apiUrl}/${wikidataId}`);
   }
 
-  // ── UPDATE (Modifier) ────────────────────────────────────
-updateMonnaie(wikidataId: string, monnaie: Monnaie): Observable<Monnaie> {
-  // L'URL DOIT utiliser le port 8083 pour parler à Eclipse
-  return this.http.put<Monnaie>(`http://localhost:8083/api/monnaies/${wikidataId}`, monnaie);
-}
+  // ── CREATE (Ajouter) ─────────────────────────────────────
+  createMonnaie(monnaie: Monnaie): Observable<Monnaie> {
+    return this.http.post<Monnaie>(this.apiUrl, monnaie);
+  }
 
- // ── DELETE (Supprimer) ────────────────────────────────────
-deleteMonnaie(wikidataId: string): Observable<void> {
-  // Changement de 8084 à 8083
-  return this.http.delete<void>(`http://localhost:8083/api/monnaies/${wikidataId}`);
-}
+  // ── UPDATE (Modifier) ────────────────────────────────────
+  updateMonnaie(wikidataId: string, monnaie: Monnaie): Observable<Monnaie> {
+    return this.http.put<Monnaie>(`${this.apiUrl}/${wikidataId}`, monnaie);
+  }
+
+  // ── DELETE (Supprimer) ───────────────────────────────────
+  deleteMonnaie(wikidataId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${wikidataId}`);
+  }
 
   // ── Recherche dans le backend ─────────────────────────────
   rechercherMonnaies(query: string): Observable<Monnaie[]> {

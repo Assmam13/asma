@@ -1,15 +1,20 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter }                from '@angular/router';
-import { provideHttpClient }            from '@angular/common/http';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+// ============================================================
+// app.config.ts  —  Projet MONETA
+// ============================================================
 
-import { routes } from './app.routes';
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { provideRouter }                                  from '@angular/router';
+import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/http';
+import { routes }                                         from './app.routes';
+import { authInterceptor }                                from './auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideBrowserGlobalErrorListeners(),
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(),
-    provideClientHydration(withEventReplay())
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([authInterceptor])   // ✅ JWT ajouté à chaque requête
+    )
   ]
 };

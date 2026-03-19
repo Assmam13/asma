@@ -1,38 +1,82 @@
 <div class="login-container">
   <div class="login-card">
+
     <div class="login-header">
-      <img src="logo.png" alt="Moneta Logo" class="login-logo">
+      <img src="logo.png" alt="Moneta Logo" class="login-logo" onerror="this.style.display='none'">
       <h2>Créer un compte</h2>
       <p>Rejoignez Moneta pour explorer l'histoire archéologique.</p>
     </div>
 
-    <form (submit)="onSubmit()">
+    <!-- Message d'erreur -->
+    @if (erreur) {
+      <div class="erreur-message">⚠️ {{ erreur }}</div>
+    }
+
+    <!-- Message de succès -->
+    @if (succes) {
+      <div class="succes-message">✅ {{ succes }}</div>
+    }
+
+    <form (ngSubmit)="onSubmit()">
+
       <div class="form-group">
-        <label for="name">Nom Complet</label>
-        <input type="text" id="name" placeholder="Votre nom et prénom" required>
+        <label for="username">Nom d'utilisateur</label>
+        <input
+          type="text"
+          id="username"
+          placeholder="Choisissez un nom d'utilisateur"
+          [(ngModel)]="username"
+          name="username"
+          required/>
       </div>
 
       <div class="form-group">
         <label for="email">Adresse E-mail</label>
-        <input type="email" id="email" placeholder="nom@exemple.com" required>
+        <input
+          type="email"
+          id="email"
+          placeholder="nom@exemple.com"
+          [(ngModel)]="email"
+          name="email"
+          required/>
       </div>
 
       <div class="form-group">
         <label for="password">Mot de passe</label>
-        <input type="password" id="password" placeholder="••••••••" required>
+        <input
+          type="password"
+          id="password"
+          placeholder="••••••••  (min. 6 caractères)"
+          [(ngModel)]="password"
+          name="password"
+          required/>
       </div>
 
       <div class="form-group">
-        <label for="confirm-password">Confirmer le mot de passe</label>
-        <input type="password" id="confirm-password" placeholder="••••••••" required>
+        <label for="confirmPassword">Confirmer le mot de passe</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          placeholder="••••••••"
+          [(ngModel)]="confirmPassword"
+          name="confirmPassword"
+          required/>
       </div>
 
-      <button type="submit" class="login-button">S'inscrire</button>
+      <button type="submit" class="login-button" [disabled]="chargement">
+        @if (chargement) {
+          ⏳ Inscription en cours...
+        } @else {
+          S'inscrire
+        }
+      </button>
+
     </form>
 
     <div class="login-footer">
       <p>Déjà membre ? <a routerLink="/login" class="red-link">Se connecter</a></p>
       <a routerLink="/" class="back-home">← Retour à l'accueil</a>
     </div>
+
   </div>
 </div>

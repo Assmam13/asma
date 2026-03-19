@@ -1,33 +1,48 @@
 <div class="dashboard-wrapper">
   <aside class="sidebar">
+
+    <!-- ── Header ── -->
     <div class="sidebar-header">
-      <img src="logo.png" alt="Moneta Logo" class="sidebar-logo">
+      <img src="logo.png" alt="Moneta Logo" class="sidebar-logo" onerror="this.style.display='none'">
       <span class="brand-name">Moneta</span>
     </div>
 
+    <!-- ── User Info Card ── -->
+    <div class="user-card">
+      <div class="user-avatar">{{ auth.getUsername()?.charAt(0)?.toUpperCase() }}</div>
+      <div class="user-info">
+        <span class="user-name">{{ auth.getUsername() }}</span>
+        <span class="user-role" [class]="getRoleClass()">{{ getRoleLabel() }}</span>
+      </div>
+    </div>
+
+    <!-- ── Navigation ── -->
     <nav class="sidebar-nav">
       <div class="menu-category">Exploration</div>
       <a routerLink="/cartes" routerLinkActive="active" class="nav-item">
         <span class="icon">📍</span> Carte Interactive
       </a>
-      <a routerLink="/sites" routerLinkActive="active" class="nav-item">
-        <span class="icon">🏛️</span> Sites Archéologiques
-      </a>
       <a routerLink="/monnaies" routerLinkActive="active" class="nav-item">
         <span class="icon">🪙</span> Monnaies
       </a>
-      
-      <div class="menu-category">Administration</div>
-      <a routerLink="/users" routerLinkActive="active" class="nav-item">
-        <span class="icon">👥</span> Gestion Utilisateurs
-      </a>
+
+      <!-- ── Admin only ── -->
+      @if (auth.isAdmin()) {
+        <div class="menu-category">Administration</div>
+        <a routerLink="/users" routerLinkActive="active" class="nav-item">
+          <span class="icon">👥</span> Gestion Utilisateurs
+        </a>
+      }
     </nav>
 
+    <!-- ── Footer : Logout ── -->
     <div class="sidebar-footer">
-      <a routerLink="/login" class="logout-btn">
-        <span class="icon">👤</span> Connexion
-      </a>
+      <div class="user-email">{{ auth.getEmail() }}</div>
+      <button class="logout-btn" (click)="seDeconnecter()">
+        <span class="icon">🚪</span> Se déconnecter
+      </button>
     </div>
+
   </aside>
 
   <main class="main-content">
@@ -35,22 +50,17 @@
       <div class="filter-card">
         <div class="filter-card-header">
           <span class="filter-title">🔍 Filtres de Recherche Avancés</span>
-          
+
           <div class="smart-search-container" [class.ai-active]="isAIMode">
             <div class="search-input-wrapper">
               <span class="search-main-icon">🔍</span>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 [placeholder]="isAIMode ? 'Recherche IA Moneta activée...' : 'Recherche...'"
                 class="search-input"
                 (focus)="onSearchFocus()"
-                (blur)="onSearchBlur()"
-              >
-              <button 
-                type="button" 
-                class="ai-toggle-btn" 
-                (click)="toggleAIMode()" 
-                title="Moneta Intelligence Archéologique">
+                (blur)="onSearchBlur()"/>
+              <button type="button" class="ai-toggle-btn" (click)="toggleAIMode()" title="Moneta Intelligence Archéologique">
                 <span class="ai-icon">✨</span>
               </button>
             </div>
@@ -73,7 +83,6 @@
               <option>Médiévale</option>
             </select>
           </div>
-
           <div class="filter-group">
             <label>Matériau</label>
             <select>
@@ -83,12 +92,10 @@
               <option>Cuivre</option>
             </select>
           </div>
-
           <div class="filter-group">
             <label>Lieu / Région</label>
             <input type="text" placeholder="Ex: Carthage...">
           </div>
-
           <div class="filter-group">
             <label>Intervalle d'Années</label>
             <div class="range-inputs">
@@ -103,12 +110,17 @@
     <section class="content-view">
       <router-outlet></router-outlet>
 
-      <div class="welcome-banner" *ngIf="isWelcomeVisible()">
-        <div class="banner-content">
-          <h1>Plateforme de Gestion Moneta</h1>
-          <p>Utilisez le menu latéral pour naviguer et les filtres pour affiner vos données.</p>
+      @if (isWelcomeVisible()) {
+        <div class="welcome-banner">
+          <div class="banner-content">
+            <h1>Bienvenue, {{ auth.getUsername() }} 👋</h1>
+            <p>Utilisez le menu latéral pour naviguer et les filtres pour affiner vos données.</p>
+            <div class="welcome-role-badge" [class]="getRoleClass()">
+              {{ getRoleLabel() }}
+            </div>
+          </div>
         </div>
-      </div>
+      }
     </section>
   </main>
 </div>

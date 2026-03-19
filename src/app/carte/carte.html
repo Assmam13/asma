@@ -1,17 +1,56 @@
 <div class="carte-page-wrapper">
+
+  <!-- En-tête -->
   <div class="page-header">
-    <div class="header-text">
-      <h2>Carte Interactive des Trouvailles</h2>
-      <p>Explorez la distribution géographique des monnaies selon les époques historiques.</p>
+    <div class="header-left">
+      <h2 class="header-titre">🗺️ Carte Archéologique de Tunisie</h2>
+      <p class="header-sous">Distribution géographique des monnaies selon les époques historiques</p>
     </div>
-    <div class="map-legend">
-      <span class="legend-item"><span class="dot antique"></span> Antique</span>
-      <span class="legend-item"><span class="dot romaine"></span> Romaine</span>
-      <span class="legend-item"><span class="dot islamique"></span> Islamique</span>
+    <div class="header-stats">
+      <div class="stat-item" *ngFor="let ep of epoques.slice(1)">
+        <span class="stat-dot" [style.background]="ep.couleur"></span>
+        <span class="stat-label">{{ ep.label }}</span>
+        <span class="stat-count">{{ statsEpoques[ep.label] || 0 }}</span>
+      </div>
     </div>
   </div>
 
+  <!-- Filtres -->
+  <div class="filtres-carte">
+    <span class="filtres-label">🔍 Filtrer par époque :</span>
+    <div class="filtres-btns">
+      <button
+        *ngFor="let ep of epoques"
+        class="filtre-btn"
+        [class.actif]="epoqueActive === ep.label"
+        [style.--c]="ep.couleur || '#888'"
+        (click)="filtrerEpoque(ep.label)">
+        {{ ep.label }}
+        <span class="filtre-count" *ngIf="ep.label !== 'Toutes'">
+          {{ statsEpoques[ep.label] || 0 }}
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Chargement -->
+  <div class="loading-carte" *ngIf="chargement">
+    <div class="loading-spinner">🪙</div>
+    <p>Chargement des monnaies depuis MariaDB...</p>
+  </div>
+
+  <!-- Carte -->
   <div class="map-container">
     <div id="historical-map"></div>
+
+    <!-- Légende sur la carte -->
+    <div class="map-legend-overlay">
+      <div class="legend-titre">Légende</div>
+      <div class="legend-item" *ngFor="let ep of epoques.slice(1)">
+        <span class="legend-dot" [style.background]="ep.couleur"></span>
+        <span>{{ ep.label }}</span>
+      </div>
+    </div>
   </div>
+
 </div>

@@ -85,7 +85,6 @@
     </div>
     @if (hasFiltresActifs()) {
       <div class="tags-actifs">
-<<<<<<< HEAD
         @if (filtres.periode) {
           <span class="tag-actif" (click)="filtres.periode=''; appliquerFiltres()">{{ filtres.periode }} ✕</span>
         }
@@ -95,24 +94,21 @@
         @if (filtres.region) {
           <span class="tag-actif" (click)="filtres.region=''; appliquerFiltres()">{{ filtres.region }} ✕</span>
         }
-=======
-        @if (filtres.periode) { <span class="tag-actif" (click)="filtres.periode=''; appliquerFiltres()">{{ filtres.periode }}  ✕</span> }
-        @if (filtres.materiau) { <span class="tag-actif" (click)="filtres.materiau=''; appliquerFiltres()">{{ filtres.materiau }}  ✕</span> }
-        @if (filtres.region) { <span class="tag-actif" (click)="filtres.region=''; appliquerFiltres()">{{ filtres.region }}  ✕</span> }
->>>>>>> 0ec953e445ab7863a94bcffbc4885075e0f7a60e
       </div>
     }
   </div>
 
-  <!-- ── BOUTON AJOUTER ── -->
-  <div class="actions-bar">
-    <button class="btn-ouvrir-ajout" [class.ouvert]="showAddForm" (click)="showAddForm = !showAddForm">
-      {{ showAddForm ? '✕  Fermer' : '🪙  Ajouter une monnaie' }}
-    </button>
-  </div>
+  <!-- ── BOUTON AJOUTER (ADMIN SEULEMENT) ── -->
+  @if (isAdmin) {
+    <div class="actions-bar">
+      <button class="btn-ouvrir-ajout" [class.ouvert]="showAddForm" (click)="showAddForm = !showAddForm">
+        {{ showAddForm ? '✕  Fermer' : '🪙  Ajouter une monnaie' }}
+      </button>
+    </div>
+  }
 
-  <!-- ── FORMULAIRE D'AJOUT INLINE ── -->
-  @if (showAddForm) {
+  <!-- ── FORMULAIRE D'AJOUT INLINE (ADMIN SEULEMENT) ── -->
+  @if (isAdmin && showAddForm) {
     <div class="ajout-panel">
       <div class="ajout-panel-header">
         <span>🪙</span>
@@ -345,15 +341,19 @@
             </a>
           }
 
-          <div class="admin-actions-vertical">
-            @if (!isEditing) {
-              <button class="btn-admin edit" (click)="activerEdition()">✏️ Modifier</button>
-              <button class="btn-admin delete" (click)="supprimerMonnaie(monnaieSelectionnee)">🗑️ Supprimer</button>
-            } @else {
-              <button class="btn-admin save" (click)="sauvegarderModification()">💾 Enregistrer</button>
-              <button class="btn-admin cancel" (click)="annulerEdition()">✕ Annuler</button>
-            }
-          </div>
+          <!-- ── BOUTONS MODIFIER / SUPPRIMER (ADMIN SEULEMENT) ── -->
+          @if (isAdmin) {
+            <div class="admin-actions-vertical">
+              @if (!isEditing) {
+                <button class="btn-admin edit" (click)="activerEdition()">✏️ Modifier</button>
+                <button class="btn-admin delete" (click)="supprimerMonnaie(monnaieSelectionnee)">🗑️ Supprimer</button>
+              } @else {
+                <button class="btn-admin save" (click)="sauvegarderModification()">💾 Enregistrer</button>
+                <button class="btn-admin cancel" (click)="annulerEdition()">✕ Annuler</button>
+              }
+            </div>
+          }
+
         </div>
 
         <div class="modal-info-col">

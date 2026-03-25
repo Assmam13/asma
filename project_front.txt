@@ -1,0 +1,4445 @@
+﻿=== C:\Users\Alpha\asma\src\app\carte\carte.css ===
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600&display=swap');
+
+.carte-page-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeIn 0.4s ease-out;
+  font-family: 'Crimson Text', serif;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* â”€â”€ EN-TÃŠTE â”€â”€ */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #2c1810, #4a2c1a);
+  padding: 20px 28px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  border: 1px solid rgba(201,168,76,0.3);
+}
+
+.header-titre {
+  font-family: 'Cinzel', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #c9a84c;
+  margin: 0 0 6px 0;
+  letter-spacing: 0.05em;
+}
+
+.header-sous {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.6);
+  margin: 0;
+  font-style: italic;
+}
+
+.header-stats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.08);
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.stat-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.stat-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.8);
+  letter-spacing: 0.05em;
+}
+
+.stat-count {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #c9a84c;
+  background: rgba(201,168,76,0.15);
+  padding: 1px 7px;
+  border-radius: 10px;
+}
+
+/* â”€â”€ FILTRES â”€â”€ */
+.filtres-carte {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  padding: 14px 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  border: 1px solid #eee;
+  flex-wrap: wrap;
+}
+
+.filtres-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  color: #7a6a52;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.filtres-btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filtre-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1.5px solid #ddd;
+  border-radius: 20px;
+  background: white;
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #555;
+}
+
+.filtre-btn:hover {
+  border-color: var(--c, #888);
+  color: var(--c, #888);
+  background: rgba(0,0,0,0.03);
+}
+
+.filtre-btn.actif {
+  background: var(--c, #888);
+  border-color: var(--c, #888);
+  color: white;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+
+.filtre-count {
+  background: rgba(255,255,255,0.3);
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+}
+
+.filtre-btn.actif .filtre-count {
+  background: rgba(255,255,255,0.3);
+}
+
+/* â”€â”€ CARTE â”€â”€ */
+.map-container {
+  height: 580px;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  border: 3px solid white;
+  position: relative;
+  display: block;
+}
+
+#historical-map {
+  height: 580px !important;
+  width: 100% !important;
+  min-height: 580px;
+  display: block;
+  z-index: 1;
+}
+
+/* â”€â”€ LÃ‰GENDE OVERLAY â”€â”€ */
+.map-legend-overlay {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(4px);
+  padding: 12px 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+  border: 1px solid rgba(201,168,76,0.3);
+  z-index: 1000;
+  min-width: 120px;
+}
+
+.legend-titre {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #c9a84c;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  padding-bottom: 6px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  color: #444;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 4px rgba(0,0,0,0.2);
+}
+
+/* â”€â”€ MARQUEURS PERSONNALISÃ‰S â”€â”€ */
+:host ::ng-deep .coin-marker {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host ::ng-deep .coin-marker-pulse {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--c);
+  opacity: 0.25;
+  animation: pulse 2s ease-out infinite;
+}
+
+:host ::ng-deep .coin-marker-dot {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--c);
+  border: 3px solid white;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  z-index: 1;
+  transition: transform 0.2s;
+}
+
+:host ::ng-deep .coin-marker:hover .coin-marker-dot {
+  transform: scale(1.2);
+}
+
+@keyframes pulse {
+  0%   { transform: scale(0.8); opacity: 0.4; }
+  70%  { transform: scale(2);   opacity: 0;   }
+  100% { transform: scale(0.8); opacity: 0;   }
+}
+
+/* â”€â”€ POPUP MONETA â”€â”€ */
+:host ::ng-deep .moneta-popup-wrapper .leaflet-popup-content-wrapper {
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  border: none;
+  padding: 0;
+  overflow: hidden;
+  border-top: 4px solid #c9a84c;
+}
+
+:host ::ng-deep .moneta-popup-wrapper .leaflet-popup-content {
+  margin: 0;
+  width: 260px !important;
+}
+
+:host ::ng-deep .moneta-popup-wrapper .leaflet-popup-tip {
+  background: white;
+}
+
+:host ::ng-deep .moneta-popup {
+  padding: 16px;
+  font-family: 'Crimson Text', serif;
+}
+
+:host ::ng-deep .popup-epoque {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  color: white;
+  font-size: 11px;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+:host ::ng-deep .popup-nom {
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a0f08;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+
+:host ::ng-deep .popup-meta {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+:host ::ng-deep .popup-meta span {
+  font-size: 12px;
+  color: #888;
+  background: #f5f0e8;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+:host ::ng-deep .popup-desc {
+  font-size: 13px;
+  color: #555;
+  margin: 0 0 10px 0;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+:host ::ng-deep .popup-musee {
+  font-size: 12px;
+  color: #c9a84c;
+  font-weight: 600;
+  border-top: 1px solid #f0e8d8;
+  padding-top: 8px;
+}
+
+:host ::ng-deep .popup-id {
+  font-size: 10px;
+  color: #ccc;
+  margin-top: 4px;
+  font-family: 'Cinzel', serif;
+}
+
+:host ::ng-deep .popup-img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: block;
+  border: 2px solid rgba(201,168,76,0.3);
+}
+
+:host ::ng-deep .popup-no-img {
+  width: 100%;
+  height: 80px;
+  background: linear-gradient(135deg, #2c1810, #4a2c1a);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  border: 2px solid rgba(201,168,76,0.3);
+}
+
+/* â”€â”€ LOADING â”€â”€ */
+.loading-carte {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  gap: 0.8rem;
+  color: #7a6a52;
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+}
+
+.loading-spinner {
+  font-size: 2.5rem;
+  animation: spinCoin 1.2s linear infinite;
+}
+
+@keyframes spinCoin {
+  to { transform: rotateY(360deg); }
+}
+
+=== C:\Users\Alpha\asma\src\app\carte\carte.html ===
+<div class="carte-page-wrapper">
+
+  <!-- En-tÃªte -->
+  <div class="page-header">
+    <div class="header-left">
+      <h2 class="header-titre">ðŸ—ºï¸ Carte ArchÃ©ologique de Tunisie</h2>
+      <p class="header-sous">Distribution gÃ©ographique des monnaies selon les Ã©poques historiques</p>
+    </div>
+    <div class="header-stats">
+      <div class="stat-item" *ngFor="let ep of epoques.slice(1)">
+        <span class="stat-dot" [style.background]="ep.couleur"></span>
+        <span class="stat-label">{{ ep.label }}</span>
+        <span class="stat-count">{{ statsEpoques[ep.label] || 0 }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtres -->
+  <div class="filtres-carte">
+    <span class="filtres-label">ðŸ” Filtrer par Ã©poque :</span>
+    <div class="filtres-btns">
+      <button
+        *ngFor="let ep of epoques"
+        class="filtre-btn"
+        [class.actif]="epoqueActive === ep.label"
+        [style.--c]="ep.couleur || '#888'"
+        (click)="filtrerEpoque(ep.label)">
+        {{ ep.label }}
+        <span class="filtre-count" *ngIf="ep.label !== 'Toutes'">
+          {{ statsEpoques[ep.label] || 0 }}
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Chargement -->
+  <div class="loading-carte" *ngIf="chargement">
+    <div class="loading-spinner">ðŸª™</div>
+    <p>Chargement des monnaies depuis MariaDB...</p>
+  </div>
+
+  <!-- Carte -->
+  <div class="map-container">
+    <div id="historical-map"></div>
+
+    <!-- LÃ©gende sur la carte -->
+    <div class="map-legend-overlay">
+      <div class="legend-titre">LÃ©gende</div>
+      <div class="legend-item" *ngFor="let ep of epoques.slice(1)">
+        <span class="legend-dot" [style.background]="ep.couleur"></span>
+        <span>{{ ep.label }}</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+=== C:\Users\Alpha\asma\src\app\carte\carte.ts ===
+import { Component, AfterViewInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import * as L from 'leaflet';
+
+interface ArcheoCoin {
+  id: string;
+  nom: string;
+  epoque: 'Punique' | 'Romaine' | 'Byzantine' | 'Islamique' | 'Numide';
+  materiau: string;
+  latitude: number;
+  longitude: number;
+  description: string;
+  annee: string;
+  musee: string;
+  image?: string;
+}
+
+// Interface pour les donnÃ©es Spring Boot
+interface MonnaieApi {
+  wikidataId: string;
+  nom:         string;
+  periode:     string;
+  materiau:    string;
+  region:      string;
+  description: string;
+  annee:       number;
+  collection:  string;
+  image:       string;
+  imageRevers: string;
+}
+
+@Component({
+  selector: 'app-carte',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './carte.html',
+  styleUrl: './carte.css'
+})
+export class CarteComponent implements AfterViewInit, OnDestroy {
+  private map!: L.Map;
+  private allMarkers: { marker: L.Marker; coin: ArcheoCoin }[] = [];
+
+  epoqueActive = 'Toutes';
+  chargement   = true;
+
+  epoques = [
+    { label: 'Toutes',    couleur: '' },
+    { label: 'Punique',   couleur: '#c9a84c' },
+    { label: 'Romaine',   couleur: '#c0392b' },
+    { label: 'Byzantine', couleur: '#8e44ad' },
+    { label: 'Islamique', couleur: '#27ae60' },
+    { label: 'Numide',    couleur: '#2980b9' },
+  ];
+
+  get statsEpoques() {
+    const stats: {[k: string]: number} = {};
+    this.database.forEach(c => {
+      stats[c.epoque] = (stats[c.epoque] || 0) + 1;
+    });
+    return stats;
+  }
+
+  // CoordonnÃ©es fixes par ID
+  private coords: {[id: string]: [number, number]} = {
+    'TUN001': [36.8529, 10.3233], 'TUN002': [36.8580, 10.3250],
+    'TUN003': [36.8510, 10.3210], 'TUN004': [36.8540, 10.3260],
+    'TUN005': [35.2967, 10.7061], 'TUN006': [36.8529, 10.3240],
+    'TUN007': [36.8100, 10.1800], 'TUN008': [36.5603, 8.7560],
+    'TUN009': [35.5000, 9.5000],  'TUN010': [35.8245, 10.6346],
+    'TUN011': [36.4222, 9.2202],  'TUN012': [36.8529, 10.3233],
+    'TUN013': [36.8600, 10.3200], 'TUN014': [35.6781, 10.0963],
+    'TUN015': [35.6800, 10.0950], 'TUN016': [35.5047, 11.0622],
+    'TUN017': [36.8192, 10.1658], 'TUN018': [36.8000, 10.1700],
+    'TUN019': [36.3600, 9.1900],  'TUN020': [36.3700, 9.2000],
+  };
+
+  private database: ArcheoCoin[] = [];
+
+  constructor(private http: HttpClient) {}
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.initMap();
+      this.chargerDepuisApi();
+    }, 100);
+  }
+
+  ngOnDestroy(): void {
+    if (this.map) this.map.remove();
+  }
+
+  // â”€â”€ Chargement depuis Spring Boot â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  private chargerDepuisApi(): void {
+    this.http.get<MonnaieApi[]>('http://localhost:8084/api/monnaies')
+      .subscribe({
+        next: (monnaies) => {
+          this.database = monnaies.map(m => this.convertir(m));
+          this.chargement = false;
+          this.loadMarkers();
+        },
+        error: () => {
+          // Fallback donnÃ©es statiques
+          this.database = this.donneesStatiques();
+          this.chargement = false;
+          this.loadMarkers();
+        }
+      });
+  }
+
+  private convertir(m: MonnaieApi): ArcheoCoin {
+    const coords = this.coords[m.wikidataId] || [35.8, 9.8];
+    return {
+      id:          m.wikidataId,
+      nom:         m.nom || 'Monnaie inconnue',
+      epoque:      this.detecterEpoque(m.periode),
+      materiau:    m.materiau || 'Inconnu',
+      latitude:    coords[0],
+      longitude:   coords[1],
+      description: m.description || '',
+      annee:       m.annee ? (m.annee < 0 ? `${Math.abs(m.annee)} av. J.-C.` : `${m.annee} ap. J.-C.`) : '',
+      musee:       m.collection || '',
+      image:       m.image || undefined,
+    };
+  }
+
+  private detecterEpoque(periode: string): 'Punique' | 'Romaine' | 'Byzantine' | 'Islamique' | 'Numide' {
+    if (!periode) return 'Romaine';
+    const p = periode.toLowerCase();
+    if (p.includes('punique') || p.includes('carthage')) return 'Punique';
+    if (p.includes('romaine') || p.includes('romain'))   return 'Romaine';
+    if (p.includes('byzantine') || p.includes('byzant')) return 'Byzantine';
+    if (p.includes('islamique') || p.includes('aghlabide') || p.includes('fatimide') || p.includes('hafside')) return 'Islamique';
+    if (p.includes('numide') || p.includes('numidie'))   return 'Numide';
+    return 'Romaine';
+  }
+
+  private getCouleur(epoque: string): string {
+    const map: {[k: string]: string} = {
+      'Punique':   '#c9a84c', 'Romaine':   '#c0392b',
+      'Byzantine': '#8e44ad', 'Islamique': '#27ae60', 'Numide': '#2980b9',
+    };
+    return map[epoque] || '#888';
+  }
+
+  private getSymbole(epoque: string): string {
+    const map: {[k: string]: string} = {
+      'Punique':'ðŸ›', 'Romaine':'âš”', 'Byzantine':'âœ', 'Islamique':'â˜ª', 'Numide':'ðŸ—º',
+    };
+    return map[epoque] || 'ðŸª™';
+  }
+
+  private initMap(): void {
+    this.map = L.map('historical-map', { center: [35.8, 9.8], zoom: 7, zoomControl: false });
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+      subdomains: 'abcd', maxZoom: 19
+    }).addTo(this.map);
+    L.control.zoom({ position: 'bottomright' }).addTo(this.map);
+  }
+
+  private loadMarkers(): void {
+    this.database.forEach(coin => {
+      const couleur = this.getCouleur(coin.epoque);
+      const symbole = this.getSymbole(coin.epoque);
+
+      const icon = L.divIcon({
+        className: '',
+        html: `<div class="coin-marker" style="--c:${couleur}">
+                 <div class="coin-marker-pulse"></div>
+                 <div class="coin-marker-dot">${symbole}</div>
+               </div>`,
+        iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -22]
+      });
+
+      // âœ… Image depuis MariaDB
+      const imgHtml = coin.image
+        ? `<img src="${coin.image}" class="popup-img" onerror="this.style.display='none'" />`
+        : `<div class="popup-no-img">ðŸª™</div>`;
+
+      const popup = `
+        <div class="moneta-popup">
+          ${imgHtml}
+          <div class="popup-epoque" style="background:${couleur}">${symbole} ${coin.epoque}</div>
+          <h3 class="popup-nom">${coin.nom}</h3>
+          <div class="popup-meta">
+            <span>ðŸ“… ${coin.annee}</span>
+            <span>âš—ï¸ ${coin.materiau}</span>
+          </div>
+          <p class="popup-desc">${coin.description}</p>
+          <div class="popup-musee">ðŸ›ï¸ ${coin.musee}</div>
+          <div class="popup-id">${coin.id}</div>
+        </div>`;
+
+      const marker = L.marker([coin.latitude, coin.longitude], { icon })
+        .addTo(this.map)
+        .bindPopup(popup, { maxWidth: 280, className: 'moneta-popup-wrapper' });
+
+      this.allMarkers.push({ marker, coin });
+    });
+  }
+
+  filtrerEpoque(epoque: string): void {
+    this.epoqueActive = epoque;
+    this.allMarkers.forEach(({ marker, coin }) => {
+      if (epoque === 'Toutes' || coin.epoque === epoque) {
+        marker.addTo(this.map);
+      } else {
+        marker.remove();
+      }
+    });
+  }
+
+  // â”€â”€ Fallback donnÃ©es statiques â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  private donneesStatiques(): ArcheoCoin[] {
+    return [
+      { id:'TUN001', nom:'StatÃ¨re d\'Or de Carthage',    epoque:'Punique',   materiau:'Or',     latitude:36.8529, longitude:10.3233, annee:'350 av. J.-C.', musee:'MusÃ©e de Carthage',  description:'Symbole du pouvoir punique.', image:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/BMC_Carthage_4.jpg/120px-BMC_Carthage_4.jpg' },
+      { id:'TUN002', nom:'Shekel d\'Argent de Carthage', epoque:'Punique',   materiau:'Argent', latitude:36.8580, longitude:10.3250, annee:'260 av. J.-C.', musee:'MusÃ©e du Bardo',     description:'FrappÃ©e pendant les guerres puniques.', image:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Carthaginiansilvershekel.jpg/120px-Carthaginiansilvershekel.jpg' },
+      { id:'TUN014', nom:'Dinar Aghlabide d\'Or',        epoque:'Islamique', materiau:'Or',     latitude:35.6781, longitude:10.0963, annee:'850 ap. J.-C.', musee:'MusÃ©e de Kairouan',  description:'FrappÃ©e par la dynastie aghlabide Ã  Kairouan.' },
+      { id:'TUN011', nom:'Denier de Thugga',             epoque:'Numide',    materiau:'Argent', latitude:36.4222, longitude:9.2202,  annee:'150 av. J.-C.', musee:'MusÃ©e de Dougga',    description:'Site UNESCO, chef-lieu numide puis ville romaine.' },
+      { id:'TUN005', nom:'Denier de Thysdrus',           epoque:'Romaine',   materiau:'Argent', latitude:35.2967, longitude:10.7061, annee:'238 ap. J.-C.', musee:'MusÃ©e de Sousse',    description:'FrappÃ©e Ã  El Djem, cÃ©lÃ¨bre pour son amphithÃ©Ã¢tre.' },
+      { id:'TUN012', nom:'Follis Byzantin de Carthage',  epoque:'Byzantine', materiau:'Bronze', latitude:36.8529, longitude:10.3233, annee:'620 ap. J.-C.', musee:'MusÃ©e de Carthage',  description:'FrappÃ©e avant la conquÃªte arabe.' },
+    ];
+  }
+}
+
+=== C:\Users\Alpha\asma\src\app\chatbot\chatbot.css ===
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+/* â”€â”€ BOUTON FLOTTANT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.chatbot-trigger {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(201, 168, 76, 0.5);
+}
+
+.chatbot-trigger:hover { transform: scale(1.1); }
+
+.trigger-glow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,168,76,0.3) 0%, transparent 70%);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { transform: scale(1);   opacity: 0.7; }
+  50%       { transform: scale(1.3); opacity: 0.3; }
+}
+
+.trigger-icon {
+  position: absolute;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  object-fit: cover;
+  z-index: 1;
+  border: 2px solid #c9a84c;
+}
+
+.trigger-overlay-x {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.45);
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.notification-dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 13px;
+  height: 13px;
+  background: #c0392b;
+  border-radius: 50%;
+  border: 2px solid white;
+  z-index: 3;
+  animation: bounce 0.5s ease infinite alternate;
+}
+
+@keyframes bounce {
+  from { transform: scale(1);   }
+  to   { transform: scale(1.3); }
+}
+
+/* â”€â”€ FENETRE DE CHAT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.chatbot-window {
+  position: fixed;
+  bottom: 100px;
+  right: 28px;
+  width: 340px;
+  height: 480px;
+  background: #fdf8f0;
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25), 0 0 0 1px rgba(201,168,76,0.3);
+  display: flex;
+  flex-direction: column;
+  z-index: 9998;
+  overflow: hidden;
+  transform: scale(0.8) translateY(20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.chatbot-window.open {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* â”€â”€ HEADER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.chat-header {
+  background: linear-gradient(135deg, #2c1810, #4a2c1a);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 2px solid #c9a84c;
+  flex-shrink: 0;
+}
+
+.header-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #c9a84c;
+  flex-shrink: 0;
+}
+
+.header-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.header-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.header-info h3 {
+  font-family: 'Cinzel', serif;
+  color: #c9a84c;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.header-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  background: #27ae60;
+  border-radius: 50%;
+  animation: pulse-green 2s ease infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse-green {
+  0%, 100% { opacity: 1;   }
+  50%       { opacity: 0.4; }
+}
+
+.status-text {
+  font-family: 'Crimson Text', serif;
+  color: rgba(255,255,255,0.55);
+  font-size: 11px;
+}
+
+.header-close {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  font-size: 15px;
+  cursor: pointer;
+  padding: 4px 7px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.header-close:hover {
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+/* â”€â”€ MESSAGES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: linear-gradient(180deg, #fdf8f0 0%, #f5ede0 100%);
+}
+
+.chat-messages::-webkit-scrollbar       { width: 3px; }
+.chat-messages::-webkit-scrollbar-track { background: transparent; }
+.chat-messages::-webkit-scrollbar-thumb { background: #c9a84c; border-radius: 2px; }
+
+.bot-message {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  animation: slide-in-left 0.3s ease;
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.message-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid rgba(201,168,76,0.4);
+}
+
+.message-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.message-bubble {
+  max-width: 82%;
+  padding: 9px 12px;
+  border-radius: 14px;
+}
+
+.bot-bubble {
+  background: white;
+  border: 1px solid rgba(201,168,76,0.2);
+  border-bottom-left-radius: 3px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.bot-bubble p {
+  font-family: 'Crimson Text', serif;
+  font-size: 13px;
+  color: #3a2510;
+  margin: 0;
+  line-height: 1.55;
+}
+
+.user-message {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  justify-content: flex-end;
+  animation: slide-in-right 0.3s ease;
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.user-bubble {
+  background: linear-gradient(135deg, #c9a84c, #8b6914);
+  border-bottom-right-radius: 3px;
+}
+
+.user-bubble p {
+  font-family: 'Crimson Text', serif;
+  font-size: 13px;
+  color: white;
+  margin: 0;
+  line-height: 1.55;
+}
+
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c0392b, #8b0000);
+  color: white;
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.message-time {
+  display: block;
+  font-size: 10px;
+  color: rgba(0,0,0,0.3);
+  margin-top: 3px;
+  text-align: right;
+}
+
+.user-bubble .message-time { color: rgba(255,255,255,0.6); }
+
+/* Typing dots */
+.typing-dots { display: flex; gap: 4px; padding: 2px 0; }
+.typing-dots span {
+  width: 7px; height: 7px;
+  background: #c9a84c;
+  border-radius: 50%;
+  animation: typing 1.4s ease infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+  0%, 60%, 100% { transform: translateY(0);   opacity: 0.4; }
+  30%            { transform: translateY(-5px); opacity: 1;   }
+}
+
+/* â”€â”€ WELCOME FORM â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.welcome-inputs {
+  display: flex;
+  gap: 7px;
+  margin-top: 8px;
+  padding-left: 36px;
+}
+
+.welcome-input {
+  flex: 1;
+  padding: 9px 12px;
+  border: 1px solid rgba(201,168,76,0.4);
+  border-radius: 18px;
+  background: white;
+  font-family: 'Crimson Text', serif;
+  font-size: 13px;
+  color: #3a2510;
+  outline: none;
+}
+
+.welcome-input:focus {
+  border-color: #c9a84c;
+  box-shadow: 0 0 0 2px rgba(201,168,76,0.15);
+}
+
+.welcome-btn {
+  padding: 9px 14px;
+  background: linear-gradient(135deg, #c9a84c, #8b6914);
+  color: white;
+  border: none;
+  border-radius: 18px;
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.welcome-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 3px 10px rgba(201,168,76,0.4);
+}
+
+/* â”€â”€ SUGGESTIONS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.quick-suggestions {
+  padding: 6px 10px;
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  background: rgba(201,168,76,0.05);
+  border-top: 1px solid rgba(201,168,76,0.15);
+  flex-shrink: 0;
+}
+
+.quick-suggestions::-webkit-scrollbar { display: none; }
+
+.suggestion-chip {
+  padding: 5px 10px;
+  background: white;
+  border: 1px solid rgba(201,168,76,0.4);
+  border-radius: 16px;
+  font-family: 'Crimson Text', serif;
+  font-size: 11px;
+  color: #8b6914;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.suggestion-chip:hover {
+  background: #c9a84c;
+  color: white;
+  border-color: #c9a84c;
+}
+
+/* â”€â”€ INPUT ZONE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.chat-input-area {
+  padding: 10px 12px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: white;
+  border-top: 1px solid rgba(201,168,76,0.2);
+  flex-shrink: 0;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 9px 14px;
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 20px;
+  background: #fdf8f0;
+  font-family: 'Crimson Text', serif;
+  font-size: 13px;
+  color: #3a2510;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.chat-input:focus {
+  border-color: #c9a84c;
+  box-shadow: 0 0 0 2px rgba(201,168,76,0.15);
+}
+
+.chat-input:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.send-btn {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, #c9a84c, #8b6914);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.send-btn:hover:not(:disabled) {
+  transform: scale(1.1);
+  box-shadow: 0 3px 10px rgba(201,168,76,0.5);
+}
+
+.send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* â”€â”€ RESPONSIVE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+@media (max-width: 480px) {
+  .chatbot-window {
+    width: calc(100vw - 16px);
+    right: 8px;
+    bottom: 88px;
+    height: 65vh;
+  }
+  .chatbot-trigger { bottom: 18px; right: 18px; }
+}
+
+=== C:\Users\Alpha\asma\src\app\chatbot\chatbot.html ===
+<!-- Bouton flottant -->
+<div class="chatbot-trigger" (click)="toggleChat()">
+  <div class="trigger-glow"></div>
+  <img src="chatbot-icon.jpg" alt="MONETA IA" class="trigger-icon"/>
+  <span class="trigger-overlay-x" *ngIf="isOpen">âœ•</span>
+  <div class="notification-dot" *ngIf="!isOpen && hasNewMessage"></div>
+</div>
+
+<!-- FenÃªtre de chat -->
+<div class="chatbot-window" [class.open]="isOpen">
+
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="header-avatar">
+      <img src="chatbot-icon.jpg" alt="MONETA IA"/>
+    </div>
+    <div class="header-info">
+      <h3>MONETA IA</h3>
+      <div class="header-subtitle">
+        <span class="status-dot"></span>
+        <span class="status-text">Assistant monnaies tunisiennes</span>
+      </div>
+    </div>
+    <button class="header-close" (click)="toggleChat()">âœ•</button>
+  </div>
+
+  <!-- Messages -->
+  <div class="chat-messages" #messagesContainer>
+
+    <!-- Formulaire prÃ©nom -->
+    <div class="welcome-form" *ngIf="showWelcomeForm">
+      <div class="bot-message">
+        <div class="message-avatar">
+          <img src="chatbot-icon.jpg" alt="bot"/>
+        </div>
+        <div class="message-bubble bot-bubble">
+          <p>Bienvenue sur <strong>MONETA</strong> ! ðŸª™<br/>
+          Je suis votre assistant expert en monnaies tunisiennes.<br/><br/>
+          Pour commencer, quel est votre prÃ©nom ?</p>
+        </div>
+      </div>
+      <div class="welcome-inputs">
+        <input
+          type="text"
+          placeholder="Votre prÃ©nom..."
+          [(ngModel)]="userPrenom"
+          (keyup.enter)="submitWelcome()"
+          class="welcome-input"
+        />
+        <button class="welcome-btn" (click)="submitWelcome()">â†’</button>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div *ngFor="let msg of messages" class="message-wrapper">
+
+      <div class="bot-message" *ngIf="msg.role === 'bot'">
+        <div class="message-avatar">
+          <img src="chatbot-icon.jpg" alt="bot"/>
+        </div>
+        <div class="message-bubble bot-bubble">
+          <p [innerHTML]="msg.content"></p>
+          <span class="message-time">{{ msg.time }}</span>
+        </div>
+      </div>
+
+      <div class="user-message" *ngIf="msg.role === 'user'">
+        <div class="message-bubble user-bubble">
+          <p>{{ msg.content }}</p>
+          <span class="message-time">{{ msg.time }}</span>
+        </div>
+        <div class="user-avatar">{{ userPrenom[0]?.toUpperCase() }}</div>
+      </div>
+
+    </div>
+
+    <!-- Typing -->
+    <div class="bot-message" *ngIf="isTyping">
+      <div class="message-avatar">
+        <img src="chatbot-icon.jpg" alt="bot"/>
+      </div>
+      <div class="message-bubble bot-bubble">
+        <div class="typing-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Suggestions -->
+  <div class="quick-suggestions" *ngIf="showSuggestions && !showWelcomeForm">
+    <button class="suggestion-chip" *ngFor="let s of suggestions" (click)="sendSuggestion(s)">
+      {{ s }}
+    </button>
+  </div>
+
+  <!-- Input -->
+  <div class="chat-input-area">
+    <input
+      type="text"
+      [(ngModel)]="currentMessage"
+      (keyup.enter)="sendMessage()"
+      placeholder="Posez votre question..."
+      class="chat-input"
+      [disabled]="isTyping || showWelcomeForm"
+    />
+    <button class="send-btn" (click)="sendMessage()"
+      [disabled]="isTyping || showWelcomeForm || !currentMessage.trim()">
+      âž¤
+    </button>
+  </div>
+
+</div>
+
+=== C:\Users\Alpha\asma\src\app\chatbot\chatbot.ts ===
+import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { timeout } from 'rxjs/operators';
+
+interface Message {
+  role: 'user' | 'bot';
+  content: string;
+  time: string;
+}
+
+@Component({
+  selector: 'app-chatbot',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './chatbot.html',
+  styleUrl: './chatbot.css'
+})
+export class ChatbotComponent implements OnInit, AfterViewChecked {
+
+  @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
+
+  isOpen          = false;
+  showWelcomeForm = true;
+  isTyping        = false;
+  hasNewMessage   = false;
+  showSuggestions = true;
+  shouldScroll    = false;
+
+  userPrenom     = '';
+  currentMessage = '';
+  messages: Message[] = [];
+
+  suggestions = [
+    'ðŸ›ï¸ Monnaies puniques',
+    'âš”ï¸ PÃ©riode romaine',
+    'â˜ªï¸ Dinars islamiques',
+    'ðŸ—ºï¸ Numidie',
+  ];
+
+  private apiUrl = 'http://localhost:5000/api/chat';
+
+  constructor(
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {}
+
+  ngAfterViewChecked(): void {
+    if (this.shouldScroll) {
+      this.scrollToBottom();
+      this.shouldScroll = false;
+    }
+  }
+
+  toggleChat(): void {
+    this.isOpen = !this.isOpen;
+    this.hasNewMessage = false;
+    if (this.isOpen) {
+      this.shouldScroll = true;
+    }
+    this.cdr.detectChanges();
+  }
+
+  submitWelcome(): void {
+    if (!this.userPrenom.trim()) return;
+    this.showWelcomeForm = false;
+    this.showSuggestions = true;
+    this.addBotMessage(
+      `Bonjour <strong>${this.userPrenom}</strong> ! ðŸ‘‹<br><br>
+       Je suis <strong>MONETA IA</strong>, votre guide expert en monnaies tunisiennes anciennes.<br><br>
+       Je peux vous renseigner sur les monnaies puniques de Carthage, romaines, byzantines, islamiques et numides.<br><br>
+       Que souhaitez-vous savoir ? ðŸª™`
+    );
+    this.cdr.detectChanges();
+  }
+
+  sendMessage(): void {
+    if (!this.currentMessage.trim() || this.isTyping) return;
+    const msg = this.currentMessage.trim();
+    this.addUserMessage(msg);
+    this.currentMessage  = '';
+    this.showSuggestions = false;
+    this.cdr.detectChanges();
+    this.callRAGApi(msg);
+  }
+
+  sendSuggestion(suggestion: string): void {
+    this.addUserMessage(suggestion);
+    this.showSuggestions = false;
+    this.cdr.detectChanges();
+    const msg = suggestion.replace(/^[^\s]+\s/, '');
+    this.callRAGApi(msg);
+  }
+
+  private callRAGApi(question: string): void {
+    this.isTyping     = true;
+    this.shouldScroll = true;
+    this.cdr.detectChanges();
+
+    this.http.post<any>(this.apiUrl, {
+      question: question,
+      prenom:   this.userPrenom
+    }).pipe(
+      timeout(60000)
+    ).subscribe({
+      next: (response) => {
+        this.isTyping        = false;
+        this.showSuggestions = true;
+        this.addBotMessage(response.answer || 'Je n\'ai pas trouvÃ© de rÃ©ponse.');
+        this.shouldScroll = true;
+        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.shouldScroll = true;
+          this.cdr.detectChanges();
+        }, 200);
+      },
+      error: () => {
+        this.isTyping        = false;
+        this.showSuggestions = true;
+        this.addBotMessage(this.getFallbackResponse(question));
+        this.shouldScroll = true;
+        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.shouldScroll = true;
+          this.cdr.detectChanges();
+        }, 200);
+      }
+    });
+  }
+
+  private getFallbackResponse(question: string): string {
+    const q = question.toLowerCase();
+    if (q.includes('punique') || q.includes('carthage')) {
+      return `Les monnaies <strong>puniques de Carthage</strong> ðŸ›ï¸ sont parmi les plus anciennes de Tunisie.<br><br>
+              Le <strong>StatÃ¨re d'Or</strong> reprÃ©sente la dÃ©esse Tanit et un cheval â€” symboles du pouvoir carthaginois.`;
+    }
+    if (q.includes('romain')) {
+      return `La pÃ©riode <strong>romaine</strong> en Tunisie (146 av. J.-C. - 439 ap. J.-C.) âš”ï¸<br><br>
+              Des villes comme <strong>Hadrumetum (Sousse)</strong> et <strong>Thysdrus (El Djem)</strong> frappaient leurs propres bronzes.`;
+    }
+    if (q.includes('islamique') || q.includes('dinar') || q.includes('aghlabide')) {
+      return `Les <strong>Aghlabides</strong> (800-909) frappaient des dinars d'or Ã  Kairouan â˜ªï¸<br><br>
+              avec des inscriptions coraniques en calligraphie coufique.`;
+    }
+    if (q.includes('numide') || q.includes('massinissa')) {
+      return `Le roi <strong>Massinissa</strong> de Numidie ðŸ—ºï¸ a frappÃ© des bronzes avec son portrait<br><br>
+              et un cheval au galop â€” symbole de la puissance numide.`;
+    }
+    return `Je peux vous renseigner sur les monnaies tunisiennes ðŸª™ :<br><br>
+            ðŸ›ï¸ <strong>Punique</strong> â€” Carthage<br>
+            âš”ï¸ <strong>Romaine</strong> â€” Provinces d'Afrique<br>
+            âœï¸ <strong>Byzantine</strong> â€” Exarchat d'Afrique<br>
+            â˜ªï¸ <strong>Islamique</strong> â€” Aghlabides, Fatimides, Hafsides<br>
+            ðŸ—ºï¸ <strong>Numide</strong> â€” Massinissa, Micipsa<br><br>
+            Quelle pÃ©riode vous intÃ©resse ?`;
+  }
+
+  private addBotMessage(content: string): void {
+    this.messages.push({ role: 'bot', content, time: this.getTime() });
+    this.shouldScroll = true;
+    if (!this.isOpen) this.hasNewMessage = true;
+  }
+
+  private addUserMessage(content: string): void {
+    this.messages.push({ role: 'user', content, time: this.getTime() });
+    this.shouldScroll = true;
+  }
+
+  private getTime(): string {
+    const now = new Date();
+    return `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+  }
+
+  private scrollToBottom(): void {
+    try {
+      this.messagesContainer.nativeElement.scrollTop =
+        this.messagesContainer.nativeElement.scrollHeight;
+    } catch (e) {}
+  }
+}
+
+=== C:\Users\Alpha\asma\src\app\forgot-password\forgot-password.css ===
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-card {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+/* --- LOGO SIZE FIX --- */
+.login-logo {
+  height: 80px;      /* Fixed height */
+  width: 80px;       /* Fixed width */
+  border-radius: 50%; /* Perfect circle */
+  object-fit: cover;  /* Keeps the owl centered and not stretched */
+  border: 3px solid #dd0031; /* Moneta Red border */
+  margin: 0 auto 20px auto;
+  display: block;
+}
+
+.login-header h2 {
+  color: #1c1e21;
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
+.login-header p {
+  color: #606770;
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
+.form-group {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #4b4f56;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #dddfe2;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #dd0031;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.login-button:hover {
+  background-color: #b30027;
+}
+
+.red-link {
+  color: #dd0031;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-footer {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+=== C:\Users\Alpha\asma\src\app\forgot-password\forgot-password.html ===
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <img src="logo.png" alt="Moneta Logo" class="login-logo">
+      <h2>Mot de passe oubliÃ©</h2>
+      <p>Entrez votre e-mail pour rÃ©initialiser votre mot de passe.</p>
+    </div>
+
+    <form>
+      <div class="form-group">
+        <label for="email">Adresse E-mail</label>
+        <input type="email" id="email" placeholder="nom@exemple.com" required>
+      </div>
+      <button type="submit" class="login-button">RÃ©initialiser</button>
+    </form>
+
+    <div class="login-footer">
+      <a routerLink="/login" class="red-link">Retour Ã  la connexion</a>
+    </div>
+  </div>
+</div>
+
+=== C:\Users\Alpha\asma\src\app\forgot-password\forgot-password.ts ===
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+
+@Component({
+  selector: 'app-forgot-password',
+  standalone: true,
+  imports: [CommonModule, RouterLink],
+  templateUrl: './forgot-password.html',
+  styleUrl: './forgot-password.css'
+})
+export class ForgotPasswordComponent {
+  // Logic for password recovery can be added here later
+  constructor() {}
+
+  onReset() {
+    console.log('E-mail de rÃ©initialisation envoyÃ© !');
+  }
+}
+
+=== C:\Users\Alpha\asma\src\app\home\home.css ===
+/* â”€â”€ Layout â”€â”€ */
+.dashboard-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f7f9;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SIDEBAR
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.sidebar {
+  width: 260px;
+  background-color: #1a1c1e;
+  color: white;
+  position: fixed;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 15px rgba(0,0,0,0.2);
+  z-index: 1001;
+}
+
+.sidebar-header {
+  padding: 25px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #dd0031;
+}
+
+.sidebar-logo {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  border: 2px solid white;
+  object-fit: cover;
+}
+
+.brand-name {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* â”€â”€ User Card â”€â”€ */
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.user-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #dd0031;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-role {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+}
+
+/* â”€â”€ Role colors â”€â”€ */
+.role-admin       { background: rgba(255,215,0,0.15);  color: #ffd700; border: 1px solid rgba(255,215,0,0.3); }
+.role-superviseur { background: rgba(52,152,219,0.15); color: #3498db; border: 1px solid rgba(52,152,219,0.3); }
+.role-visiteur    { background: rgba(46,204,113,0.15); color: #2ecc71; border: 1px solid rgba(46,204,113,0.3); }
+
+/* â”€â”€ Nav â”€â”€ */
+.sidebar-nav { flex-grow: 1; padding: 15px 0; overflow-y: auto; }
+
+.menu-category {
+  padding: 20px 25px 5px;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #5b6269;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 14px 25px;
+  color: #a0a0a0;
+  text-decoration: none;
+  transition: 0.3s;
+  font-size: 14px;
+  font-weight: 500;
+  border-left: 4px solid transparent;
+  gap: 10px;
+}
+
+.nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
+
+.nav-item.active {
+  background: rgba(221,0,49,0.1);
+  color: white;
+  border-left: 4px solid #dd0031;
+}
+
+/* â”€â”€ Footer â”€â”€ */
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.user-email {
+  font-size: 11px;
+  color: #5b6269;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: white;
+  background: rgba(221,0,49,0.15);
+  border: 1px solid rgba(221,0,49,0.3);
+  padding: 11px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: 600;
+  font-size: 14px;
+  width: 100%;
+}
+
+.logout-btn:hover { background: #dd0031; border-color: #dd0031; }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   MAIN CONTENT
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.main-content {
+  margin-left: 260px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-filter-area { padding: 25px 30px; }
+
+.filter-card {
+  background: white;
+  border-radius: 15px;
+  padding: 20px 25px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  border: 1px solid #eef0f2;
+}
+
+.filter-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f4f6f8;
+  gap: 20px;
+}
+
+.filter-title { font-weight: 700; color: #333; font-size: 14px; white-space: nowrap; }
+
+.smart-search-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #f8f9fa;
+  border: 1px solid #dddfe2;
+  border-radius: 25px;
+  padding: 8px 20px;
+  width: 200px;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-input-wrapper:focus-within {
+  width: 600px;
+  border-color: #dd0031;
+  background: white;
+  box-shadow: 0 8px 25px rgba(221,0,49,0.15);
+}
+
+.search-main-icon { font-size: 16px; margin-right: 12px; color: #888; }
+
+.search-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  color: #333;
+}
+
+.ai-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  margin-left: 10px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 0.6;
+}
+
+.ai-toggle-btn:hover { background: #f0f2f5; opacity: 1; }
+
+.ai-active .search-input-wrapper {
+  border-color: #8e44ad;
+  background: rgba(142,68,173,0.02);
+}
+
+.ai-active .ai-toggle-btn {
+  background: #8e44ad;
+  opacity: 1;
+  box-shadow: 0 0 12px rgba(142,68,173,0.4);
+}
+
+.ai-active .ai-icon { filter: brightness(0) invert(1); }
+
+.filter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.filter-group { display: flex; flex-direction: column; gap: 6px; }
+.filter-group label { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; }
+.filter-group select,
+.filter-group input { padding: 10px 12px; border: 1px solid #dddfe2; border-radius: 8px; font-size: 13px; }
+.range-inputs { display: flex; gap: 5px; }
+.range-inputs input { width: 50%; }
+
+.filter-actions { display: flex; gap: 10px; }
+.btn-filter { background: #dd0031; color: white; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; }
+.btn-reset { background: #f0f2f5; color: #4b4f56; border: 1px solid #dddfe2; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+
+/* â”€â”€ Content â”€â”€ */
+.content-view { padding: 0 30px 30px; position: relative; }
+
+.welcome-banner {
+  background: linear-gradient(135deg, #1a1c1e 0%, #2c3e50 100%);
+  border-radius: 20px;
+  padding: 60px;
+  color: white;
+  text-align: center;
+}
+
+.welcome-banner h1 { font-size: 2rem; margin-bottom: 10px; }
+.welcome-banner p  { color: #a0a0a0; margin-bottom: 20px; }
+
+.welcome-role-badge {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 18px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 10px;
+}
+
+=== C:\Users\Alpha\asma\src\app\home\home.html ===
+<div class="dashboard-wrapper">
+  <aside class="sidebar">
+
+    <!-- â”€â”€ Header â”€â”€ -->
+    <div class="sidebar-header">
+      <img src="logo.png" alt="Moneta Logo" class="sidebar-logo" onerror="this.style.display='none'">
+      <span class="brand-name">Moneta</span>
+    </div>
+
+    <!-- â”€â”€ User Info Card â”€â”€ -->
+    <div class="user-card">
+      <div class="user-avatar">{{ auth.getUsername()?.charAt(0)?.toUpperCase() }}</div>
+      <div class="user-info">
+        <span class="user-name">{{ auth.getUsername() }}</span>
+        <span class="user-role" [class]="getRoleClass()">{{ getRoleLabel() }}</span>
+      </div>
+    </div>
+
+    <!-- â”€â”€ Navigation â”€â”€ -->
+    <nav class="sidebar-nav">
+      <div class="menu-category">Exploration</div>
+      <a routerLink="/cartes" routerLinkActive="active" class="nav-item">
+        <span class="icon">ðŸ“</span> Carte Interactive
+      </a>
+      <a routerLink="/monnaies" routerLinkActive="active" class="nav-item">
+        <span class="icon">ðŸª™</span> Monnaies
+      </a>
+
+      <!-- â”€â”€ Admin only â”€â”€ -->
+      @if (auth.isAdmin()) {
+        <div class="menu-category">Administration</div>
+        <a routerLink="/users" routerLinkActive="active" class="nav-item">
+          <span class="icon">ðŸ‘¥</span> Gestion Utilisateurs
+        </a>
+      }
+    </nav>
+
+    <!-- â”€â”€ Footer : Logout â”€â”€ -->
+    <div class="sidebar-footer">
+      <div class="user-email">{{ auth.getEmail() }}</div>
+      <button class="logout-btn" (click)="seDeconnecter()">
+        <span class="icon">ðŸšª</span> Se dÃ©connecter
+      </button>
+    </div>
+
+  </aside>
+
+  <main class="main-content">
+    <header class="top-filter-area">
+      <div class="filter-card">
+        <div class="filter-card-header">
+          <span class="filter-title">ðŸ” Filtres de Recherche AvancÃ©s</span>
+
+          <div class="smart-search-container" [class.ai-active]="isAIMode">
+            <div class="search-input-wrapper">
+              <span class="search-main-icon">ðŸ”</span>
+              <input
+                type="text"
+                [placeholder]="isAIMode ? 'Recherche IA Moneta activÃ©e...' : 'Recherche...'"
+                class="search-input"
+                (focus)="onSearchFocus()"
+                (blur)="onSearchBlur()"/>
+              <button type="button" class="ai-toggle-btn" (click)="toggleAIMode()" title="Moneta Intelligence ArchÃ©ologique">
+                <span class="ai-icon">âœ¨</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="filter-actions">
+            <button class="btn-reset">RÃ©initialiser</button>
+            <button class="btn-filter">Appliquer</button>
+          </div>
+        </div>
+
+        <div class="filter-grid">
+          <div class="filter-group">
+            <label>PÃ©riode Historique</label>
+            <select>
+              <option>Antique</option>
+              <option>Romaine</option>
+              <option>Byzantine</option>
+              <option>Islamique</option>
+              <option>MÃ©diÃ©vale</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>MatÃ©riau</label>
+            <select>
+              <option>Or</option>
+              <option>Argent</option>
+              <option>Bronze</option>
+              <option>Cuivre</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Lieu / RÃ©gion</label>
+            <input type="text" placeholder="Ex: Carthage...">
+          </div>
+          <div class="filter-group">
+            <label>Intervalle d'AnnÃ©es</label>
+            <div class="range-inputs">
+              <input type="number" placeholder="De">
+              <input type="number" placeholder="Ã€">
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="content-view">
+      <router-outlet></router-outlet>
+
+      @if (isWelcomeVisible()) {
+        <div class="welcome-banner">
+          <div class="banner-content">
+            <h1>Bienvenue, {{ auth.getUsername() }} ðŸ‘‹</h1>
+            <p>Utilisez le menu latÃ©ral pour naviguer et les filtres pour affiner vos donnÃ©es.</p>
+            <div class="welcome-role-badge" [class]="getRoleClass()">
+              {{ getRoleLabel() }}
+            </div>
+          </div>
+        </div>
+      }
+    </section>
+  </main>
+</div>
+
+=== C:\Users\Alpha\asma\src\app\home\home.ts ===
+// ============================================================
+// home.ts  â€”  Projet MONETA
+// ============================================================
+
+import { Component }                                        from '@angular/core';
+import { CommonModule }                                     from '@angular/common';
+import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router';
+import { AuthService }                                      from '../auth.service';
+
+@Component({
+  selector:    'app-home',
+  standalone:  true,
+  imports:     [CommonModule, RouterLink, RouterLinkActive, RouterOutlet],
+  templateUrl: './home.html',
+  styleUrl:    './home.css'
+})
+export class HomeComponent {
+
+  isAIMode        = false;
+  isSearchFocused = false;
+
+  constructor(public auth: AuthService, private router: Router) {}
+
+  toggleAIMode(): void {
+    this.isAIMode = !this.isAIMode;
+  }
+
+  onSearchFocus(): void { this.isSearchFocused = true;  }
+  onSearchBlur():  void { this.isSearchFocused = false; }
+
+  isWelcomeVisible(): boolean {
+    return this.router.url === '/' || this.router.url === '/home';
+  }
+
+  seDeconnecter(): void {
+    this.auth.logout();
+  }
+
+  // Returns a color class based on role
+  getRoleClass(): string {
+    switch (this.auth.getRole()) {
+      case 'ADMIN':       return 'role-admin';
+      case 'SUPERVISEUR': return 'role-superviseur';
+      default:            return 'role-visiteur';
+    }
+  }
+
+  getRoleLabel(): string {
+    switch (this.auth.getRole()) {
+      case 'ADMIN':       return 'ðŸ‘‘ Admin';
+      case 'SUPERVISEUR': return 'ðŸ”§ Superviseur';
+      default:            return 'ðŸ‘ï¸ Visiteur';
+    }
+  }
+}
+
+=== C:\Users\Alpha\asma\src\app\login\login.css ===
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-card {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.login-logo {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  border: 2px solid #dd0031;
+}
+
+.login-header h2 {
+  color: #1c1e21;
+  margin-bottom: 8px;
+  font-size: 24px;
+}
+
+.login-header p {
+  color: #606770;
+  font-size: 14px;
+}
+
+/* â”€â”€ Message d'erreur â”€â”€ */
+.erreur-message {
+  background: #fff0f0;
+  border: 1px solid #ffcccc;
+  border-left: 4px solid #dd0031;
+  color: #c0392b;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 14px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #4b4f56;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #dddfe2;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #dd0031;
+  box-shadow: 0 0 0 2px rgba(221, 0, 49, 0.1);
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  font-size: 14px;
+}
+
+.red-link {
+  color: #dd0031;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.red-link:hover {
+  text-decoration: underline;
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #dd0031;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.login-button:hover:not(:disabled) {
+  background-color: #b30027;
+}
+
+.login-button:disabled {
+  background-color: #e8a0a8;
+  cursor: not-allowed;
+}
+
+.login-footer {
+  margin-top: 25px;
+  text-align: center;
+  font-size: 14px;
+  color: #606770;
+}
+
+.back-home {
+  display: block;
+  margin-top: 15px;
+  color: #606770;
+  text-decoration: none;
+}
+
+.back-home:hover {
+  color: #1c1e21;
+}
+
+=== C:\Users\Alpha\asma\src\app\login\login.html ===
+<div class="login-container">
+  <div class="login-card">
+
+    <div class="login-header">
+      <img src="logo.png" alt="Moneta Logo" class="login-logo" onerror="this.style.display='none'">
+      <h2>Connexion Ã  Moneta</h2>
+      <p>Veuillez entrer vos identifiants pour accÃ©der Ã  votre espace.</p>
+    </div>
+
+    <!-- Message d'erreur -->
+    @if (erreur) {
+      <div class="erreur-message">
+        âš ï¸ {{ erreur }}
+      </div>
+    }
+
+    <form (ngSubmit)="seConnecter()">
+      <div class="form-group">
+        <label for="username">Nom d'utilisateur</label>
+        <input
+          type="text"
+          id="username"
+          placeholder="Votre nom d'utilisateur"
+          [(ngModel)]="username"
+          name="username"
+          required
+          autocomplete="username"/>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input
+          type="password"
+          id="password"
+          placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+          [(ngModel)]="password"
+          name="password"
+          required
+          autocomplete="current-password"/>
+      </div>
+
+      <div class="form-options">
+        <label class="remember-me">
+          <input type="checkbox"> Se souvenir de moi
+        </label>
+        <a routerLink="/forgot-password" class="red-link">Mot de passe oubliÃ© ?</a>
+      </div>
+
+      <button type="submit" class="login-button" [disabled]="chargement">
+        @if (chargement) {
+          â³ Connexion en cours...
+        } @else {
+          Se connecter
+        }
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <p>Vous n'avez pas de compte ?
+        <a routerLink="/request" class="red-link">Demander l'accÃ¨s</a>
+      </p>
+      <a routerLink="/" class="back-home">â† Retour Ã  l'accueil</a>
+    </div>
+
+  </div>
+</div>
+
+=== C:\Users\Alpha\asma\src\app\login\login.spec.ts ===
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { Login } from './login';
+
+describe('Login', () => {
+  let component: Login;
+  let fixture: ComponentFixture<Login>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [Login]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(Login);
+    component = fixture.componentInstance;
+    await fixture.whenStable();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+
+=== C:\Users\Alpha\asma\src\app\login\login.ts ===
+// ============================================================
+// login.ts  â€”  Projet MONETA
+// ============================================================
+
+import { Component }     from '@angular/core';
+import { CommonModule }  from '@angular/common';
+import { FormsModule }   from '@angular/forms';
+import { RouterLink }    from '@angular/router';
+import { Router }        from '@angular/router';
+import { AuthService }   from '../auth.service';
+
+@Component({
+  selector:    'app-login',
+  standalone:  true,
+  imports:     [CommonModule, FormsModule, RouterLink],
+  templateUrl: './login.html',
+  styleUrl:    './login.css'
+})
+export class LoginComponent {
+
+  username  = '';
+  password  = '';
+  erreur    = '';
+  chargement = false;
+
+  constructor(private auth: AuthService, private router: Router) {
+    // Si dÃ©jÃ  connectÃ© â†’ redirect direct
+    if (this.auth.isLoggedIn()) {
+      this.router.navigate(['/']);
+    }
+  }
+
+  seConnecter(): void {
+    this.erreur = '';
+
+    if (!this.username.trim() || !this.password.trim()) {
+      this.erreur = 'Veuillez remplir tous les champs.';
+      return;
+    }
+
+    this.chargement = true;
+
+    this.auth.login({ username: this.username, password: this.password }).subscribe({
+      next: () => {
+        this.chargement = false;
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        this.chargement = false;
+        if (err.status === 401) {
+          this.erreur = 'Identifiants incorrects. Veuillez rÃ©essayer.';
+        } else if (err.status === 0) {
+          this.erreur = 'Impossible de contacter le serveur.';
+        } else {
+          this.erreur = 'Une erreur est survenue. Veuillez rÃ©essayer.';
+        }
+      }
+    });
+  }
+}
+
+=== C:\Users\Alpha\asma\src\app\monnaies\monnaies.css ===
+/* ============================================================
+   monnaies.css  â€”  Galerie archÃ©ologique MONETA
+   ThÃ¨me : rouge foncÃ© + or + dÃ©coration antique
+============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+:host {
+  --rouge:    #c0392b;
+  --rouge-d:  #922b21;
+  --or:       #c9a84c;
+  --or-light: #f0d080;
+  --bg:       #f5f0e8;
+  --card:     #ffffff;
+  --dark:     #1c1c2e;
+  --text:     #2c2416;
+  --muted:    #7a6a52;
+  --border:   #ddd5c0;
+  --shadow:   0 4px 20px rgba(0,0,0,0.10);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+.monnaies-page {
+  padding: 2rem;
+  background: var(--bg);
+  min-height: 100vh;
+  font-family: 'Crimson Text', Georgia, serif;
+  color: var(--text);
+  background-image:
+    radial-gradient(ellipse at 10% 20%, rgba(201,168,76,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 80%, rgba(192,57,43,0.05) 0%, transparent 50%);
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   HERO DÃ‰CORATIF
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.page-hero {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding: 2rem 1rem;
+  border-bottom: 2px solid var(--border);
+  position: relative;
+}
+.hero-decoration { display: flex; align-items: center; gap: 0.6rem; flex: 1; }
+.hero-decoration.right { flex-direction: row-reverse; }
+.deco-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--or), transparent); }
+.deco-ornement { color: var(--or); font-size: 1.1rem; }
+.hero-center { display: flex; align-items: center; gap: 1.5rem; flex-shrink: 0; }
+.hero-logo { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--or); box-shadow: 0 0 20px rgba(201,168,76,0.3); }
+.hero-text { text-align: center; }
+.hero-titre { font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 700; color: var(--rouge); letter-spacing: 0.3em; text-shadow: 1px 1px 0 rgba(0,0,0,0.1); }
+.hero-sous-titre { font-family: 'Crimson Text', serif; font-style: italic; font-size: 1rem; color: var(--muted); margin-top: 0.2rem; letter-spacing: 0.05em; }
+.hero-separateur { display: flex; align-items: center; gap: 0.5rem; margin: 0.5rem 0; justify-content: center; }
+.sep-line { width: 40px; height: 1px; background: var(--or); }
+.sep-coin { font-size: 1rem; }
+.hero-stats { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; }
+.stat-badge { background: rgba(192,57,43,0.08); border: 1px solid rgba(192,57,43,0.2); color: var(--rouge); font-size: 0.8rem; padding: 0.2rem 0.7rem; border-radius: 999px; font-family: 'Crimson Text', serif; }
+.stat-badge.source { background: rgba(201,168,76,0.08); border-color: rgba(201,168,76,0.3); color: var(--or); }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   FILTRES
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.filtres-panel {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 1.4rem 1.6rem;
+  margin-bottom: 1.8rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--or);
+}
+.filtres-titre { font-family: 'Cinzel', serif; font-size: 0.88rem; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.1rem; letter-spacing: 0.05em; }
+.filtre-icon { color: var(--or); font-size: 1rem; }
+.btn-reset { margin-left: auto; background: none; border: 1px solid var(--border); border-radius: 8px; padding: 0.28rem 0.8rem; font-size: 0.8rem; color: var(--muted); cursor: pointer; font-family: 'Crimson Text', serif; transition: all 0.2s; }
+.btn-reset:hover { border-color: var(--rouge); color: var(--rouge); }
+.filtres-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
+.filtre-group { display: flex; flex-direction: column; gap: 0.35rem; }
+.filtre-group label { font-size: 0.7rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-family: 'Cinzel', serif; }
+.filtre-group input,
+.filtre-group select { border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 0.7rem; font-size: 0.9rem; color: var(--text); background: #faf8f4; font-family: 'Crimson Text', serif; outline: none; transition: border-color 0.2s; }
+.filtre-group input:focus,
+.filtre-group select:focus { border-color: var(--or); }
+.full-width { grid-column: 1 / -1; }
+.search-input-wrap { position: relative; }
+.search-input-wrap input { padding-left: 2.2rem; width: 100%; }
+.search-icon { position: absolute; left: 0.7rem; top: 50%; transform: translateY(-50%); font-size: 0.9rem; }
+.annees-wrap { display: flex; align-items: center; gap: 0.4rem; }
+.annees-wrap input { flex: 1; }
+.annees-sep { color: var(--muted); }
+.tags-actifs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid var(--border); }
+.tag-actif { background: rgba(192,57,43,0.1); color: var(--rouge); border: 1px solid rgba(192,57,43,0.3); border-radius: 999px; padding: 0.22rem 0.7rem; font-size: 0.8rem; cursor: pointer; font-family: 'Crimson Text', serif; }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   BARRE ACTIONS + BOUTON AJOUTER
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.actions-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.btn-ouvrir-ajout {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: linear-gradient(135deg, var(--rouge), var(--rouge-d));
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.65rem 1.4rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.25s;
+  box-shadow: 0 4px 14px rgba(192,57,43,0.3);
+}
+.btn-ouvrir-ajout:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(192,57,43,0.45);
+}
+.btn-ouvrir-ajout.ouvert {
+  background: linear-gradient(135deg, var(--muted), #5a4a38);
+  box-shadow: none;
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   FORMULAIRE D'AJOUT INLINE
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.ajout-panel {
+  background: var(--card);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--rouge);
+  box-shadow: var(--shadow);
+  margin-bottom: 1.8rem;
+  overflow: hidden;
+  animation: fadeCard 0.35s ease both;
+}
+
+.ajout-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 1.1rem 1.6rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(192,57,43,0.03);
+}
+.ajout-panel-titre {
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--rouge);
+  letter-spacing: 0.06em;
+  flex: 1;
+}
+.ajout-panel-close {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.ajout-panel-close:hover { border-color: var(--rouge); color: var(--rouge); }
+
+.ajout-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  padding: 1.4rem 1.6rem;
+}
+.ajout-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+}
+.ajout-group.span2 { grid-column: span 2; }
+.ajout-group label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.ajout-input {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.52rem 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text);
+  background: #faf8f4;
+  font-family: 'Crimson Text', serif;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+.ajout-input:focus {
+  border-color: var(--or);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+}
+.ajout-input.textarea {
+  min-height: 80px;
+  resize: vertical;
+  line-height: 1.5;
+}
+.ajout-separateur {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--or);
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+}
+.ajout-separateur::before,
+.ajout-separateur::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.ajout-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem 1.6rem 1.4rem;
+  border-top: 1px solid var(--border);
+}
+.btn-annuler-ajout {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.78rem;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.05em;
+}
+.btn-annuler-ajout:hover { border-color: var(--rouge); color: var(--rouge); }
+.btn-soumettre-ajout {
+  background: linear-gradient(135deg, var(--rouge), var(--rouge-d));
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.55rem 1.5rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  cursor: pointer;
+  transition: all 0.25s;
+  box-shadow: 0 3px 10px rgba(192,57,43,0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.btn-soumettre-ajout:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 16px rgba(192,57,43,0.45);
+}
+.btn-soumettre-ajout:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   CHARGEMENT & VIDE
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.loading-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4rem; gap: 1rem; color: var(--muted); }
+.coin-spinner { font-size: 3rem; animation: spinCoin 1.2s linear infinite; }
+@keyframes spinCoin { to { transform: rotateY(360deg); } }
+.vide-state { display: flex; flex-direction: column; align-items: center; padding: 3rem; gap: 0.8rem; color: var(--muted); font-size: 1rem; }
+.vide-state span { font-size: 2rem; }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   BARRE RÃ‰SULTATS
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.resultats-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; padding: 0 0.2rem; }
+.resultats-count { font-family: 'Cinzel', serif; font-size: 0.82rem; color: var(--muted); letter-spacing: 0.06em; }
+.tri-select { display: flex; align-items: center; gap: 0.5rem; font-size: 0.88rem; color: var(--muted); }
+.tri-select select { border: 1px solid var(--border); border-radius: 8px; padding: 0.3rem 0.6rem; font-family: 'Crimson Text', serif; background: var(--card); font-size: 0.88rem; }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   GRILLE DE CARTES
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.monnaies-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+.monnaie-card {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 1.5rem 1.2rem 1.2rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+  position: relative;
+  overflow: hidden;
+  animation: fadeCard 0.45s ease both;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+@keyframes fadeCard {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.monnaie-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.15); border-color: var(--or); }
+.card-deco-tl, .card-deco-br { position: absolute; width: 24px; height: 24px; border-color: var(--or); border-style: solid; opacity: 0.4; }
+.card-deco-tl { top: 8px; left: 8px; border-width: 2px 0 0 2px; border-radius: 4px 0 0 0; }
+.card-deco-br { bottom: 8px; right: 8px; border-width: 0 2px 2px 0; border-radius: 0 0 4px 0; }
+.card-image-wrap { position: relative; margin-bottom: 1rem; }
+.card-image-ring {
+  width: 140px; height: 140px; border-radius: 50%;
+  border: 3px solid var(--or);
+  box-shadow: 0 0 0 6px rgba(201,168,76,0.12), 0 4px 16px rgba(0,0,0,0.15);
+  overflow: hidden; background: #f0e8d0;
+  display: flex; align-items: center; justify-content: center;
+  transition: box-shadow 0.3s;
+}
+.monnaie-card:hover .card-image-ring { box-shadow: 0 0 0 8px rgba(201,168,76,0.22), 0 6px 20px rgba(0,0,0,0.2); }
+.card-img { width: 100%; height: 100%; object-fit: cover; }
+.card-badge { position: absolute; bottom: 4px; right: -4px; font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Cinzel', serif; }
+.mat-or       { background: #fef3cd; color: #856404; }
+.mat-argent   { background: #e2e3e5; color: #383d41; }
+.mat-bronze   { background: #fde8d8; color: #7a3310; }
+.mat-Ã©lectrum { background: #fff3cd; color: #664d03; }
+.mat-cuivre   { background: #fddbc7; color: #7c3000; }
+.mat-plomb    { background: #e0e0e0; color: #444; }
+.card-body { width: 100%; display: flex; flex-direction: column; gap: 0.4rem; }
+.card-nom { font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 600; color: var(--dark); line-height: 1.3; }
+.card-annee { font-family: 'Crimson Text', serif; font-style: italic; font-size: 0.88rem; color: var(--rouge); font-weight: 600; }
+.card-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; justify-content: center; }
+.card-tag { font-size: 0.75rem; color: var(--muted); background: #f5f0e8; border-radius: 6px; padding: 0.12rem 0.45rem; font-family: 'Crimson Text', serif; }
+.card-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.5; font-family: 'Crimson Text', serif; font-style: italic; }
+.card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border); }
+.card-id { font-size: 0.72rem; color: #bbb; }
+.btn-voir { background: var(--rouge); color: #fff; border: none; border-radius: 8px; padding: 0.38rem 0.9rem; font-size: 0.82rem; cursor: pointer; font-family: 'Crimson Text', serif; transition: background 0.2s, transform 0.2s; }
+.btn-voir:hover { background: var(--rouge-d); transform: translateX(2px); }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   PAGINATION
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.pagination { display: flex; justify-content: center; gap: 0.4rem; margin-top: 2rem; padding-bottom: 2rem; }
+.pagination button { border: 1px solid var(--border); background: var(--card); border-radius: 8px; padding: 0.4rem 0.8rem; cursor: pointer; font-size: 0.9rem; color: var(--text); font-family: 'Cinzel', serif; transition: all 0.2s; }
+.pagination button:hover:not(:disabled) { border-color: var(--or); color: var(--or); }
+.pagination button.active { background: var(--rouge); color: #fff; border-color: var(--rouge); }
+.pagination button:disabled { opacity: 0.3; cursor: default; }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   MODAL DÃ‰TAIL
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(28,20,10,0.7);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.25s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-card {
+  background: #fff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 860px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+  position: relative;
+  animation: slideUp 0.3s ease;
+  border-top: 4px solid var(--or);
+}
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.modal-header-deco { text-align: center; padding: 0.8rem 0 0; font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 0.3em; color: var(--or); }
+.modal-close { position: absolute; top: 0.8rem; right: 1rem; background: #f5f0e8; border: 1px solid var(--border); border-radius: 50%; width: 34px; height: 34px; cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+.modal-close:hover { background: #fce4e4; color: var(--rouge); }
+.modal-body { display: flex; gap: 2rem; padding: 1.5rem 2rem 2rem; }
+
+/* â”€â”€ Col image â”€â”€ */
+.modal-image-col { flex-shrink: 0; width: 220px; display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
+
+/* â”€â”€ FLIP 2D â”€â”€ */
+.coin-flip-container { width: 220px; height: 220px; perspective: 1000px; position: relative; }
+.coin-face {
+  position: absolute; width: 100%; height: 100%;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  transition: transform 0.6s ease;
+  border-radius: 14px; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center;
+  border: 3px solid var(--or);
+  box-shadow: 0 0 20px rgba(201,168,76,0.3);
+}
+.coin-face.front { transform: rotateY(0deg); }
+.coin-face.back  { transform: rotateY(180deg); }
+.coin-flip-container.flipped .front { transform: rotateY(-180deg); }
+.coin-flip-container.flipped .back  { transform: rotateY(0deg); }
+.modal-img { width: 100%; height: 100%; object-fit: cover; }
+.face-label { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.55); color: #fff; font-size: 0.72rem; padding: 0.18rem 0.6rem; border-radius: 999px; font-family: 'Cinzel', serif; }
+.btn-flip { background: var(--dark); color: #fff; border: none; border-radius: 10px; padding: 0.5rem 1rem; cursor: pointer; width: 100%; transition: background 0.2s; font-family: 'Crimson Text', serif; font-size: 0.95rem; }
+.btn-flip:hover { background: var(--rouge); }
+.btn-flip.active { background: var(--or); color: white; border: none; }
+
+.flip-btns {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.flip-btns .btn-flip {
+  flex: 1;
+  padding: 0.45rem 0.5rem;
+  background: #f5f0e8;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  font-family: 'Cinzel', serif;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.flip-btns .btn-flip:hover { background: var(--or); color: white; border-color: var(--or); }
+.flip-btns .btn-flip.active { background: var(--or); color: white; border-color: var(--or); }
+
+.modal-badge-mat { font-size: 0.8rem; font-weight: 700; padding: 0.32rem 1rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.08em; font-family: 'Cinzel', serif; }
+.btn-wikidata { display: block; text-align: center; background: #f5f0e8; border: 1px solid var(--border); border-radius: 8px; padding: 0.45rem; font-size: 0.82rem; color: var(--muted); text-decoration: none; width: 100%; transition: all 0.2s; font-family: 'Crimson Text', serif; }
+.btn-wikidata:hover { border-color: var(--or); color: var(--or); }
+
+/* â”€â”€ Col infos â”€â”€ */
+.modal-info-col { flex: 1; display: flex; flex-direction: column; gap: 0.8rem; }
+.modal-titre { font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 700; color: var(--dark); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+.modal-wikid { font-size: 0.75rem; color: #bbb; margin-top: -0.4rem; }
+.modal-desc  { font-size: 0.95rem; color: var(--muted); line-height: 1.7; font-style: italic; }
+.modal-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+.detail-item { background: #faf8f4; border-radius: 8px; padding: 0.55rem 0.85rem; border-left: 3px solid var(--or); display: flex; flex-direction: column; gap: 0.1rem; }
+.detail-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); font-family: 'Cinzel', serif; }
+.detail-value { font-size: 0.92rem; font-weight: 600; color: var(--dark); }
+.avers-revers { display: flex; gap: 0.8rem; }
+.ar-block { flex: 1; background: #faf8f4; border-left: 3px solid var(--rouge); border-radius: 0 8px 8px 0; padding: 0.65rem 0.9rem; font-size: 0.88rem; color: var(--muted); font-style: italic; }
+.ar-label { display: block; font-weight: 700; color: var(--rouge); font-size: 0.75rem; margin-bottom: 0.25rem; font-family: 'Cinzel', serif; font-style: normal; }
+.btn-ia { background: linear-gradient(135deg, var(--dark), #2d4a8a); color: #fff; border: none; border-radius: 10px; padding: 0.75rem 1.5rem; font-size: 0.95rem; cursor: pointer; width: 100%; margin-top: auto; transition: opacity 0.2s, transform 0.2s; font-family: 'Crimson Text', serif; }
+.btn-ia:hover { opacity: 0.9; transform: translateY(-1px); }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   ACTIONS ADMINISTRATION
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.admin-actions-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  width: 100%;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--border);
+}
+.btn-admin {
+  padding: 0.6rem;
+  border-radius: 8px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+.btn-admin.edit   { background: var(--bg); border: 1px solid var(--or); color: var(--text); }
+.btn-admin.edit:hover   { background: var(--or); color: white; }
+.btn-admin.delete { background: rgba(192,57,43,0.05); border: 1px solid var(--rouge); color: var(--rouge); }
+.btn-admin.delete:hover { background: var(--rouge); color: white; }
+.btn-admin.save   { background: var(--rouge); color: white; border: none; }
+.btn-admin.save:hover { background: var(--rouge-d); }
+.btn-admin.cancel { background: var(--muted); color: white; border: none; }
+.btn-admin.cancel:hover { opacity: 0.85; }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   FORMULAIRE D'Ã‰DITION (dans la modal)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.edit-form-wrap { display: flex; flex-direction: column; gap: 1rem; width: 100%; }
+.edit-group { display: flex; flex-direction: column; gap: 0.3rem; }
+.edit-group label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  color: var(--or);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.edit-input {
+  background: #faf8f4;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.6rem;
+  font-family: 'Crimson Text', serif;
+  font-size: 1rem;
+  color: var(--text);
+  outline: none;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.edit-input:focus { border-color: var(--or); box-shadow: 0 0 5px rgba(201,168,76,0.2); }
+.edit-input.title-edit { font-family: 'Cinzel', serif; font-size: 1.3rem; font-weight: 700; border-bottom: 2px solid var(--or); }
+.edit-input.area-edit { min-height: 120px; resize: vertical; line-height: 1.5; }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   RESPONSIVE
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+@media (max-width: 900px) {
+  .monnaies-grid { grid-template-columns: 1fr; }
+  .modal-body { flex-direction: column; }
+  .modal-image-col { width: 100%; align-items: center; }
+  .page-hero { flex-direction: column; text-align: center; }
+  .hero-decoration { display: none; }
+  .ajout-group.span2 { grid-column: span 1; }
+}
+
+=== C:\Users\Alpha\asma\src\app\monnaies\monnaies.html ===
+<div class="monnaies-page">
+
+  <!-- â”€â”€ HERO â”€â”€ -->
+  <div class="page-hero">
+    <div class="hero-decoration left">
+      <div class="deco-line"></div>
+      <span class="deco-ornement"> âœ¦ </span>
+      <div class="deco-line"></div>
+    </div>
+    <div class="hero-center">
+      <img src="logo.jpg" alt="Moneta Logo" class="hero-logo" onerror="this.style.display='none'"/>
+      <div class="hero-text">
+        <h1 class="hero-titre">MONETA</h1>
+        <p class="hero-sous-titre">Galerie des Monnaies ArchÃ©ologiques</p>
+        <div class="hero-separateur">
+          <span class="sep-line"></span>
+          <span class="sep-coin">ðŸª™</span>
+          <span class="sep-line"></span>
+        </div>
+        <p class="hero-stats">
+          <span class="stat-badge">{{ totalMonnaies }} monnaies rÃ©fÃ©rencÃ©es</span>
+          <span class="stat-badge source"> ðŸ”—  Source : Wikidata</span>
+        </p>
+      </div>
+    </div>
+    <div class="hero-decoration right">
+      <div class="deco-line"></div>
+      <span class="deco-ornement"> âœ¦ </span>
+      <div class="deco-line"></div>
+    </div>
+  </div>
+
+  <!-- â”€â”€ FILTRES â”€â”€ -->
+  <div class="filtres-panel">
+    <div class="filtres-titre">
+      <span class="filtre-icon"> âš— </span> Filtres de recherche
+      <button class="btn-reset" (click)="reinitialiserFiltres()"> âœ•  RÃ©initialiser</button>
+    </div>
+    <div class="filtres-grid">
+      <div class="filtre-group full-width">
+        <label>Recherche libre</label>
+        <div class="search-input-wrap">
+          <span class="search-icon"> ðŸ” </span>
+          <input type="text" placeholder="Ex: Denier romain, Carthage..."
+            [(ngModel)]="filtres.recherche" (ngModelChange)="appliquerFiltres()"/>
+        </div>
+      </div>
+      <div class="filtre-group">
+        <label>PÃ©riode historique</label>
+        <select [(ngModel)]="filtres.periode" (ngModelChange)="appliquerFiltres()">
+          <option value="">Toutes</option>
+          <option value="antique">AntiquitÃ©</option>
+          <option value="medievale">MÃ©diÃ©vale</option>
+          <option value="islamique">Islamique</option>
+          <option value="byzantine">Byzantine</option>
+          <option value="romaine">Romaine</option>
+          <option value="grecque">Grecque</option>
+          <option value="punique">Punique</option>
+        </select>
+      </div>
+      <div class="filtre-group">
+        <label>MatÃ©riau</label>
+        <select [(ngModel)]="filtres.materiau" (ngModelChange)="appliquerFiltres()">
+          <option value="">Tous</option>
+          <option value="or">Or</option>
+          <option value="argent">Argent</option>
+          <option value="bronze">Bronze</option>
+          <option value="cuivre">Cuivre</option>
+          <option value="electrum">Ã‰lectrum</option>
+        </select>
+      </div>
+      <div class="filtre-group">
+        <label>RÃ©gion / Lieu</label>
+        <input type="text" placeholder="Ex: Carthage, Rome..."
+          [(ngModel)]="filtres.region" (ngModelChange)="appliquerFiltres()"/>
+      </div>
+      <div class="filtre-group">
+        <label>Intervalle d'annÃ©es</label>
+        <div class="annees-wrap">
+          <input type="number" placeholder="De" [(ngModel)]="filtres.anneeMin" (ngModelChange)="appliquerFiltres()"/>
+          <span class="annees-sep">â†’</span>
+          <input type="number" placeholder="Ã€" [(ngModel)]="filtres.anneeMax" (ngModelChange)="appliquerFiltres()"/>
+        </div>
+      </div>
+    </div>
+    @if (hasFiltresActifs()) {
+      <div class="tags-actifs">
+<<<<<<< HEAD
+        @if (filtres.periode) {
+          <span class="tag-actif" (click)="filtres.periode=''; appliquerFiltres()">{{ filtres.periode }} âœ•</span>
+        }
+        @if (filtres.materiau) {
+          <span class="tag-actif" (click)="filtres.materiau=''; appliquerFiltres()">{{ filtres.materiau }} âœ•</span>
+        }
+        @if (filtres.region) {
+          <span class="tag-actif" (click)="filtres.region=''; appliquerFiltres()">{{ filtres.region }} âœ•</span>
+        }
+=======
+        @if (filtres.periode) { <span class="tag-actif" (click)="filtres.periode=''; appliquerFiltres()">{{ filtres.periode }}  âœ•</span> }
+        @if (filtres.materiau) { <span class="tag-actif" (click)="filtres.materiau=''; appliquerFiltres()">{{ filtres.materiau }}  âœ•</span> }
+        @if (filtres.region) { <span class="tag-actif" (click)="filtres.region=''; appliquerFiltres()">{{ filtres.region }}  âœ•</span> }
+>>>>>>> 0ec953e445ab7863a94bcffbc4885075e0f7a60e
+      </div>
+    }
+  </div>
+
+  <!-- â”€â”€ BOUTON AJOUTER â”€â”€ -->
+  <div class="actions-bar">
+    <button class="btn-ouvrir-ajout" [class.ouvert]="showAddForm" (click)="showAddForm = !showAddForm">
+      {{ showAddForm ? 'âœ•  Fermer' : 'ðŸª™  Ajouter une monnaie' }}
+    </button>
+  </div>
+
+  <!-- â”€â”€ FORMULAIRE D'AJOUT INLINE â”€â”€ -->
+  @if (showAddForm) {
+    <div class="ajout-panel">
+      <div class="ajout-panel-header">
+        <span>ðŸª™</span>
+        <span class="ajout-panel-titre">NOUVELLE MONNAIE ARCHÃ‰OLOGIQUE</span>
+        <button class="ajout-panel-close" (click)="showAddForm = false">âœ•</button>
+      </div>
+
+      <div class="ajout-form-grid">
+
+        <div class="ajout-separateur">âœ¦ IdentitÃ©</div>
+
+        <div class="ajout-group">
+          <label>ID Wikidata *</label>
+          <input class="ajout-input" type="text" [(ngModel)]="nouvelleMonnaie.wikidataId"
+            placeholder="Ex: TUN021" />
+        </div>
+        <div class="ajout-group">
+          <label>Nom de la monnaie *</label>
+          <input class="ajout-input" type="text" [(ngModel)]="nouvelleMonnaie.nom"
+            placeholder="Ex: Dinar d'Or Hafside" />
+        </div>
+
+        <div class="ajout-separateur">âœ¦ Historique</div>
+
+        <div class="ajout-group">
+          <label>PÃ©riode historique</label>
+          <select class="ajout-input" [(ngModel)]="nouvelleMonnaie.periode">
+            <option value="">â€” Choisir â€”</option>
+            <option value="Punique">Punique</option>
+            <option value="Numide">Numide</option>
+            <option value="Romaine">Romaine</option>
+            <option value="Byzantine">Byzantine</option>
+            <option value="Islamique - Aghlabide">Islamique - Aghlabide</option>
+            <option value="Islamique - Fatimide">Islamique - Fatimide</option>
+            <option value="Islamique - Hafside">Islamique - Hafside</option>
+          </select>
+        </div>
+        <div class="ajout-group">
+          <label>AnnÃ©e (nÃ©gatif = av. J.-C.)</label>
+          <input class="ajout-input" type="number" [(ngModel)]="nouvelleMonnaie.annee"
+            placeholder="Ex: -300" />
+        </div>
+        <div class="ajout-group">
+          <label>RÃ©gion / Lieu</label>
+          <input class="ajout-input" type="text" [(ngModel)]="nouvelleMonnaie.region"
+            placeholder="Ex: Carthage" />
+        </div>
+        <div class="ajout-group">
+          <label>Atelier de frappe</label>
+          <input class="ajout-input" type="text" [(ngModel)]="nouvelleMonnaie.atelier"
+            placeholder="Ex: Kairouan" />
+        </div>
+
+        <div class="ajout-separateur">âœ¦ CaractÃ©ristiques physiques</div>
+
+        <div class="ajout-group">
+          <label>MatÃ©riau</label>
+          <select class="ajout-input" [(ngModel)]="nouvelleMonnaie.materiau">
+            <option value="">â€” Choisir â€”</option>
+            <option value="Or">Or</option>
+            <option value="Argent">Argent</option>
+            <option value="Bronze">Bronze</option>
+            <option value="Cuivre">Cuivre</option>
+            <option value="Ã‰lectrum">Ã‰lectrum</option>
+            <option value="Plomb">Plomb</option>
+          </select>
+        </div>
+        <div class="ajout-group">
+          <label>Poids (grammes)</label>
+          <input class="ajout-input" type="number" step="0.01" [(ngModel)]="nouvelleMonnaie.poids"
+            placeholder="Ex: 4.25" />
+        </div>
+        <div class="ajout-group">
+          <label>DiamÃ¨tre (mm)</label>
+          <input class="ajout-input" type="number" step="0.1" [(ngModel)]="nouvelleMonnaie.diametre"
+            placeholder="Ex: 19.0" />
+        </div>
+        <div class="ajout-group">
+          <label>Collection / MusÃ©e</label>
+          <input class="ajout-input" type="text" [(ngModel)]="nouvelleMonnaie.collection"
+            placeholder="Ex: MusÃ©e du Bardo" />
+        </div>
+
+        <div class="ajout-separateur">âœ¦ Iconographie</div>
+
+        <div class="ajout-group">
+          <label>Description de l'Avers</label>
+          <input class="ajout-input" type="text" [(ngModel)]="nouvelleMonnaie.avers"
+            placeholder="Ex: TÃªte de Tanit couronnÃ©e" />
+        </div>
+        <div class="ajout-group">
+          <label>Description du Revers</label>
+          <input class="ajout-input" type="text" [(ngModel)]="nouvelleMonnaie.revers"
+            placeholder="Ex: Cheval au galop" />
+        </div>
+        <div class="ajout-group span2">
+          <label>URL Image (Avers)</label>
+          <input class="ajout-input" type="url" [(ngModel)]="nouvelleMonnaie.image"
+            placeholder="https://upload.wikimedia.org/..." />
+        </div>
+        <div class="ajout-group span2">
+          <label>URL Image (Revers)</label>
+          <input class="ajout-input" type="url" [(ngModel)]="nouvelleMonnaie.imageRevers"
+            placeholder="https://..." />
+        </div>
+
+        <div class="ajout-separateur">âœ¦ Description</div>
+
+        <div class="ajout-group span2">
+          <label>Description archÃ©ologique</label>
+          <textarea class="ajout-input textarea" [(ngModel)]="nouvelleMonnaie.description"
+            placeholder="DÃ©crivez l'histoire et la signification de cette monnaie..."></textarea>
+        </div>
+      </div>
+
+      <div class="ajout-footer">
+        <button class="btn-annuler-ajout" (click)="annulerAjout()">âœ• Annuler</button>
+        <button class="btn-soumettre-ajout"
+          [disabled]="!nouvelleMonnaie.wikidataId || !nouvelleMonnaie.nom"
+          (click)="ajouterMonnaie()">
+          ðŸª™ Enregistrer dans la base
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- â”€â”€ CHARGEMENT â”€â”€ -->
+  @if (chargement) {
+    <div class="loading-state">
+      <div class="coin-spinner">ðŸª™</div>
+      <p>Chargement depuis Wikidata...</p>
+    </div>
+  }
+
+  <!-- â”€â”€ RÃ‰SULTATS â”€â”€ -->
+  @if (!chargement && !erreur) {
+    <div class="resultats-bar">
+      <span class="resultats-count">{{ monnaiesFiltrees.length }} monnaie(s) trouvÃ©e(s)</span>
+      <div class="tri-select">
+        <label>Trier par :</label>
+        <select [(ngModel)]="triActif" (ngModelChange)="trierMonnaies()">
+          <option value="nom">Nom</option>
+          <option value="annee">AnnÃ©e</option>
+          <option value="materiau">MatÃ©riau</option>
+        </select>
+      </div>
+    </div>
+    @if (monnaiesFiltrees.length === 0) {
+      <div class="vide-state">
+        <span> ðŸ” </span>
+        <p>Aucune monnaie ne correspond Ã  vos filtres.</p>
+      </div>
+    }
+    <div class="monnaies-grid">
+      @for (m of monnaiesFiltrees; track m.wikidataId; let i = $index) {
+        <div class="monnaie-card" [style.animation-delay]="i * 80 + 'ms'" (click)="ouvrirDetail(m)">
+          <div class="card-image-wrap">
+            <div class="card-image-ring">
+              <img [src]="m.image || 'coin-placeholder.png'" [alt]="m.nom" class="card-img" (error)="onImgError($event)"/>
+            </div>
+            <span class="card-badge" [class]="'mat-' + (m.materiau | lowercase)">{{ m.materiau || '?' }}</span>
+          </div>
+          <div class="card-body">
+            <h3 class="card-nom">{{ m.nom || 'Nom inconnu' }}</h3>
+            <p class="card-annee">{{ formatAnnee(m.annee) }}</p>
+            <div class="card-tags">
+              @if (m.region) { <span class="card-tag"> ðŸ“  {{ m.region }}</span> }
+              @if (m.periode) { <span class="card-tag"> ðŸ›  {{ m.periode }}</span> }
+            </div>
+            <p class="card-desc">{{ ((m.description || '') | slice:0:90) }}{{ (m.description && m.description.length > 90) ? '...' : '' }}</p>
+            <div class="card-footer">
+              <span class="card-id">{{ m.wikidataId }}</span>
+              <button class="btn-voir" (click)="ouvrirDetail(m); $event.stopPropagation()">Voir dÃ©tails â†’</button>
+            </div>
+          </div>
+          <div class="card-deco-tl"></div>
+          <div class="card-deco-br"></div>
+        </div>
+      }
+    </div>
+    @if (totalPages > 1) {
+      <div class="pagination">
+        <button [disabled]="pageCourante === 1" (click)="changerPage(pageCourante - 1)">â€¹</button>
+        @for (p of pages; track p) {
+          <button [class.active]="p === pageCourante" (click)="changerPage(p)">{{ p }}</button>
+        }
+        <button [disabled]="pageCourante === totalPages" (click)="changerPage(pageCourante + 1)">â€º</button>
+      </div>
+    }
+  }
+
+</div>
+
+<!-- â”€â”€ MODAL DÃ‰TAIL â”€â”€ -->
+@if (monnaieSelectionnee) {
+  <div class="modal-overlay" (click)="fermerDetail()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header-deco">
+        <span class="modal-deco-text">{{ isEditing ? 'â€” Ã‰DITION DE LA FICHE â€”' : 'â€” MONETA â€”' }}</span>
+      </div>
+      <button class="modal-close" (click)="fermerDetail()"> âœ• </button>
+
+      <div class="modal-body">
+        <div class="modal-image-col">
+
+          <!-- FLIP 2D -->
+          <div class="coin-flip-container" [class.flipped]="isFlipped">
+            <div class="coin-face front">
+              <img [src]="monnaieSelectionnee.image || 'coin-placeholder.svg'" [alt]="monnaieSelectionnee.nom" class="modal-img" (error)="onImgError($event)"/>
+              <span class="face-label">â¬† Avers</span>
+            </div>
+            <div class="coin-face back">
+              <img [src]="monnaieSelectionnee.imageRevers || monnaieSelectionnee.image || 'coin-placeholder.svg'" [alt]="monnaieSelectionnee.nom" class="modal-img" (error)="onImgError($event)"/>
+              <span class="face-label">â¬‡ Revers</span>
+            </div>
+          </div>
+
+          <div class="flip-btns">
+            <button class="btn-flip" [class.active]="!isFlipped" (click)="isFlipped = false">â¬† Avers</button>
+            <button class="btn-flip" [class.active]="isFlipped"  (click)="isFlipped = true">â¬‡ Revers</button>
+          </div>
+
+          <div class="modal-badge-mat" [class]="'mat-' + (monnaieSelectionnee.materiau | lowercase)">
+            {{ monnaieSelectionnee.materiau || 'MatÃ©riau inconnu' }}
+          </div>
+
+          @if (monnaieSelectionnee.wikidataId && !isEditing) {
+            <a [href]="'https://www.wikidata.org/wiki/' + monnaieSelectionnee.wikidataId" target="_blank" class="btn-wikidata">
+              ðŸ”—  Voir sur Wikidata
+            </a>
+          }
+
+          <div class="admin-actions-vertical">
+            @if (!isEditing) {
+              <button class="btn-admin edit" (click)="activerEdition()">âœï¸ Modifier</button>
+              <button class="btn-admin delete" (click)="supprimerMonnaie(monnaieSelectionnee)">ðŸ—‘ï¸ Supprimer</button>
+            } @else {
+              <button class="btn-admin save" (click)="sauvegarderModification()">ðŸ’¾ Enregistrer</button>
+              <button class="btn-admin cancel" (click)="annulerEdition()">âœ• Annuler</button>
+            }
+          </div>
+        </div>
+
+        <div class="modal-info-col">
+          @if (isEditing) {
+            <div class="edit-form-wrap">
+              <div class="edit-group">
+                <label>Nom de la monnaie</label>
+                <input type="text" [(ngModel)]="monnaieSelectionnee.nom" class="edit-input title-edit">
+              </div>
+              <div class="edit-group">
+                <label>Description Historique</label>
+                <textarea [(ngModel)]="monnaieSelectionnee.description" class="edit-input area-edit"></textarea>
+              </div>
+              <div class="modal-details-grid">
+                <div class="edit-group"><label>PÃ©riode</label><input type="text" [(ngModel)]="monnaieSelectionnee.periode" class="edit-input"></div>
+                <div class="edit-group"><label>AnnÃ©e</label><input type="number" [(ngModel)]="monnaieSelectionnee.annee" class="edit-input"></div>
+                <div class="edit-group"><label>RÃ©gion</label><input type="text" [(ngModel)]="monnaieSelectionnee.region" class="edit-input"></div>
+                <div class="edit-group">
+                  <label>MatÃ©riau</label>
+                  <select [(ngModel)]="monnaieSelectionnee.materiau" class="edit-input">
+                    <option value="Or">Or</option>
+                    <option value="Argent">Argent</option>
+                    <option value="Bronze">Bronze</option>
+                    <option value="Cuivre">Cuivre</option>
+                  </select>
+                </div>
+                <div class="edit-group"><label>Atelier</label><input type="text" [(ngModel)]="monnaieSelectionnee.atelier" class="edit-input"></div>
+                <div class="edit-group"><label>Collection</label><input type="text" [(ngModel)]="monnaieSelectionnee.collection" class="edit-input"></div>
+              </div>
+            </div>
+          } @else {
+            <h2 class="modal-titre">{{ monnaieSelectionnee.nom || 'Nom inconnu' }}</h2>
+            <p class="modal-wikid">{{ monnaieSelectionnee.wikidataId }}</p>
+            <p class="modal-desc">{{ monnaieSelectionnee.description || 'Aucune description disponible.' }}</p>
+            <div class="modal-details-grid">
+              @if (monnaieSelectionnee.periode) { <div class="detail-item"><span class="detail-label"> ðŸ›  PÃ©riode</span><span class="detail-value">{{ monnaieSelectionnee.periode }}</span></div> }
+              @if (monnaieSelectionnee.annee) { <div class="detail-item"><span class="detail-label"> ðŸ“…  AnnÃ©e</span><span class="detail-value">{{ formatAnnee(monnaieSelectionnee.annee) }}</span></div> }
+              @if (monnaieSelectionnee.region) { <div class="detail-item"><span class="detail-label"> ðŸ“  RÃ©gion</span><span class="detail-value">{{ monnaieSelectionnee.region }}</span></div> }
+              @if (monnaieSelectionnee.atelier) { <div class="detail-item"><span class="detail-label"> âš’  Atelier</span><span class="detail-value">{{ monnaieSelectionnee.atelier }}</span></div> }
+              @if (monnaieSelectionnee.diametre) { <div class="detail-item"><span class="detail-label"> ðŸ“  DiamÃ¨tre</span><span class="detail-value">{{ monnaieSelectionnee.diametre }} mm</span></div> }
+              @if (monnaieSelectionnee.poids) { <div class="detail-item"><span class="detail-label"> âš–  Poids</span><span class="detail-value">{{ monnaieSelectionnee.poids }} g</span></div> }
+              @if (monnaieSelectionnee.materiau) { <div class="detail-item"><span class="detail-label"> ðŸ”©  MatÃ©riau</span><span class="detail-value">{{ monnaieSelectionnee.materiau }}</span></div> }
+              @if (monnaieSelectionnee.collection) { <div class="detail-item"><span class="detail-label"> ðŸ¦  Collection</span><span class="detail-value">{{ monnaieSelectionnee.collection }}</span></div> }
+            </div>
+            @if (monnaieSelectionnee.avers || monnaieSelectionnee.revers) {
+              <div class="avers-revers">
+                @if (monnaieSelectionnee.avers) { <div class="ar-block"><span class="ar-label"> â¬†  Avers</span><p>{{ monnaieSelectionnee.avers }}</p></div> }
+                @if (monnaieSelectionnee.revers) { <div class="ar-block"><span class="ar-label"> â¬‡  Revers</span><p>{{ monnaieSelectionnee.revers }}</p></div> }
+              </div>
+            }
+            <button class="btn-ia" routerLink="/classification" [queryParams]="{id: monnaieSelectionnee.wikidataId}">
+              ðŸ¤– Classifier avec l'IA
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+=== C:\Users\Alpha\asma\src\app\monnaies\monnaies.service.ts ===
+// ============================================================
+// monnaies.service.ts  â€”  Angular 21  â€”  Projet MONETA
+// ============================================================
+
+import { Injectable }             from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable }             from 'rxjs';
+
+// â”€â”€ ModÃ¨le Monnaie â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+export interface Monnaie {
+  wikidataId:  string;
+  nom:         string;
+  description: string;
+  image:       string | null;
+  imageRevers: string | null;
+  periode:     string;
+  materiau:    string;
+  region:      string;
+  atelier:     string;
+  annee:       number | null;
+  diametre:    number | null;
+  poids:       number | null;
+  avers:       string;
+  revers:      string;
+  collection:  string;
+}
+
+// â”€â”€ RÃ©ponse paginÃ©e du backend â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+export interface MonnaiesResponse {
+  monnaies: Monnaie[];
+  total:    number;
+  page:     number;
+  parPage:  number;
+}
+
+@Injectable({ providedIn: 'root' })
+export class MonnaiesService {
+
+  // âœ… Un seul port â€” modifiez ici si besoin
+  private apiUrl = 'http://localhost:8083/api/monnaies';
+
+  constructor(private http: HttpClient) {}
+
+  // â”€â”€ GET toutes les monnaies â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  getMonnaies(params?: {
+    periode?:  string;
+    materiau?: string;
+    region?:   string;
+    anneeMin?: number;
+    anneeMax?: number;
+    page?:     number;
+    parPage?:  number;
+  }): Observable<Monnaie[]> {
+    let httpParams = new HttpParams();
+    if (params) {
+      Object.entries(params).forEach(([key, val]) => {
+        if (val !== undefined && val !== null && val !== '') {
+          httpParams = httpParams.set(key, val.toString());
+        }
+      });
+    }
+    return this.http.get<Monnaie[]>(this.apiUrl, { params: httpParams });
+  }
+
+  // â”€â”€ GET monnaie par ID Wikidata â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  getMonnaieById(wikidataId: string): Observable<Monnaie> {
+    return this.http.get<Monnaie>(`${this.apiUrl}/${wikidataId}`);
+  }
+
+  // â”€â”€ CREATE (Ajouter) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  createMonnaie(monnaie: Monnaie): Observable<Monnaie> {
+    return this.http.post<Monnaie>(this.apiUrl, monnaie);
+  }
+
+  // â”€â”€ UPDATE (Modifier) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  updateMonnaie(wikidataId: string, monnaie: Monnaie): Observable<Monnaie> {
+    return this.http.put<Monnaie>(`${this.apiUrl}/${wikidataId}`, monnaie);
+  }
+
+  // â”€â”€ DELETE (Supprimer) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  deleteMonnaie(wikidataId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${wikidataId}`);
+  }
+
+  // â”€â”€ Recherche dans le backend â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  rechercherMonnaies(query: string): Observable<Monnaie[]> {
+    return this.http.get<Monnaie[]>(`${this.apiUrl}/search`, {
+      params: new HttpParams().set('q', query)
+    });
+  }
+}
+
+=== C:\Users\Alpha\asma\src\app\monnaies\monnaies.ts ===
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { LowerCasePipe, SlicePipe }    from '@angular/common';
+import { FormsModule }                 from '@angular/forms';
+import { RouterLink }                  from '@angular/router';
+import { Subject }                     from 'rxjs';
+import { takeUntil }                   from 'rxjs/operators';
+import { MonnaiesService, Monnaie }    from './monnaies.service';
+
+export interface Filtres {
+  recherche: string;
+  periode:   string;
+  materiau:  string;
+  region:    string;
+  anneeMin:  number | null;
+  anneeMax:  number | null;
+}
+
+@Component({
+  selector:    'app-monnaies',
+  standalone:  true,
+  imports:     [FormsModule, RouterLink, LowerCasePipe, SlicePipe],
+  templateUrl: './monnaies.html',
+  styleUrls:   ['./monnaies.css']
+})
+export class MonnaiesComponent implements OnInit, OnDestroy {
+
+  toutesMonnaies:      Monnaie[] = [];
+  monnaiesFiltrees:    Monnaie[] = [];
+  monnaieSelectionnee: Monnaie | null = null;
+
+  isEditing     = false;
+  backupMonnaie: Monnaie | null = null;
+
+  chargement    = false;
+  erreur:         string | null = null;
+  totalMonnaies = 0;
+  isFlipped     = false;
+
+  filtres: Filtres = {
+    recherche: '', periode: '', materiau: '',
+    region: '', anneeMin: null, anneeMax: null
+  };
+
+  triActif     = 'nom';
+  pageCourante = 1;
+  parPage      = 20;
+  totalPages   = 1;
+  pages:         number[] = [];
+
+  // â”€â”€ Formulaire d'ajout â”€â”€
+  showAddForm = false;
+  nouvelleMonnaie: Monnaie = this.formulaireVide();
+
+  private destroy$ = new Subject<void>();
+
+  constructor(private monnaiesService: MonnaiesService) {}
+
+  ngOnInit(): void {
+    this.chargerMockData();
+    this.monnaiesService.getMonnaies()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data) => {
+          if (data && data.length > 0) {
+            this.toutesMonnaies = data;
+            this.totalMonnaies  = data.length;
+            this.appliquerFiltres();
+          }
+        },
+        error: () => {}
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  chargerDepuisBackend(): void {
+    this.monnaiesService.getMonnaies()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data) => {
+          if (data && data.length > 0) {
+            this.toutesMonnaies = data;
+            this.totalMonnaies  = data.length;
+            this.appliquerFiltres();
+          } else {
+            this.chargerMockData();
+          }
+        },
+        error: () => { this.chargerMockData(); }
+      });
+  }
+
+  // â”€â”€ Actions Admin â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  activerEdition(): void {
+    this.isEditing    = true;
+    this.backupMonnaie = JSON.parse(JSON.stringify(this.monnaieSelectionnee));
+  }
+
+  annulerEdition(): void {
+    if (this.backupMonnaie) {
+      this.monnaieSelectionnee = JSON.parse(JSON.stringify(this.backupMonnaie));
+    }
+    this.isEditing = false;
+  }
+
+  sauvegarderModification(): void {
+    if (!this.monnaieSelectionnee) return;
+
+    console.log("DonnÃ©es envoyÃ©es pour modification :", this.monnaieSelectionnee);
+
+    this.monnaiesService.updateMonnaie(this.monnaieSelectionnee.wikidataId, this.monnaieSelectionnee)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (updatedCoin) => {
+          const index = this.toutesMonnaies.findIndex(m => m.wikidataId === updatedCoin.wikidataId);
+          if (index !== -1) {
+            this.toutesMonnaies[index] = { ...updatedCoin };
+          }
+          this.isEditing = false;
+          this.appliquerFiltres();
+          alert("âœ… Modifications enregistrÃ©es avec succÃ¨s dans MariaDB.");
+        },
+        error: (err) => {
+          console.error("Erreur dÃ©taillÃ©e du serveur :", err);
+          if (err.status === 404) {
+            alert('âŒ Cette monnaie n\'existe pas dans la base de donnÃ©es.');
+          } else {
+            alert('âŒ Erreur lors de la sauvegarde.');
+          }
+        }
+      });
+  }
+
+  supprimerMonnaie(monnaie: Monnaie): void {
+    const confirmation = confirm(`Voulez-vous vraiment supprimer dÃ©finitivement "${monnaie.nom}" ?`);
+
+    if (confirmation) {
+      this.monnaiesService.deleteMonnaie(monnaie.wikidataId)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.toutesMonnaies = this.toutesMonnaies.filter(m => m.wikidataId !== monnaie.wikidataId);
+            this.appliquerFiltres();
+            this.fermerDetail();
+            alert("ðŸ—‘ï¸ Monnaie supprimÃ©e avec succÃ¨s de la base de donnÃ©es.");
+          },
+          error: (err) => {
+            console.error("Erreur lors de la suppression", err);
+            if (err.status === 404) {
+              alert("Info : Cette monnaie n'existe plus dans MariaDB.");
+              this.toutesMonnaies = this.toutesMonnaies.filter(m => m.wikidataId !== monnaie.wikidataId);
+              this.appliquerFiltres();
+            } else {
+              alert("âŒ Impossible de supprimer la monnaie.");
+            }
+          }
+        });
+    }
+  }
+
+  // â”€â”€ Formulaire d'ajout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  private formulaireVide(): Monnaie {
+    return {
+      wikidataId: '',
+      nom:        '',
+      description:'',
+      image:      null,
+      imageRevers:null,
+      periode:    '',
+      materiau:   '',
+      region:     '',
+      atelier:    '',
+      annee:      null,
+      diametre:   null,
+      poids:      null,
+      avers:      '',
+      revers:     '',
+      collection: ''
+    };
+  }
+
+  annulerAjout(): void {
+    this.showAddForm    = false;
+    this.nouvelleMonnaie = this.formulaireVide();
+  }
+
+  ajouterMonnaie(): void {
+    if (!this.nouvelleMonnaie.wikidataId?.trim() || !this.nouvelleMonnaie.nom?.trim()) return;
+
+    this.monnaiesService.createMonnaie(this.nouvelleMonnaie)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (monnaieCreee) => {
+          this.toutesMonnaies.unshift(monnaieCreee);
+          this.totalMonnaies = this.toutesMonnaies.length;
+          this.appliquerFiltres();
+          this.showAddForm     = false;
+          this.nouvelleMonnaie = this.formulaireVide();
+          alert('âœ¨ Monnaie ajoutÃ©e avec succÃ¨s dans la base de donnÃ©es !');
+        },
+        error: (err) => {
+          console.error("Erreur d'ajout", err);
+          if (err.status === 409) {
+            alert('âŒ Cet ID Wikidata existe dÃ©jÃ  dans la base.');
+          } else {
+            alert("âŒ Erreur lors de l'ajout. VÃ©rifiez la console (F12).");
+          }
+        }
+      });
+  }
+
+  // â”€â”€ Mock data tunisiennes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  chargerMockData(): void {
+    this.toutesMonnaies = [
+      { wikidataId:'TUN001', nom:'StatÃ¨re d\'Or de Carthage',       description:"Monnaie en or frappÃ©e Ã  Carthage au IVe siÃ¨cle av. J.-C. Symbole du pouvoir punique.", image:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/BMC_Carthage_4.jpg/320px-BMC_Carthage_4.jpg', imageRevers:null, periode:'Punique',    materiau:'Or',     region:'Carthage',            atelier:'Carthage',     annee:-350, diametre:19.0, poids:9.4,  avers:'TÃªte de Tanit couronnÃ©e de laurier',  revers:'Cheval debout, palmier dattier',       collection:'MusÃ©e de Carthage' },
+      { wikidataId:'TUN002', nom:'Shekel d\'Argent de Carthage',    description:"Monnaie en argent de Carthage frappÃ©e pendant les guerres puniques contre Rome.",        image:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Carthaginiansilvershekel.jpg/320px-Carthaginiansilvershekel.jpg', imageRevers:null, periode:'Punique', materiau:'Argent', region:'Carthage', atelier:'Carthage', annee:-260, diametre:24.0, poids:7.2, avers:'TÃªte d\'HÃ©raklÃ¨s-Melqart', revers:'Cheval dressÃ©, Ã©toile en haut', collection:'MusÃ©e du Bardo' },
+      { wikidataId:'TUN003', nom:'Bronze Punique de Carthage',      description:"Monnaie de bronze punique en circulation dans tout le territoire de Carthage.",          image:null, imageRevers:null, periode:'Punique',    materiau:'Bronze', region:'Carthage',            atelier:'Carthage',     annee:-300, diametre:20.0, poids:8.5,  avers:'TÃªte de Tanit Ã  gauche',              revers:'Cheval au pas, lÃ©gende punique',       collection:'MusÃ©e National de Carthage' },
+      { wikidataId:'TUN004', nom:'Trishekel de Carthage',           description:"Grande monnaie d\'argent de Carthage valant 3 shekels.",                                 image:null, imageRevers:null, periode:'Punique',    materiau:'Argent', region:'Carthage',            atelier:'Carthage',     annee:-320, diametre:32.0, poids:21.5, avers:'TÃªte de PersÃ©phone / Tanit',          revers:'Quadrige au galop conduit par aurige', collection:'MusÃ©e du Bardo, Tunis' },
+      { wikidataId:'TUN005', nom:'Denier de Thysdrus (El Djem)',    description:"Monnaie romaine frappÃ©e Ã  Thysdrus (El Djem), cÃ©lÃ¨bre pour son amphithÃ©Ã¢tre.",          image:null, imageRevers:null, periode:'Romaine',    materiau:'Argent', region:'El Djem (Thysdrus)',  atelier:'Thysdrus',     annee:238,  diametre:19.0, poids:3.4,  avers:'Portrait de l\'Empereur Gordien Ier', revers:'L\'Afrique personnifiÃ©e tenant des Ã©pis', collection:'MusÃ©e de Sousse' },
+      { wikidataId:'TUN006', nom:'As de Carthage Romaine',          description:"Monnaie de bronze frappÃ©e aprÃ¨s la reconstruction de Carthage par Rome.",               image:null, imageRevers:null, periode:'Romaine',    materiau:'Bronze', region:'Carthage Romaine',    atelier:'Carthago',     annee:29,   diametre:27.0, poids:11.0, avers:'Buste d\'Auguste laurÃ© Ã  droite',     revers:'Carthago debout, gouvernail',          collection:'MusÃ©e National de Carthage' },
+      { wikidataId:'TUN007', nom:'Sesterce de Septime SÃ©vÃ¨re',      description:"Grande monnaie de l\'Empereur Septime SÃ©vÃ¨re, premier Empereur africain.",             image:null, imageRevers:null, periode:'Romaine',    materiau:'Bronze', region:'Afrique du Nord',     atelier:'Rome',         annee:200,  diametre:33.0, poids:25.0, avers:'Buste de Septime SÃ©vÃ¨re laurÃ©',       revers:'La Victoire ailÃ©e tenant couronne',    collection:'MusÃ©e du Bardo' },
+      { wikidataId:'TUN008', nom:'Bronze de Bulla Regia',           description:"Monnaie frappÃ©e Ã  Bulla Regia (Jendouba), ville royale numide puis romaine.",           image:null, imageRevers:null, periode:'Romaine',    materiau:'Bronze', region:'Bulla Regia (Jendouba)', atelier:'Bulla Regia', annee:100, diametre:22.0, poids:7.5, avers:'TÃªte de Jupiter laurÃ©', revers:'LÃ©gende BULLA REGIA', collection:'MusÃ©e de Jendouba' },
+      { wikidataId:'TUN009', nom:'As de Bilarigia',                 description:"Monnaie de la citÃ© antique de Bilarigia, en Tunisie centrale.",                         image:null, imageRevers:null, periode:'Romaine',    materiau:'Bronze', region:'Bilarigia (Tunisie)', atelier:'Bilarigia',    annee:50,   diametre:21.0, poids:8.0,  avers:'TÃªte de l\'Empereur Auguste',         revers:'LÃ©gende BILARIGIA',                    collection:'MusÃ©e ArchÃ©ologique' },
+      { wikidataId:'TUN010', nom:'Bronze de Hadrumetum (Sousse)',   description:"Monnaie frappÃ©e Ã  Hadrumetum (Sousse), grande ville punique et romaine.",              image:null, imageRevers:null, periode:'Romaine',    materiau:'Bronze', region:'Hadrumetum (Sousse)', atelier:'Hadrumetum',   annee:100,  diametre:23.0, poids:9.0,  avers:'Portrait de l\'Empereur Hadrien',     revers:'Neptune tenant un trident',            collection:'MusÃ©e de Sousse' },
+      { wikidataId:'TUN011', nom:'Denier de Thugga (Dougga)',       description:"Monnaie de Thugga (Dougga), site UNESCO, chef-lieu numide puis ville romaine.",         image:null, imageRevers:null, periode:'Numide/Romaine', materiau:'Argent', region:'Thugga (Dougga)', atelier:'Thugga', annee:-150, diametre:17.0, poids:3.8, avers:'Portrait du Roi Massinissa', revers:'Cheval au galop, lÃ©gende libyque', collection:'MusÃ©e de Dougga' },
+      { wikidataId:'TUN012', nom:'Follis Byzantin de Carthage',     description:"Monnaie byzantine frappÃ©e dans l\'Exarchat d\'Afrique avant la conquÃªte arabe.",       image:null, imageRevers:null, periode:'Byzantine',  materiau:'Bronze', region:'Carthage (Exarchat)', atelier:'Carthage Byzantine', annee:620, diametre:28.0, poids:10.5, avers:'HÃ©raclius debout en armure', revers:'Grand M, date de rÃ¨gne', collection:'MusÃ©e de Carthage' },
+      { wikidataId:'TUN013', nom:'Solidus Byzantin d\'Afrique',     description:"Monnaie d\'or byzantine frappÃ©e Ã  Carthage, capitale de l\'Exarchat d\'Afrique.",     image:null, imageRevers:null, periode:'Byzantine',  materiau:'Or',     region:'Carthage (Exarchat)', atelier:'Carthago',     annee:650,  diametre:20.0, poids:4.5,  avers:'Buste de l\'Empereur Constant II',    revers:'Croix sur globe',                      collection:'British Museum' },
+      { wikidataId:'TUN014', nom:'Dinar Aghlabide d\'Or',           description:"Monnaie d\'or de la dynastie aghlabide qui rÃ©gna sur l\'Ifriqiya de 800 Ã  909.",      image:null, imageRevers:null, periode:'Islamique - Aghlabide', materiau:'Or',     region:'Kairouan', atelier:'Kairouan', annee:850, diametre:19.0, poids:4.25, avers:'Attestation de foi en arabe coufique', revers:'Nom de l\'Ã‰mir et date hÃ©girienne', collection:'MusÃ©e de Kairouan' },
+      { wikidataId:'TUN015', nom:'Dirham Aghlabide d\'Argent',      description:"Monnaie d\'argent aghlabide frappÃ©e Ã  Kairouan, premiÃ¨re capitale islamique.",        image:null, imageRevers:null, periode:'Islamique - Aghlabide', materiau:'Argent', region:'Kairouan', atelier:'Kairouan', annee:820, diametre:25.0, poids:2.9, avers:'Inscription coranique en coufique', revers:'Nom de l\'Ã‰mir et date AH', collection:'MusÃ©e Islamique de Kairouan' },
+      { wikidataId:'TUN016', nom:'Dinar Fatimide',                  description:"Monnaie d\'or fatimide frappÃ©e en Ifriqiya avant le dÃ©placement vers Le Caire.",      image:null, imageRevers:null, periode:'Islamique - Fatimide', materiau:'Or',     region:'Al-Mahdiyya', atelier:'Al-Mahdiyya', annee:920, diametre:21.0, poids:4.2, avers:'Formule chiite ismaÃ©lienne coufique', revers:'Nom du Calife al-Mahdi', collection:'MusÃ©e National de Carthage' },
+      { wikidataId:'TUN017', nom:'Demi-Dirham Hafside',             description:"Monnaie de la puissante dynastie hafside qui rÃ©gna sur la Tunisie de 1229 Ã  1574.",   image:null, imageRevers:null, periode:'Islamique - Hafside',  materiau:'Argent', region:'Tunis', atelier:'Tunis', annee:1350, diametre:15.0, poids:1.5, avers:'Calligraphie : nom du Sultan hafside', revers:'Devise de la dynastie et annÃ©e AH', collection:'MusÃ©e du Bardo, Tunis' },
+      { wikidataId:'TUN018', nom:'Kharouba de Tunis',               description:"Petite monnaie de cuivre populaire dans la Tunisie mÃ©diÃ©vale.",                       image:null, imageRevers:null, periode:'Islamique - Hafside',  materiau:'Cuivre', region:'Tunis', atelier:'Tunis', annee:1400, diametre:14.0, poids:2.0, avers:'Ã‰toile Ã  cinq branches', revers:'Inscription arabe : Tunis', collection:'MusÃ©e de la MÃ©dina, Tunis' },
+      { wikidataId:'TUN019', nom:'Bronze de Massinissa (Numidie)',  description:"Monnaie du Roi Massinissa, fondateur du Royaume de Numidie unifiÃ©, alliÃ© de Rome.",   image:null, imageRevers:null, periode:'Numide',     materiau:'Bronze', region:'Cirta (Constantine)', atelier:'Numidie', annee:-200, diametre:22.0, poids:9.5, avers:'Portrait de Massinissa diadÃ©mÃ©', revers:'Cheval au galop, lÃ©gende nÃ©o-punique', collection:'MusÃ©e du Bardo' },
+      { wikidataId:'TUN020', nom:'Monnaie de Micipsa (Numidie)',    description:"Monnaie du roi numide Micipsa, fils de Massinissa, qui rÃ©gna sur la Numidie.",        image:null, imageRevers:null, periode:'Numide',     materiau:'Bronze', region:'Numidie', atelier:'Numidie', annee:-148, diametre:20.0, poids:7.8, avers:'Portrait de Micipsa laurÃ©', revers:'Ã‰lÃ©phant Ã  droite', collection:'MusÃ©e du Bardo, Tunis' }
+    ];
+    this.totalMonnaies = this.toutesMonnaies.length;
+    this.appliquerFiltres();
+  }
+
+  // â”€â”€ Filtrage â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  appliquerFiltres(): void {
+    let res = [...this.toutesMonnaies];
+    if (this.filtres.recherche.trim()) {
+      const q = this.filtres.recherche.toLowerCase();
+      res = res.filter(m =>
+        m.nom?.toLowerCase().includes(q) ||
+        m.description?.toLowerCase().includes(q) ||
+        m.region?.toLowerCase().includes(q)
+      );
+    }
+    if (this.filtres.periode)
+      res = res.filter(m => m.periode?.toLowerCase().includes(this.filtres.periode.toLowerCase()));
+    if (this.filtres.materiau)
+      res = res.filter(m => m.materiau?.toLowerCase().includes(this.filtres.materiau.toLowerCase()));
+    if (this.filtres.region)
+      res = res.filter(m => m.region?.toLowerCase().includes(this.filtres.region.toLowerCase()));
+    if (this.filtres.anneeMin !== null)
+      res = res.filter(m => (m.annee ?? 0) >= this.filtres.anneeMin!);
+    if (this.filtres.anneeMax !== null)
+      res = res.filter(m => (m.annee ?? 0) <= this.filtres.anneeMax!);
+    this.monnaiesFiltrees = res;
+    this.pageCourante     = 1;
+    this.trierMonnaies();
+    this.calculerPagination();
+  }
+
+  trierMonnaies(): void {
+    this.monnaiesFiltrees.sort((a, b) => {
+      switch (this.triActif) {
+        case 'annee':    return (a.annee ?? 0) - (b.annee ?? 0);
+        case 'materiau': return (a.materiau ?? '').localeCompare(b.materiau ?? '');
+        default:         return (a.nom ?? '').localeCompare(b.nom ?? '');
+      }
+    });
+  }
+
+  reinitialiserFiltres(): void {
+    this.filtres = { recherche:'', periode:'', materiau:'', region:'', anneeMin:null, anneeMax:null };
+    this.appliquerFiltres();
+  }
+
+  hasFiltresActifs(): boolean {
+    return !!(this.filtres.periode || this.filtres.materiau || this.filtres.region || this.filtres.recherche);
+  }
+
+  calculerPagination(): void {
+    this.totalPages = Math.ceil(this.monnaiesFiltrees.length / this.parPage);
+    this.pages      = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  changerPage(p: number): void {
+    if (p < 1 || p > this.totalPages) return;
+    this.pageCourante = p;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // â”€â”€ Modal dÃ©tail â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  ouvrirDetail(m: Monnaie): void {
+    this.monnaieSelectionnee     = m;
+    this.isEditing               = false;
+    this.isFlipped               = false;
+    document.body.style.overflow = 'hidden';
+  }
+
+  fermerDetail(): void {
+    this.monnaieSelectionnee     = null;
+    this.isEditing               = false;
+    document.body.style.overflow = '';
+  }
+
+  onImgError(event: Event): void {
+    (event.target as HTMLImageElement).src = 'coin-placeholder.svg';
+  }
+
+  formatAnnee(annee: number | null): string {
+    if (annee === null || annee === undefined) return 'Date inconnue';
+    return annee < 0 ? `${Math.abs(annee)} av. J.-C.` : `${annee} ap. J.-C.`;
+  }
+}
+
+=== C:\Users\Alpha\asma\src\app\request-access\request-access.css ===
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 20px;
+}
+
+.login-card {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.login-logo {
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #dd0031;
+  margin: 0 auto 15px auto;
+  display: block;
+}
+
+.login-header h2 {
+  color: #1c1e21;
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.login-header p {
+  color: #606770;
+  font-size: 14px;
+}
+
+/* â”€â”€ Messages â”€â”€ */
+.erreur-message {
+  background: #fff0f0;
+  border: 1px solid #ffcccc;
+  border-left: 4px solid #dd0031;
+  color: #c0392b;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  animation: fadeIn 0.3s ease;
+}
+
+.succes-message {
+  background: #f0fff4;
+  border: 1px solid #c3e6cb;
+  border-left: 4px solid #28a745;
+  color: #155724;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.form-group { margin-bottom: 15px; }
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #4b4f56;
+  font-size: 14px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #dddfe2;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 15px;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #dd0031;
+  box-shadow: 0 0 0 2px rgba(221, 0, 49, 0.1);
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #dd0031;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s;
+}
+
+.login-button:hover:not(:disabled) { background-color: #b30027; }
+
+.login-button:disabled {
+  background-color: #e8a0a8;
+  cursor: not-allowed;
+}
+
+.login-footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #606770;
+}
+
+.red-link {
+  color: #dd0031;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.red-link:hover { text-decoration: underline; }
+
+.back-home {
+  display: block;
+  margin-top: 15px;
+  color: #606770;
+  text-decoration: none;
+}
+
+.back-home:hover { color: #1c1e21; }
+
+=== C:\Users\Alpha\asma\src\app\request-access\request-access.html ===
+<div class="login-container">
+  <div class="login-card">
+
+    <div class="login-header">
+      <img src="logo.png" alt="Moneta Logo" class="login-logo" onerror="this.style.display='none'">
+      <h2>CrÃ©er un compte</h2>
+      <p>Rejoignez Moneta pour explorer l'histoire archÃ©ologique.</p>
+    </div>
+
+    <!-- Message d'erreur -->
+    @if (erreur) {
+      <div class="erreur-message">âš ï¸ {{ erreur }}</div>
+    }
+
+    <!-- Message de succÃ¨s -->
+    @if (succes) {
+      <div class="succes-message">âœ… {{ succes }}</div>
+    }
+
+    <form (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label for="username">Nom d'utilisateur</label>
+        <input
+          type="text"
+          id="username"
+          placeholder="Choisissez un nom d'utilisateur"
+          [(ngModel)]="username"
+          name="username"
+          required/>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Adresse E-mail</label>
+        <input
+          type="email"
+          id="email"
+          placeholder="nom@exemple.com"
+          [(ngModel)]="email"
+          name="email"
+          required/>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input
+          type="password"
+          id="password"
+          placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢  (min. 6 caractÃ¨res)"
+          [(ngModel)]="password"
+          name="password"
+          required/>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirmer le mot de passe</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+          [(ngModel)]="confirmPassword"
+          name="confirmPassword"
+          required/>
+      </div>
+
+      <button type="submit" class="login-button" [disabled]="chargement">
+        @if (chargement) {
+          â³ Inscription en cours...
+        } @else {
+          S'inscrire
+        }
+      </button>
+
+    </form>
+
+    <div class="login-footer">
+      <p>DÃ©jÃ  membre ? <a routerLink="/login" class="red-link">Se connecter</a></p>
+      <a routerLink="/" class="back-home">â† Retour Ã  l'accueil</a>
+    </div>
+
+  </div>
+</div>
+
+=== C:\Users\Alpha\asma\src\app\request-access\request-access.ts ===
+// ============================================================
+// request-access.ts  â€”  Projet MONETA
+// ============================================================
+
+import { Component }    from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule }  from '@angular/forms';
+import { RouterLink }   from '@angular/router';
+import { Router }       from '@angular/router';
+import { AuthService }  from '../auth.service';
+
+@Component({
+  selector:    'app-request-access',
+  standalone:  true,
+  imports:     [CommonModule, FormsModule, RouterLink],
+  templateUrl: './request-access.html',
+  styleUrl:    './request-access.css'
+})
+export class RequestAccessComponent {
+
+  username        = '';
+  email           = '';
+  password        = '';
+  confirmPassword = '';
+  erreur          = '';
+  succes          = '';
+  chargement      = false;
+
+  constructor(private auth: AuthService, private router: Router) {
+    // Si dÃ©jÃ  connectÃ© â†’ redirect
+    if (this.auth.isLoggedIn()) {
+      this.router.navigate(['/']);
+    }
+  }
+
+  onSubmit(): void {
+    this.erreur = '';
+    this.succes = '';
+
+    // â”€â”€ Validations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    if (!this.username.trim() || !this.email.trim() ||
+        !this.password.trim() || !this.confirmPassword.trim()) {
+      this.erreur = 'Veuillez remplir tous les champs.';
+      return;
+    }
+
+    if (this.password !== this.confirmPassword) {
+      this.erreur = 'Les mots de passe ne correspondent pas.';
+      return;
+    }
+
+    if (this.password.length < 6) {
+      this.erreur = 'Le mot de passe doit contenir au moins 6 caractÃ¨res.';
+      return;
+    }
+
+    // â”€â”€ Appel backend â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    this.chargement = true;
+
+    this.auth.register({
+      username: this.username,
+      email:    this.email,
+      password: this.password,
+      role:     'VISITEUR'   // tout nouveau compte = Visiteur par dÃ©faut
+    }).subscribe({
+      next: () => {
+        this.chargement = false;
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        this.chargement = false;
+        if (err.status === 409) {
+          this.erreur = 'Ce nom d\'utilisateur ou email est dÃ©jÃ  utilisÃ©.';
+        } else if (err.status === 0) {
+          this.erreur = 'Impossible de contacter le serveur.';
+        } else {
+          this.erreur = 'Une erreur est survenue. Veuillez rÃ©essayer.';
+        }
+      }
+    });
+  }
+}
+
+=== C:\Users\Alpha\asma\src\app\app.config.server.ts ===
+import { mergeApplicationConfig, ApplicationConfig } from '@angular/core';
+import { provideServerRendering, withRoutes } from '@angular/ssr';
+import { appConfig } from './app.config';
+import { serverRoutes } from './app.routes.server';
+
+const serverConfig: ApplicationConfig = {
+  providers: [
+    provideServerRendering(withRoutes(serverRoutes))
+  ]
+};
+
+export const config = mergeApplicationConfig(appConfig, serverConfig);
+
+=== C:\Users\Alpha\asma\src\app\app.config.ts ===
+// ============================================================
+// app.config.ts  â€”  Projet MONETA
+// ============================================================
+
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { provideRouter }                                  from '@angular/router';
+import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/http';
+import { routes }                                         from './app.routes';
+import { authInterceptor }                                from './auth.interceptor';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([authInterceptor])   // âœ… JWT ajoutÃ© Ã  chaque requÃªte
+    )
+  ]
+};
+
+=== C:\Users\Alpha\asma\src\app\app.css ===
+
+=== C:\Users\Alpha\asma\src\app\app.html ===
+<router-outlet></router-outlet>
+<app-chatbot></app-chatbot>
+
+=== C:\Users\Alpha\asma\src\app\app.routes.server.ts ===
+import { RenderMode, ServerRoute } from '@angular/ssr';
+
+export const serverRoutes: ServerRoute[] = [
+  {
+    path: '**',
+    renderMode: RenderMode.Prerender
+  }
+];
+
+=== C:\Users\Alpha\asma\src\app\app.routes.ts ===
+// ============================================================
+// app.routes.ts  â€”  Projet MONETA
+// ============================================================
+
+import { Routes }                  from '@angular/router';
+import { HomeComponent }           from './home/home';
+import { LoginComponent }          from './login/login';
+import { RequestAccessComponent }  from './request-access/request-access';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password';
+import { MonnaiesComponent }       from './monnaies/monnaies';
+import { CarteComponent }          from './carte/carte';
+import { authGuard, superviseurGuard } from './auth.guard';
+
+export const routes: Routes = [
+  {
+    path: '',
+    component: HomeComponent,
+    title: 'Moneta - Dashboard',
+    canActivate: [authGuard],           // âœ… faut Ãªtre connectÃ©
+    children: [
+      {
+        path: 'cartes',
+        component: CarteComponent,
+        title: 'Moneta - Cartes'
+      },
+      {
+        path: 'monnaies',
+        component: MonnaiesComponent,
+        title: 'Moneta - Monnaies'
+      }
+    ]
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
+    title: 'Moneta - Connexion'
+  },
+  {
+    path: 'request',
+    component: RequestAccessComponent,
+    title: 'Moneta - Inscription'
+  },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent,
+    title: 'Moneta - Mot de passe oubliÃ©'
+  },
+  {
+    path: '**',
+    redirectTo: ''
+  }
+];
+
+=== C:\Users\Alpha\asma\src\app\app.spec.ts ===
+import { TestBed } from '@angular/core/testing';
+import { App } from './app';
+
+describe('App', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [App],
+    }).compileComponents();
+  });
+
+  it('should create the app', () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+    expect(app).toBeTruthy();
+  });
+
+  it('should render title', async () => {
+    const fixture = TestBed.createComponent(App);
+    await fixture.whenStable();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, pfe-angular-app');
+  });
+});
+
+=== C:\Users\Alpha\asma\src\app\app.ts ===
+import { Component, signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { ChatbotComponent } from './chatbot/chatbot';
+
+@Component({
+  selector: 'app-root',
+  imports: [RouterOutlet, ChatbotComponent],
+  templateUrl: './app.html',
+  styleUrl: './app.css'
+})
+export class App {
+  protected readonly title = signal('pfe-angular-app');
+}
+
+=== C:\Users\Alpha\asma\src\app\auth.guard.ts ===
+// ============================================================
+// auth.guard.ts  â€”  Projet MONETA
+// ============================================================
+
+import { inject }        from '@angular/core';
+import { CanActivateFn } from '@angular/router';
+import { Router }        from '@angular/router';
+import { AuthService }   from './auth.service';
+
+// â”€â”€ Tout utilisateur connectÃ© â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+export const authGuard: CanActivateFn = () => {
+  const auth   = inject(AuthService);
+  const router = inject(Router);
+  if (auth.isLoggedIn()) return true;
+  router.navigate(['/login']);
+  return false;
+};
+
+// â”€â”€ Superviseur ou Admin â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+export const superviseurGuard: CanActivateFn = () => {
+  const auth   = inject(AuthService);
+  const router = inject(Router);
+  if (auth.isSuperviseur()) return true;
+  router.navigate(['/monnaies']);
+  return false;
+};
+
+// â”€â”€ Admin uniquement â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+export const adminGuard: CanActivateFn = () => {
+  const auth   = inject(AuthService);
+  const router = inject(Router);
+  if (auth.isAdmin()) return true;
+  router.navigate(['/monnaies']);
+  return false;
+};
+
+=== C:\Users\Alpha\asma\src\app\auth.interceptor.ts ===
+// ============================================================
+// auth.interceptor.ts  â€”  Projet MONETA
+// ============================================================
+
+import { HttpInterceptorFn } from '@angular/common/http';
+import { inject }            from '@angular/core';
+import { AuthService }       from './auth.service';
+
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const auth  = inject(AuthService);
+  const token = auth.getToken();
+
+  if (token) {
+    const cloned = req.clone({
+      setHeaders: { Authorization: `Bearer ${token}` }
+    });
+    return next(cloned);
+  }
+
+  return next(req);
+};
+
+=== C:\Users\Alpha\asma\src\app\auth.service.ts ===
+// ============================================================
+// auth.service.ts  â€”  Projet MONETA
+// ============================================================
+
+import { Injectable }        from '@angular/core';
+import { HttpClient }        from '@angular/common/http';
+import { Router }            from '@angular/router';
+import { Observable, tap }   from 'rxjs';
+
+export interface LoginRequest {
+  username: string;
+  password: string;
+}
+
+export interface RegisterRequest {
+  username: string;
+  email:    string;
+  password: string;
+  role:     string;
+}
+
+export interface AuthResponse {
+  token:    string;
+  username: string;
+  email:    string;
+  role:     string;
+}
+
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+
+  private apiUrl = 'http://localhost:8083/api/auth';
+
+  constructor(private http: HttpClient, private router: Router) {}
+
+  login(credentials: LoginRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
+      tap(res => this.sauvegarderSession(res))
+    );
+  }
+
+  register(data: RegisterRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data).pipe(
+      tap(res => this.sauvegarderSession(res))
+    );
+  }
+
+  private sauvegarderSession(res: AuthResponse): void {
+    localStorage.setItem('token',    res.token);
+    localStorage.setItem('username', res.username);
+    localStorage.setItem('email',    res.email);
+    localStorage.setItem('role',     res.role);
+  }
+
+  logout(): void {
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  }
+
+  getToken():    string | null { return localStorage.getItem('token');    }
+  getUsername(): string | null { return localStorage.getItem('username'); }
+  getEmail():    string | null { return localStorage.getItem('email');    }
+  getRole():     string | null { return localStorage.getItem('role');     }
+
+  isLoggedIn(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.exp * 1000 > Date.now();
+    } catch {
+      return false;
+    }
+  }
+
+  isAdmin():       boolean { return this.getRole() === 'ADMIN'; }
+  isSuperviseur(): boolean { return this.getRole() === 'SUPERVISEUR' || this.isAdmin(); }
+  isVisiteur():    boolean { return this.isLoggedIn(); }
+}
+
+=== C:\Users\Alpha\asma\src\index.html ===
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>PfeAngularApp</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>
+
+=== C:\Users\Alpha\asma\src\main.server.ts ===
+import { BootstrapContext, bootstrapApplication } from '@angular/platform-browser';
+import { App } from './app/app';
+import { config } from './app/app.config.server';
+
+const bootstrap = (context: BootstrapContext) =>
+    bootstrapApplication(App, config, context);
+
+export default bootstrap;
+
+=== C:\Users\Alpha\asma\src\main.ts ===
+import { bootstrapApplication } from '@angular/platform-browser';
+import { appConfig } from './app/app.config';
+import { App } from './app/app';
+
+bootstrapApplication(App, appConfig)
+  .catch((err) => console.error(err));
+
+=== C:\Users\Alpha\asma\src\server.ts ===
+import {
+  AngularNodeAppEngine,
+  createNodeRequestHandler,
+  isMainModule,
+  writeResponseToNodeResponse,
+} from '@angular/ssr/node';
+import express from 'express';
+import { join } from 'node:path';
+
+const browserDistFolder = join(import.meta.dirname, '../browser');
+
+const app = express();
+const angularApp = new AngularNodeAppEngine();
+
+/**
+ * Example Express Rest API endpoints can be defined here.
+ * Uncomment and define endpoints as necessary.
+ *
+ * Example:
+ * ```ts
+ * app.get('/api/{*splat}', (req, res) => {
+ *   // Handle API request
+ * });
+ * ```
+ */
+
+/**
+ * Serve static files from /browser
+ */
+app.use(
+  express.static(browserDistFolder, {
+    maxAge: '1y',
+    index: false,
+    redirect: false,
+  }),
+);
+
+/**
+ * Handle all other requests by rendering the Angular application.
+ */
+app.use((req, res, next) => {
+  angularApp
+    .handle(req)
+    .then((response) =>
+      response ? writeResponseToNodeResponse(response, res) : next(),
+    )
+    .catch(next);
+});
+
+/**
+ * Start the server if this module is the main entry point, or it is ran via PM2.
+ * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
+ */
+if (isMainModule(import.meta.url) || process.env['pm_id']) {
+  const port = process.env['PORT'] || 4000;
+  app.listen(port, (error) => {
+    if (error) {
+      throw error;
+    }
+
+    console.log(`Node Express server listening on http://localhost:${port}`);
+  });
+}
+
+/**
+ * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.
+ */
+export const reqHandler = createNodeRequestHandler(app);
+
+=== C:\Users\Alpha\asma\src\styles.css ===
+/* You can add global styles to this file, and also import other style files */
+@import "leaflet/dist/leaflet.css";
+

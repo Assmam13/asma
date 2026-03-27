@@ -21,11 +21,49 @@
         <span class="status-text">Assistant monnaies tunisiennes</span>
       </div>
     </div>
-    <button class="header-close" (click)="toggleChat()">✕</button>
+    <!-- Boutons header -->
+    <div class="header-actions">
+      <button class="header-btn" (click)="toggleHistorique()" title="Historique" *ngIf="!showWelcomeForm">
+        🕐
+      </button>
+      <button class="header-btn" (click)="nouvelleConversation()" title="Nouvelle conversation" *ngIf="!showWelcomeForm">
+        ✏️
+      </button>
+      <button class="header-close" (click)="toggleChat()">✕</button>
+    </div>
   </div>
 
-  <!-- Messages -->
-  <div class="chat-messages" #messagesContainer>
+  <!-- ── PANNEAU HISTORIQUE ─────────────────────────── -->
+  <div class="historique-panel" *ngIf="showHistorique">
+    <div class="historique-header">
+      <span>🕐 Historique des conversations</span>
+      <button class="btn-suppr-hist" (click)="supprimerHistorique()" *ngIf="historique.length > 0">
+        🗑️ Tout supprimer
+      </button>
+    </div>
+
+    <div class="historique-vide" *ngIf="historique.length === 0">
+      <span>Aucun historique sauvegardé</span>
+    </div>
+
+    <div class="historique-liste">
+      <div class="historique-item" *ngFor="let session of historique | slice:0:10"
+           (click)="chargerSession(session)">
+        <div class="hist-avatar">{{ session.prenom[0]?.toUpperCase() }}</div>
+        <div class="hist-info">
+          <span class="hist-prenom">{{ session.prenom }}</span>
+          <span class="hist-date">{{ session.date }} — {{ session.messages.length }} messages</span>
+          <span class="hist-apercu">
+            {{ session.messages[session.messages.length - 1]?.content | slice:0:40 }}...
+          </span>
+        </div>
+        <span class="hist-arrow">›</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MESSAGES ───────────────────────────────────── -->
+  <div class="chat-messages" #messagesContainer *ngIf="!showHistorique">
 
     <!-- Formulaire prénom -->
     <div class="welcome-form" *ngIf="showWelcomeForm">
@@ -39,6 +77,18 @@
           Pour commencer, quel est votre prénom ?</p>
         </div>
       </div>
+
+      <!-- Aperçu historique si sessions existantes -->
+      <div class="hist-suggestion" *ngIf="historique.length > 0">
+        <span class="hist-suggestion-label">🕐 Sessions récentes :</span>
+        <div class="hist-suggestion-btns">
+          <button class="hist-chip" *ngFor="let h of historique | slice:0:3"
+                  (click)="chargerSession(h)">
+            {{ h.prenom }} ({{ h.date }})
+          </button>
+        </div>
+      </div>
+
       <div class="welcome-inputs">
         <input
           type="text"
@@ -51,7 +101,7 @@
       </div>
     </div>
 
-    <!-- Messages -->
+    <!-- Liste des messages -->
     <div *ngFor="let msg of messages" class="message-wrapper">
 
       <div class="bot-message" *ngIf="msg.role === 'bot'">
@@ -74,7 +124,7 @@
 
     </div>
 
-    <!-- Typing -->
+    <!-- Indicateur de frappe -->
     <div class="bot-message" *ngIf="isTyping">
       <div class="message-avatar">
         <img src="chatbot-icon.jpg" alt="bot"/>
@@ -88,14 +138,14 @@
 
   </div>
 
-  <!-- Suggestions -->
-  <div class="quick-suggestions" *ngIf="showSuggestions && !showWelcomeForm">
+  <!-- Suggestions rapides -->
+  <div class="quick-suggestions" *ngIf="showSuggestions && !showWelcomeForm && !showHistorique">
     <button class="suggestion-chip" *ngFor="let s of suggestions" (click)="sendSuggestion(s)">
       {{ s }}
     </button>
   </div>
 
-  <!-- Input -->
+  <!-- Zone de saisie -->
   <div class="chat-input-area">
     <input
       type="text"
@@ -103,10 +153,10 @@
       (keyup.enter)="sendMessage()"
       placeholder="Posez votre question..."
       class="chat-input"
-      [disabled]="isTyping || showWelcomeForm"
+      [disabled]="isTyping || showWelcomeForm || showHistorique"
     />
     <button class="send-btn" (click)="sendMessage()"
-      [disabled]="isTyping || showWelcomeForm || !currentMessage.trim()">
+      [disabled]="isTyping || showWelcomeForm || showHistorique || !currentMessage.trim()">
       ➤
     </button>
   </div>

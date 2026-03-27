@@ -52,10 +52,14 @@ export class AuthService {
     localStorage.setItem('role',     res.role);
   }
 
-  logout(): void {
-    localStorage.clear();
-    this.router.navigate(['/login']);
-  }
+ logout(): void {
+  // ✅ Supprime seulement les clés d'auth, pas l'historique du chatbot
+  localStorage.removeItem('token');
+  localStorage.removeItem('username');
+  localStorage.removeItem('email');
+  localStorage.removeItem('role');
+  this.router.navigate(['/login']);
+}
 
   getToken():    string | null { return localStorage.getItem('token');    }
   getUsername(): string | null { return localStorage.getItem('username'); }

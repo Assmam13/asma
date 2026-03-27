@@ -1,2 +1,7 @@
-<router-outlet></router-outlet>
-<app-chatbot></app-chatbot>
+<router-outlet />
+
+<!-- ✅ Chatbot visible UNIQUEMENT hors pages de connexion -->
+<app-chatbot
+  *ngIf="afficherChatbot"
+  [utilisateurConnecte]="utilisateurConnecte">
+</app-chatbot>

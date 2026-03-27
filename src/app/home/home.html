@@ -25,6 +25,11 @@
       <a routerLink="/monnaies" routerLinkActive="active" class="nav-item">
         <span class="icon">🪙</span> Monnaies
       </a>
+      @if (auth.isAdmin()) {
+  <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+    <span class="icon">📊</span> Dashboard BI
+  </a>
+}
 
       <!-- ── Admin only ── -->
       @if (auth.isAdmin()) {

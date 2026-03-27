@@ -1,0 +1,106 @@
+<div class="dashboard-page">
+
+  <!-- ── Header ── -->
+  <div class="dash-header">
+    <div class="dash-title">
+      <span class="dash-icon">📊</span>
+      <div>
+        <h1>Dashboard BI</h1>
+        <p>Statistiques de la plateforme MONETA</p>
+      </div>
+    </div>
+    <button class="btn-refresh" (click)="chargerDashboard()">
+      🔄 Actualiser
+    </button>
+  </div>
+
+  <!-- ── Chargement ── -->
+  @if (chargement) {
+    <div class="loading-state">
+      <div class="spinner">🪙</div>
+      <p>Chargement des statistiques...</p>
+    </div>
+  }
+
+  <!-- ── Erreur ── -->
+  @if (erreur) {
+    <div class="erreur-state">
+      ⚠️ {{ erreur }}
+    </div>
+  }
+
+  <!-- ── Contenu ── -->
+  @if (data && !chargement) {
+
+    <!-- Compteurs globaux -->
+    <div class="counters-grid">
+      <app-counter
+        label="Monnaies"
+        icon="🪙"
+        [value]="data.globales.totalMonnaies"
+        color="or">
+      </app-counter>
+      <app-counter
+        label="Utilisateurs"
+        icon="👥"
+        [value]="data.globales.totalUtilisateurs"
+        color="rouge">
+      </app-counter>
+      <app-counter
+        label="Visiteurs"
+        icon="👁️"
+        [value]="data.globales.totalVisiteurs"
+        color="vert">
+      </app-counter>
+      <app-counter
+        label="Superviseurs"
+        icon="🔧"
+        [value]="data.globales.totalSuperviseurs"
+        color="bleu">
+      </app-counter>
+    </div>
+
+    <!-- Graphiques -->
+    <div class="charts-grid">
+
+      <!-- Bar chart : monnaies par période -->
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <span class="chart-icon">📅</span>
+          <span class="chart-titre">Monnaies par Période</span>
+        </div>
+        <app-bar-chart
+          [data]="data.categories.parPeriode"
+          label="Monnaies par période">
+        </app-bar-chart>
+      </div>
+
+      <!-- Pie chart : monnaies par matériau -->
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <span class="chart-icon">🔩</span>
+          <span class="chart-titre">Monnaies par Matériau</span>
+        </div>
+        <app-pie-chart
+          [data]="data.categories.parMateriau"
+          label="Monnaies par matériau">
+        </app-pie-chart>
+      </div>
+
+      <!-- Bar chart : monnaies par région -->
+      <div class="chart-card full-width">
+        <div class="chart-card-header">
+          <span class="chart-icon">📍</span>
+          <span class="chart-titre">Monnaies par Région (Top 8)</span>
+        </div>
+        <app-bar-chart
+          [data]="data.categories.parRegion"
+          label="Monnaies par région"
+          color="#c9a84c">
+        </app-bar-chart>
+      </div>
+
+    </div>
+  }
+
+</div>

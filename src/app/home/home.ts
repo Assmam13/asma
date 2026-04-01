@@ -16,13 +16,13 @@ import { AuthService }                                      from '../auth.servic
 })
 export class HomeComponent {
 
-  isAIMode        = false;
-  isSearchFocused = false;
+  isAIMode        = false;// mode recherche IA activé ou non
+  isSearchFocused = false; // barre de recherche active ou non
 
   constructor(public auth: AuthService, private router: Router) {}
 
   toggleAIMode(): void {
-    this.isAIMode = !this.isAIMode;
+    this.isAIMode = !this.isAIMode;  // active/désactive la recherche IA
   }
 
   onSearchFocus(): void { this.isSearchFocused = true;  }
@@ -30,10 +30,10 @@ export class HomeComponent {
 
   isWelcomeVisible(): boolean {
     return this.router.url === '/' || this.router.url === '/home';
-  }
+  }// Affiche le message de bienvenue seulement sur la page d'accueil — disparaît quand tu navigues vers Monnaies ou Carte
 
   seDeconnecter(): void {
-    this.auth.logout();
+    this.auth.logout(); // appelle auth.service → supprime localStorage → /login
   }
 
   // Returns a color class based on role
@@ -51,5 +51,6 @@ export class HomeComponent {
       case 'SUPERVISEUR': return '🔧 Superviseur';
       default:            return '👁️ Visiteur';
     }
-  }
+  } 
+  //Affiche le bon badge coloré selon le rôle de l'utilisateur connecté
 }

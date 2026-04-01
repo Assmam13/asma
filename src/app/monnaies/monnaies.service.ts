@@ -37,7 +37,7 @@ export interface MonnaiesResponse {
 export class MonnaiesService {
 
   // ✅ Un seul port — modifiez ici si besoin
-  private apiUrl = 'http://localhost:8083/api/monnaies';
+  private apiUrl = 'http://localhost:8080/api/monnaies';
 
   constructor(private http: HttpClient) {}
 

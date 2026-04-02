@@ -20,7 +20,7 @@ export interface RegisterRequest {
 }
 
 export interface AuthResponse {
-  token:    string;
+  token:    string;//JWT recu du backend
   username: string;
   email:    string;
   role:     string;
@@ -29,7 +29,7 @@ export interface AuthResponse {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:8083/api/auth';
+  private apiUrl = 'http://localhost:8080/api/auth'; //Pointe directement vers ton **AuthController.java** dans Spring Boot
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -38,15 +38,21 @@ export class AuthService {
       tap(res => this.sauvegarderSession(res))
     );
   }
+  
+//Angular envoie → POST /api/auth/login { username, password }
+//Backend répond → { token, username, email, role }
+              //→ sauvegarderSession() stocke tout dans localStorage
 
   register(data: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data).pipe(
       tap(res => this.sauvegarderSession(res))
     );
   }
-
-  private sauvegarderSession(res: AuthResponse): void {
-    localStorage.setItem('token',    res.token);
+/*Angular envoie → POST /api/auth/register { username, email, password, role }
+Backend répond → { token, username, email, role }
+              → sauvegarderSession() stocke tout dans localStorage*/
+  private sauvegarderSession(res: AuthResponse): void { //stockage local
+    localStorage.setItem('token',    res.token);//jwt authentifier les rq
     localStorage.setItem('username', res.username);
     localStorage.setItem('email',    res.email);
     localStorage.setItem('role',     res.role);
@@ -76,7 +82,13 @@ export class AuthService {
       return false;
     }
   }
-
+/*Token JWT = 3 parties séparées par "."
+  [header].[payload].[signature]
+               ↑
+         atob() décode cette partie
+         payload.exp = date d'expiration
+         Si exp > maintenant → connecté ✅
+         Si exp < maintenant → expiré ❌*/
   isAdmin():       boolean { return this.getRole() === 'ADMIN'; }
   isSuperviseur(): boolean { return this.getRole() === 'SUPERVISEUR' || this.isAdmin(); }
   isVisiteur():    boolean { return this.isLoggedIn(); }

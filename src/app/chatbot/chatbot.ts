@@ -48,6 +48,7 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
   userPrenom     = '';
   currentMessage = '';
   messages:      Message[] = [];
+  private sessionId = '';
 
   suggestions = [
     '🏛️ Monnaies puniques',
@@ -131,8 +132,9 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     this.showWelcomeForm = false;
     this.showSuggestions = true;
 
-    // ✅ Recharge l'historique avec la bonne clé (maintenant qu'on connaît le prénom)
+    // ✅ Recharge l'historique + génère un sessionId unique
     this._chargerHistorique();
+    this.sessionId = this._genererSessionId();
 
     const sessionExistante = this.historique.find(
       h => h.prenom.toLowerCase() === this.userPrenom.toLowerCase()
@@ -183,9 +185,11 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     // ✅ Headers sans erreur TypeScript
     const httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
+    const userId = this.utilisateurConnecte?.email ?? `visiteur_${this.userPrenom.toLowerCase()}`;
+
     this.http.post<ChatResponse>(
       this.apiUrl,
-      { question, prenom: this.userPrenom },
+      { question, prenom: this.userPrenom, user_id: userId, session_id: this.sessionId },
       { headers: httpHeaders }
     ).pipe(timeout(60000)).subscribe({
       next: (response) => {
@@ -310,6 +314,10 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
   private getTime(): string {
     const now = new Date();
     return `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+  }
+
+  private _genererSessionId(): string {
+    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 
   private scrollToBottom(): void {

@@ -2,6 +2,8 @@
 // dashboard.component.scss  —  Projet MONETA
 // ============================================================
 
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap');
+
 .dashboard-page {
   padding: 2rem;
   background: #f4f7f9;
@@ -9,12 +11,33 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
+// ── Section titres ───────────────────────────────────────────
+.section-titre {
+  font-family: 'Cinzel', serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #7a6a52;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 1.8rem 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #ddd5c0;
+  }
+}
+
 // ── Header ──────────────────────────────────────────────────
 .dash-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   padding-bottom: 1.5rem;
   border-bottom: 2px solid #ddd5c0;
 }
@@ -25,6 +48,7 @@
   gap: 1rem;
 
   h1 {
+    font-family: 'Cinzel', serif;
     font-size: 1.6rem;
     font-weight: 700;
     color: #1c1c2e;
@@ -38,9 +62,7 @@
   }
 }
 
-.dash-icon {
-  font-size: 2rem;
-}
+.dash-icon { font-size: 2rem; }
 
 .btn-refresh {
   background: #c0392b;
@@ -53,10 +75,7 @@
   cursor: pointer;
   transition: all 0.2s;
 
-  &:hover {
-    background: #922b21;
-    transform: translateY(-1px);
-  }
+  &:hover { background: #922b21; transform: translateY(-1px); }
 }
 
 // ── Loading & Error ──────────────────────────────────────────
@@ -74,9 +93,7 @@
   }
 }
 
-@keyframes spin {
-  to { transform: rotateY(360deg); }
-}
+@keyframes spin { to { transform: rotateY(360deg); } }
 
 .erreur-state {
   background: #fff0f0;
@@ -93,7 +110,11 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.2rem;
-  margin-bottom: 1.8rem;
+  margin-bottom: 0.5rem;
+
+  &.trois {
+    grid-template-columns: repeat(3, 1fr);
+  }
 
   @media (max-width: 900px) {
     grid-template-columns: repeat(2, 1fr);
@@ -105,6 +126,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.4rem;
+  margin-bottom: 0.5rem;
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
@@ -119,9 +141,7 @@
   border: 1px solid #ddd5c0;
   border-top: 3px solid #c9a84c;
 
-  &.full-width {
-    grid-column: 1 / -1;
-  }
+  &.full-width { grid-column: 1 / -1; }
 }
 
 .chart-card-header {
@@ -133,14 +153,35 @@
   border-bottom: 1px solid #f0ebe0;
 }
 
-.chart-icon {
-  font-size: 1.1rem;
-}
+.chart-icon  { font-size: 1.1rem; }
 
 .chart-titre {
   font-family: 'Cinzel', serif;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: #2c2416;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
+  flex: 1;
+}
+
+// ── Badges bibliothèque ──────────────────────────────────────
+.chart-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+
+  &.chartjs {
+    background: rgba(255, 99, 132, 0.12);
+    color: #c0392b;
+    border: 1px solid rgba(192, 57, 43, 0.25);
+  }
+
+  &.echarts {
+    background: rgba(201, 168, 76, 0.12);
+    color: #856404;
+    border: 1px solid rgba(201, 168, 76, 0.3);
+  }
 }

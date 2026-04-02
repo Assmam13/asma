@@ -41,7 +41,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   erreur      = '';
 
   private destroy$ = new Subject<void>();
-  private apiUrl   = 'http://localhost:8083/api/bi/dashboard';
+  private apiUrl   = 'http://localhost:8080/api/bi/dashboard';
 
   constructor(private http: HttpClient, public auth: AuthService) {}
 

@@ -10,27 +10,40 @@ import { takeUntil }                    from 'rxjs/operators';
 import { AuthService }                  from '../auth.service';
 import { BarChartComponent }            from './charts/bar-chart.component';
 import { PieChartComponent }            from './charts/pie-chart.component';
+import { LineChartComponent }           from './charts/line-chart.component';
+import { HeatmapChartComponent }        from './charts/heatmap-chart.component';
 import { CounterComponent }             from './charts/counter.component';
 
 export interface DashboardData {
   globales: {
-    totalMonnaies:      number;
-    totalUtilisateurs:  number;
-    totalVisiteurs:     number;
-    totalSuperviseurs:  number;
-    totalAdmins:        number;
+    totalMonnaies:        number;
+    totalUtilisateurs:    number;
+    totalVisiteurs:       number;
+    totalSuperviseurs:    number;
+    totalAdmins:          number;
+    visiteursAujourdhui:  number;
+    visiteursParSemaine:  number;
+    visiteursParMois:     number;
   };
   categories: {
     parPeriode:  Record<string, number>;
     parMateriau: Record<string, number>;
     parRegion:   Record<string, number>;
+    parAnnee:    Record<string, number>;
   };
 }
 
 @Component({
   selector:    'app-dashboard',
   standalone:  true,
-  imports:     [CommonModule, BarChartComponent, PieChartComponent, CounterComponent],
+  imports:     [
+    CommonModule,
+    BarChartComponent,
+    PieChartComponent,
+    LineChartComponent,
+    HeatmapChartComponent,
+    CounterComponent
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl:    './dashboard.component.scss'
 })

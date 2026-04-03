@@ -24,83 +24,91 @@
 
   <!-- ── Erreur ── -->
   @if (erreur) {
-    <div class="erreur-state">
-      ⚠️ {{ erreur }}
-    </div>
+    <div class="erreur-state">⚠️ {{ erreur }}</div>
   }
 
   <!-- ── Contenu ── -->
   @if (data && !chargement) {
 
-    <!-- Compteurs globaux -->
+    <!-- ── Section 1 : Compteurs monnaies + utilisateurs ── -->
+    <div class="section-titre">🪙 Aperçu Général</div>
     <div class="counters-grid">
-      <app-counter
-        label="Monnaies"
-        icon="🪙"
-        [value]="data.globales.totalMonnaies"
-        color="or">
-      </app-counter>
-      <app-counter
-        label="Utilisateurs"
-        icon="👥"
-        [value]="data.globales.totalUtilisateurs"
-        color="rouge">
-      </app-counter>
-      <app-counter
-        label="Visiteurs"
-        icon="👁️"
-        [value]="data.globales.totalVisiteurs"
-        color="vert">
-      </app-counter>
-      <app-counter
-        label="Superviseurs"
-        icon="🔧"
-        [value]="data.globales.totalSuperviseurs"
-        color="bleu">
-      </app-counter>
+      <app-counter label="Monnaies"     icon="🪙" [value]="data.globales.totalMonnaies"     color="or"></app-counter>
+      <app-counter label="Utilisateurs" icon="👥" [value]="data.globales.totalUtilisateurs"  color="rouge"></app-counter>
+      <app-counter label="Visiteurs"    icon="👁️" [value]="data.globales.totalVisiteurs"     color="vert"></app-counter>
+      <app-counter label="Superviseurs" icon="🔧" [value]="data.globales.totalSuperviseurs"  color="bleu"></app-counter>
     </div>
 
-    <!-- Graphiques -->
+    <!-- ── Section 2 : Compteurs visiteurs par période ── -->
+    <div class="section-titre">👥 Statistiques Visiteurs</div>
+    <div class="counters-grid trois">
+      <app-counter label="Visiteurs aujourd'hui" icon="📅" [value]="data.globales.visiteursAujourdhui" color="or"></app-counter>
+      <app-counter label="Visiteurs (7 jours)"   icon="📆" [value]="data.globales.visiteursParSemaine" color="rouge"></app-counter>
+      <app-counter label="Visiteurs (30 jours)"  icon="🗓️" [value]="data.globales.visiteursParMois"    color="bleu"></app-counter>
+    </div>
+
+    <!-- ── Section 3 : Graphiques Chart.js ── -->
+    <div class="section-titre">📊 Graphiques — Chart.js</div>
     <div class="charts-grid">
 
-      <!-- Bar chart : monnaies par période -->
+      <!-- Pie chart : monnaies par période (Chart.js) -->
       <div class="chart-card">
         <div class="chart-card-header">
+          <span class="chart-badge chartjs">Chart.js</span>
           <span class="chart-icon">📅</span>
           <span class="chart-titre">Monnaies par Période</span>
         </div>
-        <app-bar-chart
+        <app-pie-chart
           [data]="data.categories.parPeriode"
           label="Monnaies par période">
-        </app-bar-chart>
-      </div>
-
-      <!-- Pie chart : monnaies par matériau -->
-      <div class="chart-card">
-        <div class="chart-card-header">
-          <span class="chart-icon">🔩</span>
-          <span class="chart-titre">Monnaies par Matériau</span>
-        </div>
-        <app-pie-chart
-          [data]="data.categories.parMateriau"
-          label="Monnaies par matériau">
         </app-pie-chart>
       </div>
 
-      <!-- Bar chart : monnaies par région -->
-      <div class="chart-card full-width">
+      <!-- Bar chart : monnaies par matériau (Chart.js) -->
+      <div class="chart-card">
         <div class="chart-card-header">
-          <span class="chart-icon">📍</span>
-          <span class="chart-titre">Monnaies par Région (Top 8)</span>
+          <span class="chart-badge chartjs">Chart.js</span>
+          <span class="chart-icon">🔩</span>
+          <span class="chart-titre">Distribution par Matériau</span>
         </div>
         <app-bar-chart
-          [data]="data.categories.parRegion"
-          label="Monnaies par région"
-          color="#c9a84c">
+          [data]="data.categories.parMateriau"
+          label="Monnaies par matériau"
+          color="#c0392b">
         </app-bar-chart>
       </div>
 
+      <!-- Line chart : chronologique (Chart.js) -->
+      <div class="chart-card full-width">
+        <div class="chart-card-header">
+          <span class="chart-badge chartjs">Chart.js</span>
+          <span class="chart-icon">📈</span>
+          <span class="chart-titre">Évolution Chronologique des Frappes Monétaires</span>
+        </div>
+        <app-line-chart
+          [data]="data.categories.parAnnee"
+          label="Frappes par année">
+        </app-line-chart>
+      </div>
+
     </div>
+
+    <!-- ── Section 4 : Carte de chaleur ECharts ── -->
+    <div class="section-titre">🗺️ Carte de Chaleur — Apache ECharts</div>
+    <div class="charts-grid">
+
+      <!-- Heatmap : concentration géographique (ECharts) -->
+      <div class="chart-card full-width">
+        <div class="chart-card-header">
+          <span class="chart-badge echarts">ECharts</span>
+          <span class="chart-icon">🌡️</span>
+          <span class="chart-titre">Concentration Géographique des Découvertes (Top 8 Régions)</span>
+        </div>
+        <app-heatmap-chart [data]="data.categories.parRegion"></app-heatmap-chart>
+      </div>
+
+    </div>
+
   }
 
 </div>

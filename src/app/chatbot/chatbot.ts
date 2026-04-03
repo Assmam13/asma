@@ -185,7 +185,10 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     // ✅ Headers sans erreur TypeScript
     const httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    const userId = this.utilisateurConnecte?.email ?? `visiteur_${this.userPrenom.toLowerCase()}`;
+    // ✅ Si connecté → email, sinon → username direct (pas visiteur_xxx)
+    const userId = this.utilisateurConnecte?.email 
+                ?? this.utilisateurConnecte?.prenom 
+                ?? this.userPrenom.trim();
 
     this.http.post<ChatResponse>(
       this.apiUrl,

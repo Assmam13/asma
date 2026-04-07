@@ -3,7 +3,7 @@
   <!-- En-tête -->
   <div class="page-header">
     <div class="header-left">
-      <h2 class="header-titre">🗺️ Carte Archéologique de Tunisie</h2>
+      <h2 class="header-titre">🗺️ Carte Archéologique — Tunisie & France</h2>
       <p class="header-sous">Distribution géographique des monnaies selon les époques historiques</p>
     </div>
     <div class="header-stats">
@@ -15,9 +15,24 @@
     </div>
   </div>
 
-  <!-- Filtres -->
+  <!-- Filtre PAYS -->
   <div class="filtres-carte">
-    <span class="filtres-label">🔍 Filtrer par époque :</span>
+    <span class="filtres-label">🌍 Pays :</span>
+    <div class="filtres-btns">
+      <button
+        *ngFor="let p of pays"
+        class="filtre-btn"
+        [class.actif]="paysActif === p.label"
+        [style.--c]="'#555'"
+        (click)="filtrerPays(p.label)">
+        {{ p.drapeau }} {{ p.label }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtre ÉPOQUE -->
+  <div class="filtres-carte">
+    <span class="filtres-label">🔍 Époque :</span>
     <div class="filtres-btns">
       <button
         *ngFor="let ep of epoques"
@@ -33,6 +48,11 @@
     </div>
   </div>
 
+  <!-- Compteur visible -->
+  <div class="total-visible" *ngIf="!chargement">
+    <span>📍 {{ totalVisible }} site(s) affiché(s)</span>
+  </div>
+
   <!-- Chargement -->
   <div class="loading-carte" *ngIf="chargement">
     <div class="loading-spinner">🪙</div>
@@ -43,13 +63,16 @@
   <div class="map-container">
     <div id="historical-map"></div>
 
-    <!-- Légende sur la carte -->
+    <!-- Légende -->
     <div class="map-legend-overlay">
       <div class="legend-titre">Légende</div>
       <div class="legend-item" *ngFor="let ep of epoques.slice(1)">
         <span class="legend-dot" [style.background]="ep.couleur"></span>
         <span>{{ ep.label }}</span>
       </div>
+      <div class="legend-sep"></div>
+      <div class="legend-item"><span class="legend-dot" style="background:#555">🇹🇳</span><span>Tunisie</span></div>
+      <div class="legend-item"><span class="legend-dot" style="background:#555">🇫🇷</span><span>France</span></div>
     </div>
   </div>
 

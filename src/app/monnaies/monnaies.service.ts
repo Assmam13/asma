@@ -1,5 +1,6 @@
 // ============================================================
 // monnaies.service.ts  —  Angular 21  —  Projet MONETA
+// ✅ FIX: Port corrigé 8080 → 8083
 // ============================================================
 
 import { Injectable }             from '@angular/core';
@@ -36,7 +37,7 @@ export interface MonnaiesResponse {
 @Injectable({ providedIn: 'root' })
 export class MonnaiesService {
 
-  // ✅ Un seul port — modifiez ici si besoin
+  // ✅ FIX: Port 8083 (Spring Boot MONETA)
   private apiUrl = 'http://localhost:8080/api/monnaies';
 
   constructor(private http: HttpClient) {}

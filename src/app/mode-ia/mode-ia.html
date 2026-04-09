@@ -1,0 +1,149 @@
+<!-- ══════════════════════════════════════════
+     MONETA Mode IA — Style Google AI Mode
+══════════════════════════════════════════ -->
+
+<div class="ia-page">
+
+  <!-- ── ÉTAT INITIAL : Accueil ── -->
+  @if (!hasStarted) {
+    <div class="ia-welcome">
+      <h1 class="ia-greeting">
+        Bonjour {{ auth.getUsername() }}, que voulez-vous savoir ?
+      </h1>
+
+      <!-- Suggestions chips -->
+      <div class="ia-suggestions">
+        <button class="suggestion-pill" (click)="clickSuggestion('Qu\'est-ce qu\'une monnaie punique ?')">
+          🏛 Monnaies puniques
+        </button>
+        <button class="suggestion-pill" (click)="clickSuggestion('Quelles monnaies romaines viennent de Tunisie ?')">
+          ⚔ Monnaies romaines
+        </button>
+        <button class="suggestion-pill" (click)="clickSuggestion('Qu\'est-ce que le Dinar Aghlabide ?')">
+          ☪ Dinars islamiques
+        </button>
+        <button class="suggestion-pill" (click)="clickSuggestion('Comment identifier une monnaie byzantine ?')">
+          ✝ Byzantines
+        </button>
+        <button class="suggestion-pill" (click)="clickSuggestion('Quelles sont les monnaies de Massinissa ?')">
+          🗺 Monnaies numides
+        </button>
+        <button class="suggestion-pill" (click)="clickSuggestion('Histoire des monnaies françaises')">
+          ⚜ Monnaies françaises
+        </button>
+      </div>
+
+      <!-- Barre de recherche initiale -->
+      <div class="ia-input-box">
+        <textarea
+          #mainInput
+          class="ia-textarea"
+          placeholder="Posez une question"
+          [(ngModel)]="query"
+          (keydown)="onKeydown($event)"
+          rows="1">
+        </textarea>
+        <div class="ia-input-actions">
+          <button class="ia-action-btn" title="Ajouter">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+          <button class="ia-action-btn send-btn"
+                  [class.active]="query.trim()"
+                  (click)="envoyer()"
+                  title="Envoyer">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ── ÉTAT CONVERSATION ── -->
+  @if (hasStarted) {
+    <div class="ia-conversation">
+
+      <!-- Zone scrollable des messages -->
+      <div class="ia-scroll-area" #scrollArea>
+        <div class="ia-messages-wrapper">
+
+          @for (msg of messages; track msg.id) {
+
+            <!-- Message Utilisateur -->
+            @if (msg.role === 'user') {
+              <div class="ia-user-turn">
+                <div class="ia-user-bubble">{{ msg.text }}</div>
+              </div>
+            }
+
+            <!-- Réponse IA -->
+            @if (msg.role === 'ai') {
+              <div class="ia-ai-turn">
+                <div class="ia-ai-header">
+                  <div class="ia-sparkle">✦</div>
+                  <span class="ia-label">MONETA Intelligence</span>
+                </div>
+                <div class="ia-ai-content" [innerHTML]="msg.html"></div>
+              </div>
+            }
+
+          }
+
+          <!-- Typing indicator -->
+          @if (isTyping) {
+            <div class="ia-ai-turn">
+              <div class="ia-ai-header">
+                <div class="ia-sparkle spinning">✦</div>
+                <span class="ia-label">MONETA Intelligence</span>
+                <span class="ia-thinking">Réflexion en cours...</span>
+              </div>
+              <div class="ia-typing-bar">
+                <div class="ia-typing-line l1"></div>
+                <div class="ia-typing-line l2"></div>
+                <div class="ia-typing-line l3"></div>
+              </div>
+            </div>
+          }
+
+        </div>
+      </div>
+
+      <!-- ── BARRE DU BAS (style Google) ── -->
+      <div class="ia-bottom-bar">
+        <div class="ia-bottom-input-box">
+          <textarea
+            #bottomInput
+            class="ia-textarea"
+            placeholder="Posez une question"
+            [(ngModel)]="query"
+            (keydown)="onKeydown($event)"
+            rows="1">
+          </textarea>
+          <div class="ia-input-actions">
+            <button class="ia-action-btn" title="Ajouter">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+            <button class="ia-action-btn mic-btn" title="Microphone">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  }
+
+</div>

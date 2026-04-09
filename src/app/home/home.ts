@@ -1,42 +1,44 @@
 // ============================================================
-// home.ts  —  Projet MONETA
+// home.ts  —  Projet MONETA — avec Mode IA Google style
 // ============================================================
 
-import { Component }                                        from '@angular/core';
-import { CommonModule }                                     from '@angular/common';
+import { Component }                                          from '@angular/core';
+import { CommonModule }                                       from '@angular/common';
+import { FormsModule }                                        from '@angular/forms';
 import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router';
-import { AuthService }                                      from '../auth.service';
+import { AuthService }                                        from '../auth.service';
+import { ModeIaComponent }                                    from '../mode-ia/mode-ia';
 
 @Component({
   selector:    'app-home',
   standalone:  true,
-  imports:     [CommonModule, RouterLink, RouterLinkActive, RouterOutlet],
+  imports:     [CommonModule, FormsModule, RouterLink, RouterLinkActive, RouterOutlet, ModeIaComponent],
   templateUrl: './home.html',
   styleUrl:    './home.css'
 })
 export class HomeComponent {
 
-  isAIMode        = false;// mode recherche IA activé ou non
-  isSearchFocused = false; // barre de recherche active ou non
+  isAIMode    = false;
+  searchQuery = '';
 
   constructor(public auth: AuthService, private router: Router) {}
 
-  toggleAIMode(): void {
-    this.isAIMode = !this.isAIMode;  // active/désactive la recherche IA
+  toggleModeIA(): void {
+    this.isAIMode = !this.isAIMode;
   }
 
-  onSearchFocus(): void { this.isSearchFocused = true;  }
-  onSearchBlur():  void { this.isSearchFocused = false; }
+  fermerModeIA(): void {
+    this.isAIMode = false;
+  }
 
   isWelcomeVisible(): boolean {
     return this.router.url === '/' || this.router.url === '/home';
-  }// Affiche le message de bienvenue seulement sur la page d'accueil — disparaît quand tu navigues vers Monnaies ou Carte
-
-  seDeconnecter(): void {
-    this.auth.logout(); // appelle auth.service → supprime localStorage → /login
   }
 
-  // Returns a color class based on role
+  seDeconnecter(): void {
+    this.auth.logout();
+  }
+
   getRoleClass(): string {
     switch (this.auth.getRole()) {
       case 'ADMIN':       return 'role-admin';
@@ -51,6 +53,5 @@ export class HomeComponent {
       case 'SUPERVISEUR': return '🔧 Superviseur';
       default:            return '👁️ Visiteur';
     }
-  } 
-  //Affiche le bon badge coloré selon le rôle de l'utilisateur connecté
+  }
 }

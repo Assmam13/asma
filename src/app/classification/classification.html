@@ -1,0 +1,239 @@
+<div class="classification-page">
+
+  <!-- ── HERO ── -->
+  <div class="page-hero">
+    <div class="hero-icon">🤖</div>
+    <div class="hero-text">
+      <h1 class="hero-titre">Classification CNN</h1>
+      <p class="hero-sous">Identification automatique des monnaies par Intelligence Artificielle</p>
+    </div>
+  </div>
+
+  <div class="classification-layout">
+
+    <!-- ── COLONNE GAUCHE : Upload ── -->
+    <div class="upload-col">
+      <div class="upload-card">
+        <div class="card-header">
+          <span class="card-icon">📸</span>
+          <span class="card-titre">Télécharger une image</span>
+        </div>
+
+        <!-- Zone Drag & Drop -->
+        <div class="drop-zone"
+             [class.has-image]="imagePreview"
+             (dragover)="onDragOver($event)"
+             (drop)="onDrop($event)"
+             (click)="fileInput.click()">
+
+          @if (!imagePreview) {
+            <div class="drop-placeholder">
+              <div class="drop-icon">🖼️</div>
+              <p class="drop-text">Glissez une image ici</p>
+              <p class="drop-sub">ou cliquez pour sélectionner</p>
+              <span class="drop-formats">JPG, PNG, WEBP</span>
+            </div>
+          } @else {
+            <img [src]="imagePreview" alt="Aperçu" class="preview-img"/>
+            <div class="preview-overlay">
+              <span>Cliquer pour changer</span>
+            </div>
+          }
+        </div>
+
+        <input #fileInput type="file" accept="image/*"
+               style="display:none" (change)="onFileSelected($event)"/>
+
+        @if (selectedFile) {
+          <div class="file-info">
+            <span class="file-name">📎 {{ selectedFile.name }}</span>
+            <span class="file-size">{{ (selectedFile.size / 1024).toFixed(1) }} KB</span>
+          </div>
+        }
+
+        <!-- Boutons -->
+        <div class="btn-group">
+          <button class="btn-classifier"
+                  [disabled]="!selectedFile || chargement"
+                  (click)="classifier()">
+            @if (chargement) {
+              <span class="spinner">⟳</span> Analyse en cours...
+            } @else {
+              🤖 Classifier la monnaie
+            }
+          </button>
+          @if (selectedFile) {
+            <button class="btn-reset" (click)="reinitialiser()">✕ Reset</button>
+          }
+        </div>
+
+        <!-- Erreur -->
+        @if (erreur) {
+          <div class="erreur-box">{{ erreur }}</div>
+        }
+      </div>
+
+      <!-- Info CNN -->
+      <div class="info-card">
+        <div class="card-header">
+          <span class="card-icon">ℹ️</span>
+          <span class="card-titre">À propos du modèle</span>
+        </div>
+        <div class="info-content">
+          <div class="info-item">
+            <span class="info-label">Architecture</span>
+            <span class="info-value">MobileNetV2 + Transfer Learning</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Framework</span>
+            <span class="info-value">TensorFlow 2.x / Keras</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Dataset</span>
+            <span class="info-value">~3900 images numismatiques</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Classes</span>
+            <span class="info-value">7 époques historiques</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Taille d'entrée</span>
+            <span class="info-value">224 × 224 pixels</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── COLONNE DROITE : Résultats ── -->
+    <div class="result-col">
+
+      <!-- État initial -->
+      @if (!resultat && !chargement && !erreur) {
+        <div class="empty-state">
+          <div class="empty-icon">🔍</div>
+          <h3>En attente d'une image</h3>
+          <p>Uploadez une photo de monnaie archéologique et notre CNN l'identifiera automatiquement.</p>
+          <div class="classes-preview">
+            @for (cls of ['Punique','Romaine','Byzantine','Islamique','Numide','Medievale','Moderne']; track cls) {
+              <span class="cls-badge" [style.background]="getCouleur(cls)">
+                {{ getSymbole(cls) }} {{ cls }}
+              </span>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Chargement -->
+      @if (chargement) {
+        <div class="loading-state">
+          <div class="cnn-animation">
+            <div class="layer l1"></div>
+            <div class="arrow">→</div>
+            <div class="layer l2"></div>
+            <div class="arrow">→</div>
+            <div class="layer l3"></div>
+            <div class="arrow">→</div>
+            <div class="output">🪙</div>
+          </div>
+          <p class="loading-text">Analyse CNN en cours...</p>
+          <p class="loading-sub">Le réseau de neurones examine votre image</p>
+        </div>
+      }
+
+      <!-- Résultat -->
+      @if (resultat) {
+        <div class="result-card">
+
+          <!-- Résultat principal -->
+          <div class="result-main"
+               [style.border-color]="getCouleur(resultat.prediction.classe)"
+               [style.background]="getCouleur(resultat.prediction.classe) + '10'">
+
+            <div class="result-badge"
+                 [style.background]="getCouleur(resultat.prediction.classe)">
+              {{ getSymbole(resultat.prediction.classe) }}
+              {{ resultat.prediction.classe }}
+            </div>
+
+            <div class="result-confiance">
+              <div class="confiance-value"
+                   [style.color]="getNiveauCouleur(resultat.prediction.confiance)">
+                {{ resultat.prediction.confiance.toFixed(1) }}%
+              </div>
+              <div class="confiance-label">
+                Confiance : {{ getNiveauConfiance(resultat.prediction.confiance) }}
+              </div>
+            </div>
+
+            <p class="result-desc">{{ resultat.prediction.description }}</p>
+
+            <!-- Barre de confiance -->
+            <div class="barre-container">
+              <div class="barre-fill"
+                   [style.width]="resultat.prediction.confiance + '%'"
+                   [style.background]="getCouleur(resultat.prediction.classe)">
+              </div>
+            </div>
+          </div>
+
+          <!-- Top 3 -->
+          <div class="top3-section">
+            <h3 class="section-titre">🏆 Top 3 des classes</h3>
+            <div class="top3-list">
+              @for (item of resultat.top3; track item.classe; let i = $index) {
+                <div class="top3-item" [class.winner]="i === 0">
+                  <div class="top3-rank">{{ i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉' }}</div>
+                  <div class="top3-info">
+                    <div class="top3-classe">
+                      <span class="top3-dot" [style.background]="getCouleur(item.classe)"></span>
+                      {{ getSymbole(item.classe) }} {{ item.classe }}
+                    </div>
+                    <div class="top3-bar-wrap">
+                      <div class="top3-bar"
+                           [style.width]="item.confiance + '%'"
+                           [style.background]="getCouleur(item.classe)">
+                      </div>
+                    </div>
+                    <span class="top3-desc">{{ item.description }}</span>
+                  </div>
+                  <div class="top3-pct" [style.color]="getCouleur(item.classe)">
+                    {{ item.confiance.toFixed(1) }}%
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Toutes les classes -->
+          <div class="all-classes-section">
+            <h3 class="section-titre">📊 Distribution complète</h3>
+            <div class="all-classes-list">
+              @for (item of resultat.toutes_classes; track item.classe) {
+                <div class="all-class-item">
+                  <span class="all-class-name">
+                    <span class="all-dot" [style.background]="getCouleur(item.classe)"></span>
+                    {{ item.classe }}
+                  </span>
+                  <div class="all-bar-wrap">
+                    <div class="all-bar"
+                         [style.width]="item.confiance + '%'"
+                         [style.background]="getCouleur(item.classe)">
+                    </div>
+                  </div>
+                  <span class="all-pct">{{ item.confiance.toFixed(1) }}%</span>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Nouvelle analyse -->
+          <button class="btn-nouvelle" (click)="reinitialiser()">
+            🔄 Nouvelle analyse
+          </button>
+
+        </div>
+      }
+
+    </div>
+  </div>
+</div>

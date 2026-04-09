@@ -18,18 +18,27 @@
 
     <!-- ── Navigation ── -->
     <nav class="sidebar-nav">
+
       <div class="menu-category">Exploration</div>
+
       <a routerLink="/cartes" routerLinkActive="active" class="nav-item">
         <span class="icon">📍</span> Carte Interactive
       </a>
+
       <a routerLink="/monnaies" routerLinkActive="active" class="nav-item">
         <span class="icon">🪙</span> Monnaies
       </a>
+
+      <!-- ── Classification CNN (tous les utilisateurs) ── -->
+      <a routerLink="/classification" routerLinkActive="active" class="nav-item">
+        <span class="icon">🤖</span> Classification CNN
+      </a>
+
       @if (auth.isAdmin()) {
-  <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
-    <span class="icon">📊</span> Dashboard BI
-  </a>
-}
+        <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+          <span class="icon">📊</span> Dashboard BI
+        </a>
+      }
 
       <!-- ── Admin only ── -->
       @if (auth.isAdmin()) {
@@ -38,6 +47,7 @@
           <span class="icon">👥</span> Gestion Utilisateurs
         </a>
       }
+
     </nav>
 
     <!-- ── Footer : Logout ── -->

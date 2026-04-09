@@ -10,6 +10,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password';
 import { MonnaiesComponent }       from './monnaies/monnaies';
 import { CarteComponent }          from './carte/carte';
 import { DashboardComponent }      from './dashboard/dashboard.component';
+import { ClassificationComponent } from './classification/classification';
 import { authGuard, adminGuard }   from './auth.guard';
 
 export const routes: Routes = [
@@ -19,8 +20,10 @@ export const routes: Routes = [
     title: 'Moneta - Accueil',
     canActivate: [authGuard],
     children: [
-      { path: 'cartes',   component: CarteComponent },
-      { path: 'monnaies', component: MonnaiesComponent },
+      { path: 'cartes',          component: CarteComponent },
+      { path: 'monnaies',        component: MonnaiesComponent },
+      { path: 'classification',  component: ClassificationComponent,
+        title: 'Moneta - Classification CNN' },
       {
         path:        'dashboard',
         component:   DashboardComponent,
@@ -29,8 +32,8 @@ export const routes: Routes = [
       }
     ]
   },
-  { path: 'login',            component: LoginComponent,           title: 'Moneta - Connexion'          },
-  { path: 'request',          component: RequestAccessComponent,   title: 'Moneta - Inscription'        },
-  { path: 'forgot-password',  component: ForgotPasswordComponent,  title: 'Moneta - Mot de passe oublié'},
+  { path: 'login',           component: LoginComponent,          title: 'Moneta - Connexion'           },
+  { path: 'request',         component: RequestAccessComponent,  title: 'Moneta - Inscription'         },
+  { path: 'forgot-password', component: ForgotPasswordComponent, title: 'Moneta - Mot de passe oublié' },
   { path: '**', redirectTo: '' }
 ];

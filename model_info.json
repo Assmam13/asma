@@ -1,0 +1,15 @@
+{
+  "classes": [
+    "Punique",
+    "Romaine",
+    "Byzantine",
+    "Islamique",
+    "Numide",
+    "Medievale",
+    "Moderne"
+  ],
+  "img_size": 224,
+  "accuracy": 0.22562673687934875,
+  "model_path": "moneta_cnn_v2.h5",
+  "num_classes": 7
+}

@@ -28,9 +28,12 @@
       <a routerLink="/classification" routerLinkActive="active" class="nav-item" (click)="fermerModeIA()">
         <span class="icon">🤖</span> Classification CNN
       </a>
-      @if (auth.isAdmin()) {
+      @if (auth.isAdmin() || auth.isSuperviseur()) {
         <a routerLink="/dashboard" routerLinkActive="active" class="nav-item" (click)="fermerModeIA()">
           <span class="icon">📊</span> Dashboard BI
+          @if (auth.isSuperviseur()) {
+            <span class="nav-badge">Science</span>
+          }
         </a>
       }
       @if (auth.isAdmin()) {
@@ -53,27 +56,37 @@
 
   <main class="main-content">
 
-    <!-- ── TOP BAR avec bouton Mode IA ── -->
+    <!-- ══════════════════════════════════════════
+         BARRE DE RECHERCHE GLOBALE
+    ══════════════════════════════════════════ -->
     <header class="top-filter-area">
       <div class="filter-card">
+
+        <!-- Ligne 1 : Titre + Barre IA + Boutons -->
         <div class="filter-card-header">
-          <span class="filter-title">🔍 Filtres de Recherche Avancés</span>
+          <span class="filter-title">🔍 Recherche Avancée</span>
 
           <div class="search-center">
             <div class="search-input-wrapper" [class.ai-active]="isAIMode">
-              <span class="search-main-icon">🔍</span>
+              <span class="search-main-icon">
+                @if (isExtracting) { ⏳ } @else { 🔍 }
+              </span>
               <input
                 type="text"
                 [(ngModel)]="searchQuery"
-                placeholder="Recherche..."
+                [placeholder]="isAIMode
+                  ? 'Décrivez la monnaie (ex: pièce en or punique de Carthage)...'
+                  : 'Recherche libre...'"
                 class="search-input"
+                [class.ia-input]="isAIMode"
+                (keydown.enter)="isAIMode ? appliquerModeIA() : appliquerFiltreClassique()"
               />
-              <!-- Bouton Mode IA — style Google -->
+              <!-- Bouton Mode IA -->
               <button
                 class="mode-ia-btn"
                 [class.active]="isAIMode"
                 (click)="toggleModeIA()"
-                title="Mode IA">
+                [title]="isAIMode ? 'Désactiver Mode IA' : 'Activer recherche en langage naturel'">
                 <svg class="mode-ia-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <path d="M12 2L13.09 8.26L19 6L15.45 11.27L21 13L15.45 14.73L19 20L13.09 17.74L12 24L10.91 17.74L5 20L8.55 14.73L3 13L8.55 11.27L5 6L10.91 8.26L12 2Z"
                     fill="currentColor"/>
@@ -84,35 +97,66 @@
           </div>
 
           <div class="filter-actions">
-            <button class="btn-reset">Réinitialiser</button>
-            <button class="btn-filter">Appliquer</button>
+            <button class="btn-reset" (click)="isAIMode ? reinitialiserIA() : reinitialiserClassique()">
+              Réinitialiser
+            </button>
+            <button
+              class="btn-filter"
+              [class.btn-ia-apply]="isAIMode"
+              [disabled]="isAIMode && (isExtracting || !searchQuery.trim())"
+              (click)="isAIMode ? appliquerModeIA() : appliquerFiltreClassique()">
+              @if (isAIMode && isExtracting) {
+                <span class="spinner-btn">⟳</span> Analyse...
+              } @else if (isAIMode) {
+                ✨ Rechercher avec l'IA
+              } @else {
+                Appliquer
+              }
+            </button>
           </div>
         </div>
 
+        <!-- Ligne 2 : Filtres classiques (masqués en Mode IA) -->
         @if (!isAIMode) {
           <div class="filter-grid">
             <div class="filter-group">
               <label>Période Historique</label>
-              <select>
-                <option>Antique</option>
-                <option>Romaine</option>
-                <option>Byzantine</option>
-                <option>Islamique</option>
-                <option>Médiévale</option>
+              <select [(ngModel)]="filtrePeriode">
+                <option value="">Toutes</option>
+                <option value="Punique">Punique</option>
+                <option value="Numide">Numide</option>
+                <option value="Romaine">Romaine</option>
+                <option value="Byzantine">Byzantine</option>
+                <option value="Islamique">Islamique</option>
+                <option value="Husseinite">Husseinite</option>
+                <option value="Medievale">Médiévale</option>
+                <option value="Protectorat">Protectorat</option>
+                <option value="Republique Tunisienne">Rép. Tunisienne</option>
+                <option value="Gauloise">Gauloise</option>
+                <option value="Carolingienne">Carolingienne</option>
+                <option value="Empire">Empire Français</option>
+                <option value="Moderne">Moderne</option>
+                <option value="Euro">Euro</option>
               </select>
             </div>
             <div class="filter-group">
               <label>Matériau</label>
-              <select>
-                <option>Or</option>
-                <option>Argent</option>
-                <option>Bronze</option>
-                <option>Cuivre</option>
+              <select [(ngModel)]="filtreMateriau">
+                <option value="">Tous</option>
+                <option value="Or">Or</option>
+                <option value="Argent">Argent</option>
+                <option value="Bronze">Bronze</option>
+                <option value="Cuivre">Cuivre</option>
+                <option value="Nickel">Nickel</option>
+                <option value="Billon">Billon</option>
+                <option value="Electrum">Électrum</option>
+                <option value="Aluminium">Aluminium</option>
+                <option value="Bimetal">Bimétal</option>
               </select>
             </div>
             <div class="filter-group">
               <label>Lieu / Région</label>
-              <input type="text" placeholder="Ex: Carthage...">
+              <input type="text" [(ngModel)]="filtreRegion" placeholder="Ex: Carthage, Paris...">
             </div>
             <div class="filter-group">
               <label>Intervalle d'Années</label>
@@ -123,31 +167,52 @@
             </div>
           </div>
         }
+
+        <!-- Aide Mode IA -->
+        @if (isAIMode && !isExtracting && !filtreIA) {
+          <div class="ia-help">
+            <span class="ia-help-icon">💡</span>
+            <span>Tapez une description naturelle, ex :
+              <em>"pièces en or puniques de Carthage"</em> ou
+              <em>"monnaies islamiques en argent de Kairouan"</em> —
+              l'IA extraira les filtres automatiquement.
+            </span>
+          </div>
+        }
+
+        <!-- Filtres extraits par l'IA -->
+        @if (filtreIA) {
+          <div class="ia-result-bar">
+            <span class="ia-result-label">✨ Filtres extraits :</span>
+            @if (filtreIA.periode)   { <span class="ia-tag">🏛 {{ filtreIA.periode }}</span>  }
+            @if (filtreIA.materiau)  { <span class="ia-tag">⚗ {{ filtreIA.materiau }}</span>  }
+            @if (filtreIA.region)    { <span class="ia-tag">📍 {{ filtreIA.region }}</span>    }
+            @if (filtreIA.recherche) { <span class="ia-tag">🔍 {{ filtreIA.recherche }}</span> }
+            <span class="ia-source">via {{ filtreIA.source === 'llm' ? 'LLaMA 3' : 'règles' }}</span>
+          </div>
+        }
+
+        <!-- Erreur IA -->
+        @if (iaError) {
+          <div class="ia-error">⚠️ {{ iaError }}</div>
+        }
+
       </div>
     </header>
 
-    <!-- ── CONTENU : Mode IA OU Pages normales ── -->
-    <section class="content-view" [class.ia-mode-active]="isAIMode">
-
-      <!-- Mode IA pleine page -->
-      @if (isAIMode) {
-        <app-mode-ia></app-mode-ia>
-      }
-
-      <!-- Pages normales -->
-      @if (!isAIMode) {
-        <router-outlet></router-outlet>
-        @if (isWelcomeVisible()) {
-          <div class="welcome-banner">
-            <div class="banner-content">
-              <h1>Bienvenue, {{ auth.getUsername() }} 👋</h1>
-              <p>Utilisez le menu latéral pour naviguer et les filtres pour affiner vos données.</p>
-              <div class="welcome-role-badge" [class]="getRoleClass()">{{ getRoleLabel() }}</div>
-            </div>
+    <!-- ── CONTENU ── -->
+    <section class="content-view">
+      <router-outlet></router-outlet>
+      @if (isWelcomeVisible()) {
+        <div class="welcome-banner">
+          <div class="banner-content">
+            <h1>Bienvenue, {{ auth.getUsername() }} 👋</h1>
+            <p>Utilisez le menu latéral pour naviguer et les filtres pour affiner vos données.</p>
+            <div class="welcome-role-badge" [class]="getRoleClass()">{{ getRoleLabel() }}</div>
           </div>
-        }
+        </div>
       }
-
     </section>
+
   </main>
 </div>

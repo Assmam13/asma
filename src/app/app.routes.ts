@@ -11,7 +11,8 @@ import { MonnaiesComponent }       from './monnaies/monnaies';
 import { CarteComponent }          from './carte/carte';
 import { DashboardComponent }      from './dashboard/dashboard.component';
 import { ClassificationComponent } from './classification/classification';
-import { authGuard, adminGuard }   from './auth.guard';
+import { ModeIaComponent }         from './mode-ia/mode-ia';
+import { authGuard, adminGuard, superviseurGuard } from './auth.guard';
 
 export const routes: Routes = [
   {
@@ -20,15 +21,15 @@ export const routes: Routes = [
     title: 'Moneta - Accueil',
     canActivate: [authGuard],
     children: [
-      { path: 'cartes',          component: CarteComponent },
-      { path: 'monnaies',        component: MonnaiesComponent },
-      { path: 'classification',  component: ClassificationComponent,
-        title: 'Moneta - Classification CNN' },
+      { path: 'cartes',         component: CarteComponent },
+      { path: 'monnaies',       component: MonnaiesComponent },
+      { path: 'classification', component: ClassificationComponent, title: 'Moneta - Classification CNN' },
       {
         path:        'dashboard',
         component:   DashboardComponent,
         title:       'Moneta - Dashboard BI',
-        canActivate: [adminGuard]
+        // ✅ RBAC : Admin ET Superviseur peuvent accéder
+        canActivate: [superviseurGuard]
       }
     ]
   },

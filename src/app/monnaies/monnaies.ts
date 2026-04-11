@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { LowerCasePipe, SlicePipe }    from '@angular/common';
 import { FormsModule }                 from '@angular/forms';
-import { RouterLink }                  from '@angular/router';
-import { Subject }                     from 'rxjs';
+import { RouterLink, ActivatedRoute }  from '@angular/router';
+import { Subject, combineLatest }      from 'rxjs';
 import { takeUntil }                   from 'rxjs/operators';
 import { MonnaiesService, Monnaie }    from './monnaies.service';
 import { AuthService }                 from '../auth.service';
@@ -36,8 +36,11 @@ export class MonnaiesComponent implements OnInit, OnDestroy {
   erreur:         string | null = null;
   totalMonnaies = 0;
   isFlipped     = false;
+  isAdmin       = false;
 
-  isAdmin = false;
+  // Mode IA bannière
+  modeIAActif    = false;
+  filtresIAInfo  = '';
 
   filtres: Filtres = {
     recherche: '', periode: '', materiau: '',
@@ -46,45 +49,82 @@ export class MonnaiesComponent implements OnInit, OnDestroy {
 
   triActif     = 'nom';
   pageCourante = 1;
-  parPage      = 12;           // ✅ FIX: 12 au lieu de 20 pour moins de lag
+  parPage      = 12;
   totalPages   = 1;
   pages:         number[] = [];
 
-  showAddForm = false;
+  showAddForm      = false;
   nouvelleMonnaie: Monnaie = this.formulaireVide();
 
   private destroy$ = new Subject<void>();
 
   constructor(
     private monnaiesService: MonnaiesService,
-    private authService: AuthService
+    private authService:     AuthService,
+    private route:           ActivatedRoute
   ) {}
 
-  // ✅ FIX: Getter qui retourne uniquement les monnaies de la page courante
   get monnaiesPage(): Monnaie[] {
     const debut = (this.pageCourante - 1) * this.parPage;
     return this.monnaiesFiltrees.slice(debut, debut + this.parPage);
   }
 
   ngOnInit(): void {
-    this.isAdmin = this.authService.isAdmin();
+    this.isAdmin    = this.authService.isAdmin();
     this.chargement = true;
+
+    // ✅ Charger les monnaies D'ABORD, puis lire les queryParams et appliquer
     this.monnaiesService.getMonnaies()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
           this.chargement = false;
+
           if (data && data.length > 0) {
             this.toutesMonnaies = data;
             this.totalMonnaies  = data.length;
-            this.appliquerFiltres();
           } else {
             this.chargerMockData();
           }
+
+          // ✅ Lire les queryParams APRÈS que les données sont disponibles
+          this.route.queryParams
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(params => {
+
+              // Réinitialiser les filtres d'abord
+              this.filtres = {
+                recherche: '', periode: '', materiau: '',
+                region: '', anneeMin: null, anneeMax: null
+              };
+              this.modeIAActif  = false;
+              this.filtresIAInfo = '';
+
+              // Appliquer les queryParams reçus
+              if (params['periode'])   this.filtres.periode   = params['periode'];
+              if (params['materiau'])  this.filtres.materiau  = params['materiau'];
+              if (params['region'])    this.filtres.region    = params['region'];
+              if (params['recherche']) this.filtres.recherche = params['recherche'];
+
+              // Bannière Mode IA
+              if (params['modeIA'] === 'true') {
+                this.modeIAActif = true;
+                const parts = [];
+                if (params['periode'])   parts.push(`Période : ${params['periode']}`);
+                if (params['materiau'])  parts.push(`Matériau : ${params['materiau']}`);
+                if (params['region'])    parts.push(`Région : ${params['region']}`);
+                if (params['recherche']) parts.push(`Recherche : ${params['recherche']}`);
+                this.filtresIAInfo = parts.join(' • ');
+              }
+
+              // ✅ Appliquer les filtres maintenant que les données sont là
+              this.appliquerFiltres();
+            });
         },
         error: () => {
           this.chargement = false;
           this.chargerMockData();
+          this.appliquerFiltres();
         }
       });
   }
@@ -94,9 +134,14 @@ export class MonnaiesComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  fermerBanniereIA(): void {
+    this.modeIAActif  = false;
+    this.reinitialiserFiltres();
+  }
+
   // ── Actions Admin ─────────────────────────────────────────
   activerEdition(): void {
-    this.isEditing    = true;
+    this.isEditing     = true;
     this.backupMonnaie = JSON.parse(JSON.stringify(this.monnaieSelectionnee));
   }
 
@@ -175,46 +220,48 @@ export class MonnaiesComponent implements OnInit, OnDestroy {
   // ── Données mock (fallback) ───────────────────────────────
   chargerMockData(): void {
     this.toutesMonnaies = [
-      { wikidataId:'TUN001', nom:'Shekel de Carthage', description:"Monnaie d'or punique frappée à Carthage, représentant la déesse Tanit.", image:'https://en.numista.com/catalogue/photos/carthage/5e1cf63944e575.18700936-original.jpg', imageRevers:'https://en.numista.com/catalogue/photos/carthage/5e1cf63a13d119.62080118-original.jpg', periode:'Punique', materiau:'Or', region:'Carthage', atelier:'Carthage', annee:-300, diametre:18.0, poids:7.2, avers:'Tête de la déesse Tanit couronnée', revers:'Cheval debout, palmier dattier', collection:'Musée National de Carthage' },
-      { wikidataId:'TUN002', nom:'Triple Shekel Punique', description:"Grande monnaie d'or frappée pendant les guerres puniques contre Rome.", image:'https://en.numista.com/catalogue/photos/carthage/5e2c191b5f7965.77077694-original.jpg', imageRevers:'https://en.numista.com/catalogue/photos/carthage/5e2c191c67dcd7.61914092-original.jpg', periode:'Punique', materiau:'Or', region:'Carthage', atelier:'Carthage', annee:-264, diametre:25.0, poids:21.0, avers:'Tête de Melqart / Héraclès', revers:'Lion bondissant à droite', collection:'Musée du Bardo, Tunis' },
-      { wikidataId:'TUN003', nom:'Tétradrachme de Carthage', description:"Monnaie d'argent à l'effigie de Tanit et du cheval punique.", image:null, imageRevers:null, periode:'Punique', materiau:'Argent', region:'Carthage', atelier:'Carthage', annee:-350, diametre:26.0, poids:17.0, avers:'Tête de Tanit de face', revers:'Cheval debout', collection:'British Museum' },
-      { wikidataId:'TUN005', nom:'Denier de Thysdrus', description:"Monnaie romaine frappée à Thysdrus (El Djem).", image:'https://en.numista.com/catalogue/photos/tunisie/65ec80084a7c13.17816864-original.jpg', imageRevers:'https://en.numista.com/catalogue/photos/tunisie/65ec8008e0e2a6.18523670-original.jpg', periode:'Romaine', materiau:'Argent', region:'El Djem', atelier:'Thysdrus', annee:238, diametre:19.0, poids:3.4, avers:'Portrait de Gordien Ier', revers:'L\'Afrique personnifiée', collection:'Musée de Sousse' },
-      { wikidataId:'TUN014', nom:'Dinar Aghlabide', description:"Monnaie d'or de la dynastie aghlabide.", image:'https://en.numista.com/catalogue/photos/aghlabid_emirate/5edcdea0496b15.13206342-original.jpg', imageRevers:'https://en.numista.com/catalogue/photos/aghlabid_emirate/5edcdea05bbce1.30330371-original.jpg', periode:'Islamique - Aghlabide', materiau:'Or', region:'Kairouan', atelier:'Kairouan', annee:850, diametre:19.0, poids:4.25, avers:'Attestation de foi coufique', revers:'Nom de l\'Émir', collection:'Musée de Kairouan' },
+      { wikidataId:'TUN001', nom:'Shekel de Carthage', description:"Monnaie d'or punique frappée à Carthage.", image:'https://en.numista.com/catalogue/photos/carthage/5e1cf63944e575.18700936-original.jpg', imageRevers:'https://en.numista.com/catalogue/photos/carthage/5e1cf63a13d119.62080118-original.jpg', periode:'Punique', materiau:'Or', region:'Carthage', atelier:'Carthage', annee:-300, diametre:18.0, poids:7.2, avers:'Tête de la déesse Tanit couronnée', revers:'Cheval debout, palmier dattier', collection:'Musée National de Carthage' },
+      { wikidataId:'TUN002', nom:'Triple Shekel Punique', description:"Grande monnaie d'or des guerres puniques.", image:'https://en.numista.com/catalogue/photos/carthage/5e2c191b5f7965.77077694-original.jpg', imageRevers:'https://en.numista.com/catalogue/photos/carthage/5e2c191c67dcd7.61914092-original.jpg', periode:'Punique', materiau:'Or', region:'Carthage', atelier:'Carthage', annee:-264, diametre:25.0, poids:21.0, avers:'Tête de Melqart', revers:'Lion bondissant', collection:'Musée du Bardo, Tunis' },
+      { wikidataId:'TUN014', nom:'Dinar Aghlabide', description:"Monnaie d'or de la dynastie aghlabide.", image:'https://en.numista.com/catalogue/photos/aghlabid_emirate/5edcdea0496b15.13206342-original.jpg', imageRevers:'https://en.numista.com/catalogue/photos/aghlabid_emirate/5edcdea05bbce1.30330371-original.jpg', periode:'Islamique - Aghlabide', materiau:'Or', region:'Kairouan', atelier:'Kairouan', annee:850, diametre:19.0, poids:4.25, avers:'Attestation de foi coufique', revers:"Nom de l'Émir", collection:'Musée de Kairouan' },
     ];
     this.totalMonnaies = this.toutesMonnaies.length;
-    this.appliquerFiltres();
   }
 
   // ── Filtrage ──────────────────────────────────────────────
-  appliquerFiltres(): void {
-    let res = [...this.toutesMonnaies];
+appliquerFiltres(): void {
+  let res = [...this.toutesMonnaies];
 
-    if (this.filtres.recherche.trim()) {
-      const q = this.filtres.recherche.toLowerCase();
-      res = res.filter(m =>
-        m.nom?.toLowerCase().includes(q) ||
-        m.description?.toLowerCase().includes(q) ||
-        m.region?.toLowerCase().includes(q) ||
-        m.periode?.toLowerCase().includes(q) ||
-        m.materiau?.toLowerCase().includes(q)
-      );
-    }
-    if (this.filtres.periode)
-      res = res.filter(m => m.periode?.toLowerCase().includes(this.filtres.periode.toLowerCase()));
-    if (this.filtres.materiau)
-      res = res.filter(m => m.materiau?.toLowerCase().includes(this.filtres.materiau.toLowerCase()));
-    if (this.filtres.region)
-      res = res.filter(m => m.region?.toLowerCase().includes(this.filtres.region.toLowerCase()));
-    if (this.filtres.anneeMin !== null)
-      res = res.filter(m => (m.annee ?? 0) >= this.filtres.anneeMin!);
-    if (this.filtres.anneeMax !== null)
-      res = res.filter(m => (m.annee ?? 0) <= this.filtres.anneeMax!);
-
-    this.monnaiesFiltrees = res;
-    this.pageCourante     = 1;
-    this.trierMonnaies();
-    this.calculerPagination();
+  // ✅ Recherche libre SEULEMENT si pas de filtre periode/materiau/region
+  if (this.filtres.recherche.trim() && 
+      !this.filtres.periode && 
+      !this.filtres.materiau && 
+      !this.filtres.region) {
+    const q = this.filtres.recherche.toLowerCase();
+    res = res.filter(m =>
+      m.nom?.toLowerCase().includes(q) ||
+      m.description?.toLowerCase().includes(q) ||
+      m.region?.toLowerCase().includes(q) ||
+      m.periode?.toLowerCase().includes(q) ||
+      m.materiau?.toLowerCase().includes(q)
+    );
   }
+
+  if (this.filtres.periode)
+    res = res.filter(m => m.periode?.toLowerCase().includes(this.filtres.periode.toLowerCase()));
+  if (this.filtres.materiau)
+    res = res.filter(m => m.materiau?.toLowerCase().includes(this.filtres.materiau.toLowerCase()));
+  if (this.filtres.region)
+    res = res.filter(m => m.region?.toLowerCase().includes(this.filtres.region.toLowerCase()));
+  if (this.filtres.anneeMin !== null)
+    res = res.filter(m => (m.annee ?? 0) >= this.filtres.anneeMin!);
+  if (this.filtres.anneeMax !== null)
+    res = res.filter(m => (m.annee ?? 0) <= this.filtres.anneeMax!);
+
+  this.monnaiesFiltrees = res;
+  this.pageCourante     = 1;
+  this.trierMonnaies();
+  this.calculerPagination();
+}
 
   trierMonnaies(): void {
     this.monnaiesFiltrees.sort((a, b) => {
@@ -227,7 +274,9 @@ export class MonnaiesComponent implements OnInit, OnDestroy {
   }
 
   reinitialiserFiltres(): void {
-    this.filtres = { recherche:'', periode:'', materiau:'', region:'', anneeMin:null, anneeMax:null };
+    this.filtres       = { recherche:'', periode:'', materiau:'', region:'', anneeMin:null, anneeMax:null };
+    this.modeIAActif   = false;
+    this.filtresIAInfo = '';
     this.appliquerFiltres();
   }
 
@@ -237,7 +286,6 @@ export class MonnaiesComponent implements OnInit, OnDestroy {
 
   calculerPagination(): void {
     this.totalPages = Math.ceil(this.monnaiesFiltrees.length / this.parPage);
-    // ✅ FIX: Limiter les pages affichées à 10 max pour éviter overflow
     const maxPages  = Math.min(this.totalPages, 10);
     const startPage = Math.max(1, this.pageCourante - 5);
     this.pages = Array.from({ length: maxPages }, (_, i) => startPage + i)
@@ -251,7 +299,6 @@ export class MonnaiesComponent implements OnInit, OnDestroy {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // ── Modal détail ──────────────────────────────────────────
   ouvrirDetail(m: Monnaie): void {
     this.monnaieSelectionnee     = m;
     this.isEditing               = false;
@@ -265,14 +312,12 @@ export class MonnaiesComponent implements OnInit, OnDestroy {
     document.body.style.overflow = '';
   }
 
-  // ✅ FIX: Image fallback propre avec assets/
   onImgError(event: Event): void {
     const img = event.target as HTMLImageElement;
-    img.onerror = null; // Évite boucle infinie
+    img.onerror = null;
     img.src = 'assets/coin-placeholder.png';
   }
 
-  // ✅ FIX: Vérifie si l'URL image est valide
   getImageSrc(url: string | null): string {
     if (url && url.startsWith('http')) return url;
     return 'assets/coin-placeholder.png';

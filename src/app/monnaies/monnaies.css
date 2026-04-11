@@ -361,3 +361,62 @@
   .monnaies-grid { grid-template-columns: 1fr; }
   .modal-card { border-radius: 12px; }
 }
+
+.ia-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, rgba(142,68,173,0.08), rgba(108,52,131,0.05));
+  border: 1px solid rgba(142,68,173,0.25);
+  border-left: 4px solid #8e44ad;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  animation: fadeCard 0.4s ease;
+  gap: 12px;
+}
+
+.ia-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ia-banner-icon {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 0 6px rgba(142,68,173,0.5));
+}
+
+.ia-banner-titre {
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #6c3483;
+  letter-spacing: 0.05em;
+}
+
+.ia-banner-info {
+  font-size: 0.82rem;
+  color: #8e44ad;
+  margin-top: 2px;
+  font-style: italic;
+}
+
+.ia-banner-close {
+  background: white;
+  border: 1px solid rgba(142,68,173,0.3);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  color: #6c3483;
+  cursor: pointer;
+  font-family: 'Cinzel', serif;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.ia-banner-close:hover {
+  background: #8e44ad;
+  color: white;
+  border-color: #8e44ad;
+}

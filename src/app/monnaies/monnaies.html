@@ -296,6 +296,21 @@
   }
 
 </div>
+<!-- Bannière Mode IA — s'affiche quand les filtres viennent de l'IA -->
+@if (modeIAActif) {
+  <div class="ia-banner">
+    <div class="ia-banner-left">
+      <span class="ia-banner-icon">✨</span>
+      <div>
+        <div class="ia-banner-titre">Résultats filtrés par Mode IA</div>
+        <div class="ia-banner-info">{{ filtresIAInfo }}</div>
+      </div>
+    </div>
+    <button class="ia-banner-close" (click)="fermerBanniereIA()">
+      ✕ Voir toutes les monnaies
+    </button>
+  </div>
+}
 
 <!-- ── MODAL DÉTAIL ── -->
 @if (monnaieSelectionnee) {

@@ -184,4 +184,40 @@
     color: #856404;
     border: 1px solid rgba(201, 168, 76, 0.3);
   }
+  /* ── À AJOUTER dans dashboard.component.scss ── */
+
+/* Bannière rôle Superviseur */
+.role-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.role-banner.superviseur {
+  background: rgba(52, 152, 219, 0.1);
+  border: 1px solid rgba(52, 152, 219, 0.3);
+  color: #2980b9;
+}
+
+/* ── À AJOUTER dans home.css ── */
+
+/* Badge "Superviseur" dans la sidebar */
+.nav-badge {
+  margin-left: auto;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(52, 152, 219, 0.2);
+  color: #3498db;
+  border: 1px solid rgba(52, 152, 219, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 }

@@ -21,14 +21,7 @@
   z-index: 1001;
 }
 
-.sidebar-header {
-  padding: 25px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: #dd0031;
-}
-
+.sidebar-header { padding: 25px; display: flex; align-items: center; gap: 12px; background: #dd0031; }
 .sidebar-logo { height: 40px; width: 40px; border-radius: 50%; border: 2px solid white; object-fit: cover; }
 .brand-name { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
 
@@ -48,6 +41,8 @@
 .nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
 .nav-item.active { background: rgba(221,0,49,0.1); color: white; border-left: 4px solid #dd0031; }
 
+.nav-badge { margin-left: auto; font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 999px; background: rgba(52,152,219,0.2); color: #3498db; border: 1px solid rgba(52,152,219,0.35); text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; }
+
 .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.07); display: flex; flex-direction: column; gap: 10px; }
 .user-email { font-size: 11px; color: #5b6269; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .logout-btn { display: flex; align-items: center; justify-content: center; gap: 8px; color: white; background: rgba(221,0,49,0.15); border: 1px solid rgba(221,0,49,0.3); padding: 11px; border-radius: 8px; cursor: pointer; transition: 0.3s; font-weight: 600; font-size: 14px; width: 100%; }
@@ -60,13 +55,11 @@
 .top-filter-area { padding: 25px 30px; flex-shrink: 0; }
 
 .filter-card { background: white; border-radius: 15px; padding: 20px 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #eef0f2; }
-
-.filter-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0; padding-bottom: 12px; border-bottom: 1px solid #f4f6f8; gap: 20px; }
-.filter-card-header:last-child { border-bottom: none; margin-bottom: 0; }
+.filter-card-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid #f4f6f8; gap: 20px; margin-bottom: 0; }
 
 .filter-title { font-weight: 700; color: #333; font-size: 14px; white-space: nowrap; }
 
-/* ── Centre avec barre + bouton Mode IA ── */
+/* ── Barre de recherche ── */
 .search-center { flex: 1; display: flex; justify-content: center; }
 
 .search-input-wrapper {
@@ -81,44 +74,82 @@
   width: 380px;
 }
 .search-input-wrapper:focus-within { border-color: #dd0031; box-shadow: 0 4px 16px rgba(221,0,49,0.1); background: white; }
-.search-input-wrapper.ai-active { border-color: #1a73e8; background: white; box-shadow: 0 4px 16px rgba(26,115,232,0.1); }
+
+/* Mode IA actif — bordure violette animée */
+.search-input-wrapper.ai-active {
+  border-color: #8e44ad;
+  background: white;
+  box-shadow: 0 4px 16px rgba(142,68,173,0.15);
+  width: 500px;
+  animation: iaBorderPulse 2s ease-in-out infinite;
+}
+@keyframes iaBorderPulse {
+  0%,100% { box-shadow: 0 4px 16px rgba(142,68,173,0.15); }
+  50%      { box-shadow: 0 4px 24px rgba(142,68,173,0.35); }
+}
 
 .search-main-icon { font-size: 15px; color: #888; flex-shrink: 0; }
 
-.search-input { border: none; background: transparent; outline: none; flex: 1; font-size: 14px; color: #333; }
+.search-input {
+  border: none; background: transparent; outline: none;
+  flex: 1; font-size: 14px; color: #333;
+  transition: all 0.3s;
+}
+/* Input IA — plus grand et violet */
+.search-input.ia-input {
+  font-size: 14px;
+  color: #2c1810;
+}
+.search-input.ia-input::placeholder { color: #8e44ad; opacity: 0.7; font-style: italic; }
 
-/* ══ BOUTON MODE IA — Style Google ══ */
+/* ── Bouton Mode IA ── */
 .mode-ia-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: #f0f4f9;
-  border: 1px solid #dde3ed;
-  border-radius: 20px;
-  padding: 6px 14px;
-  cursor: pointer;
-  font-family: 'Google Sans', 'Segoe UI', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  color: #444;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  flex-shrink: 0;
+  display: flex; align-items: center; gap: 6px;
+  background: #f0f4f9; border: 1px solid #dde3ed;
+  border-radius: 20px; padding: 6px 14px;
+  cursor: pointer; font-size: 13px; font-weight: 500;
+  color: #444; transition: all 0.2s ease;
+  white-space: nowrap; flex-shrink: 0;
 }
-.mode-ia-btn:hover {
-  background: #e8edf5;
-  border-color: #c0cad8;
-  color: #1a1a1a;
-}
+.mode-ia-btn:hover { background: #e8edf5; border-color: #c0cad8; color: #1a1a1a; }
 .mode-ia-btn.active {
-  background: #e8f0fe;
-  border-color: #aecbfa;
-  color: #1a73e8;
+  background: linear-gradient(135deg, #8e44ad, #6c3483);
+  border-color: #8e44ad;
+  color: white;
+  box-shadow: 0 3px 12px rgba(142,68,173,0.4);
+  animation: starSpin 3s linear infinite;
 }
-.mode-ia-icon { flex-shrink: 0; }
+.mode-ia-icon { flex-shrink: 0; transition: transform 0.3s; }
+.mode-ia-btn.active .mode-ia-icon { animation: starRotate 4s linear infinite; }
+@keyframes starRotate { to { transform: rotate(360deg); } }
 .mode-ia-label { letter-spacing: 0.1px; }
 
-/* ── Filtres ── */
+/* ── Boutons Appliquer ── */
+.filter-actions { display: flex; gap: 10px; flex-shrink: 0; }
+.btn-filter {
+  background: #dd0031; color: white;
+  border: none; padding: 8px 20px;
+  border-radius: 6px; cursor: pointer;
+  font-weight: 600; font-size: 13px;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.btn-filter:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Bouton IA violet */
+.btn-ia-apply {
+  background: linear-gradient(135deg, #8e44ad, #6c3483) !important;
+  box-shadow: 0 3px 12px rgba(142,68,173,0.3);
+}
+.btn-ia-apply:hover:not(:disabled) { box-shadow: 0 5px 18px rgba(142,68,173,0.5); transform: translateY(-1px); }
+
+.btn-reset { background: #f0f2f5; color: #4b4f56; border: 1px solid #dddfe2; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+.btn-reset:hover { border-color: #dd0031; color: #dd0031; }
+
+.spinner-btn { display: inline-block; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Filtres classiques ── */
 .filter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 16px; }
 .filter-group { display: flex; flex-direction: column; gap: 6px; }
 .filter-group label { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; }
@@ -127,33 +158,65 @@
 .range-inputs { display: flex; gap: 5px; }
 .range-inputs input { width: 50%; }
 
-.filter-actions { display: flex; gap: 10px; }
-.btn-filter { background: #dd0031; color: white; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; }
-.btn-reset { background: #f0f2f5; color: #4b4f56; border: 1px solid #dddfe2; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+/* ── Aide Mode IA ── */
+.ia-help {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(142,68,173,0.05);
+  border: 1px solid rgba(142,68,173,0.15);
+  border-radius: 10px;
+  font-size: 13px;
+  color: #6c3483;
+}
+.ia-help-icon { font-size: 16px; flex-shrink: 0; }
+.ia-help em { color: #8e44ad; font-style: italic; }
+
+/* ── Résultats extraits ── */
+.ia-result-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(142,68,173,0.06);
+  border: 1px solid rgba(142,68,173,0.2);
+  border-radius: 10px;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+
+.ia-result-label { font-size: 12px; font-weight: 700; color: #6c3483; white-space: nowrap; }
+.ia-tag {
+  background: white;
+  border: 1px solid rgba(142,68,173,0.3);
+  color: #6c3483;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.ia-source { margin-left: auto; font-size: 10px; color: #aaa; font-style: italic; }
+
+/* ── Erreur ── */
+.ia-error {
+  margin-top: 10px;
+  padding: 8px 14px;
+  background: #fce4e4;
+  border: 1px solid #f5c6c6;
+  border-radius: 8px;
+  color: #c0392b;
+  font-size: 13px;
+}
 
 /* ══════════════════════════════════════════
    CONTENT VIEW
 ══════════════════════════════════════════ */
-.content-view {
-  padding: 0 30px 30px;
-  flex: 1;
-  position: relative;
-}
+.content-view { padding: 0 30px 30px; flex: 1; position: relative; }
 
-/* Mode IA — pleine hauteur sans padding */
-.content-view.ia-mode-active {
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.content-view.ia-mode-active app-mode-ia {
-  flex: 1;
-  overflow: hidden;
-}
-
-/* Welcome banner */
 .welcome-banner { background: linear-gradient(135deg, #1a1c1e 0%, #2c3e50 100%); border-radius: 20px; padding: 60px; color: white; text-align: center; }
 .welcome-banner h1 { font-size: 2rem; margin-bottom: 10px; }
 .welcome-banner p  { color: #a0a0a0; margin-bottom: 20px; }

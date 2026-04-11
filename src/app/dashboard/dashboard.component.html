@@ -30,28 +30,57 @@
   <!-- ── Contenu ── -->
   @if (data && !chargement) {
 
-    <!-- ── Section 1 : Compteurs monnaies + utilisateurs ── -->
+    <!-- ── Badge rôle ── -->
+    @if (isSuperviseur) {
+      <div class="role-banner superviseur">
+        🔧 Mode Superviseur — Accès aux statistiques scientifiques
+      </div>
+    }
+
+    <!-- ══════════════════════════════════════════
+         SECTION 1 : Aperçu Général
+         ✅ Admin : tout
+         ✅ Superviseur : total monnaies seulement
+    ══════════════════════════════════════════ -->
     <div class="section-titre">🪙 Aperçu Général</div>
     <div class="counters-grid">
-      <app-counter label="Monnaies"     icon="🪙" [value]="data.globales.totalMonnaies"     color="or"></app-counter>
-      <app-counter label="Utilisateurs" icon="👥" [value]="data.globales.totalUtilisateurs"  color="rouge"></app-counter>
-      <app-counter label="Visiteurs"    icon="👁️" [value]="data.globales.totalVisiteurs"     color="vert"></app-counter>
-      <app-counter label="Superviseurs" icon="🔧" [value]="data.globales.totalSuperviseurs"  color="bleu"></app-counter>
+
+      <!-- Total monnaies — visible par tous -->
+      <app-counter
+        label="Monnaies" icon="🪙"
+        [value]="data.globales.totalMonnaies"
+        color="or">
+      </app-counter>
+
+      <!-- Stats utilisateurs — Admin uniquement -->
+      @if (isAdmin) {
+        <app-counter label="Utilisateurs" icon="👥" [value]="data.globales.totalUtilisateurs"  color="rouge"></app-counter>
+        <app-counter label="Visiteurs"    icon="👁️" [value]="data.globales.totalVisiteurs"     color="vert"></app-counter>
+        <app-counter label="Superviseurs" icon="🔧" [value]="data.globales.totalSuperviseurs"  color="bleu"></app-counter>
+      }
+
     </div>
 
-    <!-- ── Section 2 : Compteurs visiteurs par période ── -->
-    <div class="section-titre">👥 Statistiques Visiteurs</div>
-    <div class="counters-grid trois">
-      <app-counter label="Visiteurs aujourd'hui" icon="📅" [value]="data.globales.visiteursAujourdhui" color="or"></app-counter>
-      <app-counter label="Visiteurs (7 jours)"   icon="📆" [value]="data.globales.visiteursParSemaine" color="rouge"></app-counter>
-      <app-counter label="Visiteurs (30 jours)"  icon="🗓️" [value]="data.globales.visiteursParMois"    color="bleu"></app-counter>
-    </div>
+    <!-- ══════════════════════════════════════════
+         SECTION 2 : Statistiques Visiteurs
+         🔒 Admin uniquement
+    ══════════════════════════════════════════ -->
+    @if (isAdmin) {
+      <div class="section-titre">👥 Statistiques Visiteurs</div>
+      <div class="counters-grid trois">
+        <app-counter label="Visiteurs aujourd'hui" icon="📅" [value]="data.globales.visiteursAujourdhui" color="or"></app-counter>
+        <app-counter label="Visiteurs (7 jours)"   icon="📆" [value]="data.globales.visiteursParSemaine" color="rouge"></app-counter>
+        <app-counter label="Visiteurs (30 jours)"  icon="🗓️" [value]="data.globales.visiteursParMois"    color="bleu"></app-counter>
+      </div>
+    }
 
-    <!-- ── Section 3 : Graphiques Chart.js ── -->
+    <!-- ══════════════════════════════════════════
+         SECTION 3 : Graphiques Chart.js
+         ✅ Admin + Superviseur
+    ══════════════════════════════════════════ -->
     <div class="section-titre">📊 Graphiques — Chart.js</div>
     <div class="charts-grid">
 
-      <!-- Pie chart : monnaies par période (Chart.js) -->
       <div class="chart-card">
         <div class="chart-card-header">
           <span class="chart-badge chartjs">Chart.js</span>
@@ -64,7 +93,6 @@
         </app-pie-chart>
       </div>
 
-      <!-- Bar chart : monnaies par matériau (Chart.js) -->
       <div class="chart-card">
         <div class="chart-card-header">
           <span class="chart-badge chartjs">Chart.js</span>
@@ -78,7 +106,6 @@
         </app-bar-chart>
       </div>
 
-      <!-- Line chart : chronologique (Chart.js) -->
       <div class="chart-card full-width">
         <div class="chart-card-header">
           <span class="chart-badge chartjs">Chart.js</span>
@@ -93,11 +120,12 @@
 
     </div>
 
-    <!-- ── Section 4 : Carte de chaleur ECharts ── -->
+    <!-- ══════════════════════════════════════════
+         SECTION 4 : Carte de Chaleur
+         ✅ Admin + Superviseur
+    ══════════════════════════════════════════ -->
     <div class="section-titre">🗺️ Carte de Chaleur — Apache ECharts</div>
     <div class="charts-grid">
-
-      <!-- Heatmap : concentration géographique (ECharts) -->
       <div class="chart-card full-width">
         <div class="chart-card-header">
           <span class="chart-badge echarts">ECharts</span>
@@ -106,7 +134,6 @@
         </div>
         <app-heatmap-chart [data]="data.categories.parRegion"></app-heatmap-chart>
       </div>
-
     </div>
 
   }

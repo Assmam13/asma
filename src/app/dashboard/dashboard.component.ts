@@ -1,5 +1,5 @@
 // ============================================================
-// dashboard.component.ts  —  Projet MONETA
+// dashboard.component.ts  —  Projet MONETA  —  RBAC
 // ============================================================
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -53,8 +53,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
   chargement  = true;
   erreur      = '';
 
+  // ✅ RBAC — propriétés de rôle
+  get isAdmin():       boolean { return this.auth.isAdmin(); }
+  get isSuperviseur(): boolean { return this.auth.isSuperviseur(); }
+
   private destroy$ = new Subject<void>();
-  private apiUrl   = 'http://localhost:8080/api/bi/dashboard';
+
+  // ✅ RBAC — endpoint selon le rôle
+  private get apiUrl(): string {
+    return this.auth.isAdmin()
+      ? 'http://localhost:8080/api/bi/dashboard'
+      : 'http://localhost:8080/api/bi/stats/scientifiques';
+  }
 
   constructor(private http: HttpClient, public auth: AuthService) {}
 
@@ -71,17 +81,70 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.chargement = true;
     this.erreur     = '';
 
-    this.http.get<DashboardData>(this.apiUrl)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (data) => {
-          this.data       = data;
-          this.chargement = false;
-        },
-        error: () => {
-          this.erreur     = 'Impossible de charger les statistiques.';
-          this.chargement = false;
-        }
-      });
+    if (this.auth.isAdmin()) {
+      // ── Admin : charge le dashboard complet ──────────────
+      this.http.get<DashboardData>('http://localhost:8080/api/bi/dashboard')
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next:  (data) => { this.data = data; this.chargement = false; },
+          error: ()     => { this.erreur = 'Impossible de charger les statistiques.'; this.chargement = false; }
+        });
+
+    } else {
+      // ── Superviseur : charge stats scientifiques + construit un DashboardData partiel ──
+      this.http.get<any>('http://localhost:8080/api/bi/stats/scientifiques')
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (cats) => {
+            // Récupérer aussi le total des monnaies
+            this.http.get<any>('http://localhost:8080/api/monnaies')
+              .pipe(takeUntil(this.destroy$))
+              .subscribe({
+                next: (monnaies) => {
+                  this.data = {
+                    globales: {
+                      totalMonnaies:       Array.isArray(monnaies) ? monnaies.length : 0,
+                      totalUtilisateurs:   0,
+                      totalVisiteurs:      0,
+                      totalSuperviseurs:   0,
+                      totalAdmins:         0,
+                      visiteursAujourdhui: 0,
+                      visiteursParSemaine: 0,
+                      visiteursParMois:    0,
+                    },
+                    categories: {
+                      parPeriode:  cats.parPeriode  || {},
+                      parMateriau: cats.parMateriau || {},
+                      parRegion:   cats.parRegion   || {},
+                      parAnnee:    cats.parAnnee    || {},
+                    }
+                  };
+                  this.chargement = false;
+                },
+                error: () => {
+                  // Fallback sans total monnaies
+                  this.data = {
+                    globales: {
+                      totalMonnaies: 0, totalUtilisateurs: 0, totalVisiteurs: 0,
+                      totalSuperviseurs: 0, totalAdmins: 0,
+                      visiteursAujourdhui: 0, visiteursParSemaine: 0, visiteursParMois: 0,
+                    },
+                    categories: {
+                      parPeriode:  cats.parPeriode  || {},
+                      parMateriau: cats.parMateriau || {},
+                      parRegion:   cats.parRegion   || {},
+                      parAnnee:    cats.parAnnee    || {},
+                    }
+                  };
+                  this.chargement = false;
+                }
+              });
+          },
+          error: () => {
+            this.erreur     = 'Impossible de charger les statistiques.';
+            this.chargement = false;
+          }
+        });
+    }
   }
 }

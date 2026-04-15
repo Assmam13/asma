@@ -151,7 +151,7 @@ export class CarteComponent implements AfterViewInit, OnDestroy {
   // ── API ──────────────────────────────────────────────────
   private chargerDepuisApi(): void {
     // ✅ FIX: Port 8083
-    this.http.get<MonnaieApi[]>('http://localhost:8080/api/monnaies')
+    this.http.get<MonnaieApi[]>('https://localhost:8443/api/monnaies')
       .subscribe({
         next: (monnaies) => {
           // ✅ FIX: 1 marqueur par combinaison (région + époque + matériau)

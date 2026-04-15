@@ -29,7 +29,7 @@ export interface AuthResponse {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:8080/api/auth'; //Pointe directement vers ton **AuthController.java** dans Spring Boot
+  private apiUrl = 'https://localhost:8443/api/auth'; //Pointe directement vers ton **AuthController.java** dans Spring Boot
 
   constructor(private http: HttpClient, private router: Router) {}
 

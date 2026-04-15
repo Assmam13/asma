@@ -40,7 +40,7 @@ export class HomeComponent {
   filtreMateriau = '';
   filtreRegion   = '';
 
-  private flaskUrl = 'http://localhost:5000/api/extract-filters';
+  private flaskUrl = 'https://localhost:5000/api/extract-filters';
 
   constructor(
     public  auth:   AuthService,

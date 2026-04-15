@@ -62,8 +62,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // ✅ RBAC — endpoint selon le rôle
   private get apiUrl(): string {
     return this.auth.isAdmin()
-      ? 'http://localhost:8080/api/bi/dashboard'
-      : 'http://localhost:8080/api/bi/stats/scientifiques';
+      ? 'https://localhost:8443/api/bi/dashboard'
+      : 'https://localhost:8443/api/bi/stats/scientifiques';
   }
 
   constructor(private http: HttpClient, public auth: AuthService) {}
@@ -83,7 +83,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     if (this.auth.isAdmin()) {
       // ── Admin : charge le dashboard complet ──────────────
-      this.http.get<DashboardData>('http://localhost:8080/api/bi/dashboard')
+      this.http.get<DashboardData>('https://localhost:8443/api/bi/dashboard')
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next:  (data) => { this.data = data; this.chargement = false; },
@@ -92,12 +92,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     } else {
       // ── Superviseur : charge stats scientifiques + construit un DashboardData partiel ──
-      this.http.get<any>('http://localhost:8080/api/bi/stats/scientifiques')
+      this.http.get<any>('https://localhost:8443/api/bi/stats/scientifiques')
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (cats) => {
             // Récupérer aussi le total des monnaies
-            this.http.get<any>('http://localhost:8080/api/monnaies')
+            this.http.get<any>('https://localhost:8443/api/monnaies')
               .pipe(takeUntil(this.destroy$))
               .subscribe({
                 next: (monnaies) => {

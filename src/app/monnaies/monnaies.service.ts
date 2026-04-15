@@ -38,7 +38,7 @@ export interface MonnaiesResponse {
 export class MonnaiesService {
 
   // ✅ FIX: Port 8083 (Spring Boot MONETA)
-  private apiUrl = 'http://localhost:8080/api/monnaies';
+  private apiUrl = 'https://localhost:8443/api/monnaies';
 
   constructor(private http: HttpClient) {}
 

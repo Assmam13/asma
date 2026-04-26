@@ -33,7 +33,6 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
 
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
 
-  // ✅ Reçoit l'utilisateur connecté depuis app.ts
   @Input() utilisateurConnecte: { email?: string; prenom?: string; role?: string } | null = null;
 
   isOpen          = false;
@@ -57,14 +56,13 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     '🗺️ Numidie',
   ];
 
-  private apiUrl = 'http://localhost:5000/api/chat';
+  // ✅ CORRIGÉ — HTTPS au lieu de HTTP
+  private apiUrl = 'https://localhost:5000/api/chat';
 
-  // ✅ Clé unique par utilisateur (email si connecté, sinon prénom saisi)
   private get storageKey(): string {
     if (this.utilisateurConnecte?.email) {
       return `moneta_hist_${this.utilisateurConnecte.email}`;
     }
-    // Visiteur anonyme → clé basée sur le prénom saisi dans le chatbot
     const prenom = this.userPrenom.trim().toLowerCase() || 'anonyme';
     return `moneta_hist_visiteur_${prenom}`;
   }
@@ -78,7 +76,6 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     }
   }
 
-  // ✅ Détecte changement d'utilisateur (connexion / déconnexion)
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['utilisateurConnecte']) {
       const ancien  = changes['utilisateurConnecte'].previousValue;
@@ -98,7 +95,6 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     }
   }
 
-  // ── Réinitialise le chat quand l'utilisateur change ──
   private _reinitialiserChat(): void {
     this.messages        = [];
     this.showWelcomeForm = true;
@@ -112,7 +108,6 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     this.cdr.detectChanges();
   }
 
-  // ── Toggle ────────────────────────────────────────────
   toggleChat(): void {
     this.isOpen         = !this.isOpen;
     this.hasNewMessage  = false;
@@ -126,13 +121,11 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     this.cdr.detectChanges();
   }
 
-  // ── Formulaire prénom ─────────────────────────────────
   submitWelcome(): void {
     if (!this.userPrenom.trim()) return;
     this.showWelcomeForm = false;
     this.showSuggestions = true;
 
-    // ✅ Recharge l'historique + génère un sessionId unique
     this._chargerHistorique();
     this.sessionId = this._genererSessionId();
 
@@ -149,15 +142,14 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     } else {
       this.addBotMessage(
         `Bonjour <strong>${this.userPrenom}</strong> ! 👋<br><br>
-         Je suis <strong>MONETA IA</strong>, votre guide expert en monnaies tunisiennes.<br><br>
-         Je peux vous renseigner sur les monnaies puniques, romaines, byzantines, islamiques et numides.<br><br>
+         Je suis <strong>MONETA IA</strong>, votre guide expert en monnaies tunisiennes et françaises.<br><br>
+         Je peux vous renseigner sur les 2000 monnaies de notre collection : puniques, romaines, byzantines, islamiques et numides.<br><br>
          Que souhaitez-vous savoir ? 🪙`
       );
     }
     this.cdr.detectChanges();
   }
 
-  // ── Envoi de message ──────────────────────────────────
   sendMessage(): void {
     if (!this.currentMessage.trim() || this.isTyping) return;
     const msg            = this.currentMessage.trim();
@@ -182,12 +174,10 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     this.shouldScroll = true;
     this.cdr.detectChanges();
 
-    // ✅ Headers sans erreur TypeScript
     const httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    // ✅ Si connecté → email, sinon → username direct (pas visiteur_xxx)
-    const userId = this.utilisateurConnecte?.email 
-                ?? this.utilisateurConnecte?.prenom 
+    const userId = this.utilisateurConnecte?.email
+                ?? this.utilisateurConnecte?.prenom
                 ?? this.userPrenom.trim();
 
     this.http.post<ChatResponse>(
@@ -198,16 +188,19 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
       next: (response) => {
         this.isTyping        = false;
         this.showSuggestions = true;
-        this.addBotMessage(response.answer || 'Je n\'ai pas trouvé de réponse.');
+        // ✅ Utilise TOUJOURS la réponse de Flask/RAG
+        this.addBotMessage(response.answer || 'Je n\'ai pas trouvé de réponse précise.');
         this._sauvegarderHistorique();
         this.shouldScroll = true;
         this.cdr.detectChanges();
         setTimeout(() => { this.shouldScroll = true; this.cdr.detectChanges(); }, 200);
       },
-      error: () => {
+      error: (err) => {
         this.isTyping        = false;
         this.showSuggestions = true;
-        this.addBotMessage(this.getFallbackResponse(question));
+        // ✅ CORRIGÉ — message d'erreur clair au lieu de réponse hardcodée
+        console.error('[Chatbot] Erreur Flask :', err);
+        this.addBotMessage(this.getServiceUnavailableMessage());
         this._sauvegarderHistorique();
         this.shouldScroll = true;
         this.cdr.detectChanges();
@@ -216,7 +209,7 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     });
   }
 
-  // ── Historique : Sauvegarde ───────────────────────────
+  // ── Historique ────────────────────────────────────────
   private _sauvegarderHistorique(): void {
     if (!this.userPrenom.trim()) return;
     const idx = this.historique.findIndex(
@@ -239,7 +232,6 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     localStorage.setItem(this.storageKey, JSON.stringify(this.historique));
   }
 
-  // ── Historique : Chargement ───────────────────────────
   private _chargerHistorique(): void {
     try {
       const data = localStorage.getItem(this.storageKey);
@@ -249,7 +241,6 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     }
   }
 
-  // ── Historique : Charger une session ──────────────────
   chargerSession(session: ConversationSession): void {
     this.userPrenom      = session.prenom;
     this.messages        = [...session.messages];
@@ -262,7 +253,6 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     this.cdr.detectChanges();
   }
 
-  // ── Historique : Supprimer tout ───────────────────────
   supprimerHistorique(): void {
     if (!confirm('Supprimer tout l\'historique des conversations ?')) return;
     this.historique = [];
@@ -271,7 +261,6 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     this.cdr.detectChanges();
   }
 
-  // ── Nouvelle conversation ─────────────────────────────
   nouvelleConversation(): void {
     if (this.messages.length > 0) this._sauvegarderHistorique();
     this.messages        = [];
@@ -281,25 +270,14 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     this.cdr.detectChanges();
   }
 
-  // ── Fallback local ────────────────────────────────────
-  private getFallbackResponse(question: string): string {
-    const q = question.toLowerCase();
-    if (q.includes('punique') || q.includes('carthage')) {
-      return `Les monnaies <strong>puniques de Carthage</strong> 🏛️ sont parmi les plus anciennes de Tunisie.<br><br>
-              Le <strong>Statère d'Or</strong> représente la déesse Tanit et un cheval.`;
-    }
-    if (q.includes('romain')) {
-      return `La période <strong>romaine</strong> en Tunisie ⚔️<br><br>
-              Des villes comme <strong>Hadrumetum (Sousse)</strong> frappaient leurs propres bronzes.`;
-    }
-    if (q.includes('islamique') || q.includes('dinar') || q.includes('aghlabide')) {
-      return `Les <strong>Aghlabides</strong> frappaient des dinars d'or à Kairouan ☪️.`;
-    }
-    if (q.includes('numide') || q.includes('massinissa')) {
-      return `Le roi <strong>Massinissa</strong> de Numidie 🗺️ a frappé des bronzes avec son portrait.`;
-    }
-    return `Je peux vous renseigner sur les monnaies tunisiennes 🪙 :<br><br>
-            🏛️ Punique — ⚔️ Romaine — ✝️ Byzantine — ☪️ Islamique — 🗺️ Numide`;
+  // ✅ CORRIGÉ — message d'erreur clair (Flask indisponible)
+  // plus de réponses hardcodées par sujet
+  private getServiceUnavailableMessage(): string {
+    return `⚠️ Le service IA est temporairement indisponible.<br><br>
+            Vérifiez que Flask est bien lancé sur <strong>https://localhost:5000</strong><br><br>
+            Si vous voyez une erreur SSL dans Chrome, allez sur :<br>
+            <a href="https://localhost:5000/api/health" target="_blank">https://localhost:5000/api/health</a><br>
+            et acceptez le certificat.`;
   }
 
   // ── Utilitaires ───────────────────────────────────────

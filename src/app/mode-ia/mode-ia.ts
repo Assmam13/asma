@@ -38,7 +38,7 @@ export class ModeIaComponent implements OnInit, AfterViewChecked {
   private msgId = 0;
   private shouldScroll = false;
 
-  private chatbotUrl = 'http://localhost:5000/chat';
+  private chatbotUrl = 'https://localhost:5000/chat';
 
   constructor(public auth: AuthService, private http: HttpClient) {}
 

@@ -1,0 +1,11 @@
+C:\Users\Alpha\eclipse-workspace\moneta-backend\src\main\java\com\moneta\moneta_backend\controller\AuthController.java
+C:\Users\Alpha\eclipse-workspace\moneta-backend\src\main\java\com\moneta\moneta_backend\controller\MonnaiesController.java
+C:\Users\Alpha\eclipse-workspace\moneta-backend\src\main\java\com\moneta\moneta_backend\model\Monnaie.java
+C:\Users\Alpha\eclipse-workspace\moneta-backend\src\main\java\com\moneta\moneta_backend\model\User.java
+C:\Users\Alpha\eclipse-workspace\moneta-backend\src\main\java\com\moneta\moneta_backend\MonetaBackendApplication.java
+C:\Users\Alpha\eclipse-workspace\moneta-backend\src\main\java\com\moneta\moneta_backend\repository\MonnaieRepository.java
+C:\Users\Alpha\eclipse-workspace\moneta-backend\src\main\java\com\moneta\moneta_backend\repository\UserRepository.java
+C:\Users\Alpha\eclipse-workspace\moneta-backend\src\main\java\com\moneta\moneta_backend\security\JwtFilter.java
+C:\Users\Alpha\eclipse-workspace\moneta-backend\src\main\java\com\moneta\moneta_backend\security\JwtUtil.java
+C:\Users\Alpha\eclipse-workspace\moneta-backend\src\main\java\com\moneta\moneta_backend\security\SecurityConfig.java
+C:\Users\Alpha\eclipse-workspace\moneta-backend\src\main\java\com\moneta\moneta_backend\service\WikidataService.java

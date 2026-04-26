@@ -1,61 +1,74 @@
-# PfeAngularApp
+# 🏛️ MONETA — Application de Gestion des Monnaies Archéologiques
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.2.
+## Description
+Plateforme web full-stack dédiée à la gestion, valorisation et 
+classification automatique des données monétaires archéologiques 
+tunisiennes et françaises.
 
-## Development server
+Projet de Fin d'Études — Licence Informatique de Gestion  
+FSEGN, Université de Carthage — 2025/2026
 
-To start a local development server, run:
+## Fonctionnalités principales
+- 🖼️ Galerie de 2000 monnaies avec filtres avancés
+- 🗺️ Carte interactive Leaflet.js (141 marqueurs)
+- 🤖 Chatbot RAG (ChromaDB + LLaMA 3.2:1b)
+- ✨ Mode IA — recherche en langage naturel
+- 🧠 Classification CNN MobileNetV2 (7 classes historiques)
+- 📊 Dashboard BI (Chart.js + Apache ECharts)
+- 🔒 Authentification JWT + HTTPS SSL
 
+## Stack Technologique
+| Couche | Technologie |
+|--------|------------|
+| Frontend | Angular (Standalone Components) |
+| Backend | Spring Boot + Java (port 8443, HTTPS) |
+| IA Chatbot | Python Flask + ChromaDB + LLaMA 3.2:1b |
+| CNN | FastAPI + TensorFlow/Keras (MobileNetV2) |
+| Base de données | MariaDB (2000 monnaies) |
+| Cartographie | Leaflet.js + CARTO Voyager |
+
+## Lancement du projet
+
+### Prérequis
+- Java JDK 17+
+- Node.js 20 LTS
+- Python 3.11+
+- MariaDB
+- Ollama
+
+### Ordre de démarrage
 ```bash
+# 1. Base de données
+# Démarrer MariaDB (HeidiSQL ou service Windows)
+
+# 2. Backend Spring Boot
+# Eclipse → Run As → Spring Boot App (port 8443)
+
+# 3. LLM
+ollama run llama3.2:1b
+
+# 4. Microservice IA (Flask)
+cd chatbot-backend
+pip install -r requirements.txt
+python app.py
+
+# 5. Frontend Angular
+cd moneta-frontend
+npm install
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Accès
+Ouvrir : http://localhost:4200
 
-## Code scaffolding
+> Note : Accepter le certificat SSL sur https://localhost:5000/api/health
+## Auteurs
+- **Asma Ben Aissa**
+- **Wissem Boumrifek**
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Encadrants
+- 👩‍🏫 Dr Rim Ksibi — FSEGN, Université de Carthage
+- 👨‍💼 Wanis Bareeh — Yebni Information et Communication
+> (certificat auto-signé en développement)
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-# asma
-dtc
+## Structure du projet

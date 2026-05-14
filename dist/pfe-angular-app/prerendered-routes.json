@@ -1,0 +1,8 @@
+{
+  "routes": {
+    "/mon-frontend": {},
+    "/mon-frontend/forgot-password": {},
+    "/mon-frontend/login": {},
+    "/mon-frontend/request": {}
+  }
+}

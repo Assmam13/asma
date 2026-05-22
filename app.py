@@ -8,7 +8,7 @@ import re
 
 app = Flask(__name__)
 
-# ✅ CORRIGÉ — ajout de https://localhost:4200
+
 CORS(app, origins=["http://localhost:4200", "https://localhost:4200"])
 
 rag = RAGEngine()

@@ -1,66 +1,113 @@
 """
-MONETA — Nettoyage des images corrompues du dataset
-Lance ce script AVANT train_cnn.py
+MONETA — Script de nettoyage du dataset
+Identifie et supprime les fichiers corrompus, non-images, ou mal formatés.
+
+Usage : python clean_dataset.py
 """
 
 import os
 from PIL import Image
+from pathlib import Path
 
 DATASET_DIR = "dataset"
-SPLITS      = ['train', 'validation', 'test']
-CLASSES     = ['Punique', 'Romaine', 'Byzantine',
-               'Islamique', 'Numide', 'Medievale', 'Moderne']
+VALID_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.bmp', '.webp']
 
-print("=" * 50)
-print("  MONETA — Nettoyage des images corrompues")
-print("=" * 50 + "\n")
+# Compteurs
+total_files = 0
+valid_files = 0
+corrupted_files = []
+non_image_files = []
+hidden_files = []
 
-total_checked = 0
-total_removed = 0
+print("=" * 70)
+print("  MONETA — Nettoyage du dataset")
+print("=" * 70)
+print(f"  Analyse de : {DATASET_DIR}")
+print("=" * 70 + "\n")
 
-for split in SPLITS:
-    for cls in CLASSES:
-        folder = os.path.join(DATASET_DIR, split, cls)
-        if not os.path.exists(folder):
+# Parcourir récursivement le dossier dataset
+for root, dirs, files in os.walk(DATASET_DIR):
+    for filename in files:
+        total_files += 1
+        filepath = os.path.join(root, filename)
+
+        # Check 1 : fichiers cachés ou système (Thumbs.db, .DS_Store, etc.)
+        if filename.startswith('.') or filename in ['Thumbs.db', 'desktop.ini']:
+            hidden_files.append(filepath)
+            print(f"🗑️  Fichier système trouvé : {filepath}")
             continue
 
-        files = [f for f in os.listdir(folder) if f.lower().endswith(('.jpg', '.jpeg', '.png'))]
+        # Check 2 : extension valide ?
+        ext = Path(filename).suffix.lower()
+        if ext not in VALID_EXTENSIONS:
+            non_image_files.append(filepath)
+            print(f"⚠️  Extension non-image : {filepath}")
+            continue
 
-        removed = 0
-        for filename in files:
-            path = os.path.join(folder, filename)
-            total_checked += 1
-            try:
-                # Essayer d'ouvrir et convertir l'image
-                with Image.open(path) as img:
-                    img.verify()  # Vérifie l'intégrité
-
-                # Deuxième vérification — convertir en RGB
-                with Image.open(path) as img:
+        # Check 3 : Tenter d'ouvrir l'image avec PIL
+        try:
+            with Image.open(filepath) as img:
+                img.verify()  # Vérification structurelle
+            # Re-ouvrir pour charger les données (verify() invalide l'image)
+            with Image.open(filepath) as img:
+                img.load()
+                # Convertir en RGB pour s'assurer que c'est utilisable
+                if img.mode not in ['RGB', 'RGBA', 'L']:
                     img.convert('RGB')
+            valid_files += 1
+        except Exception as e:
+            corrupted_files.append((filepath, str(e)))
+            print(f"❌ Image corrompue : {filepath}")
+            print(f"   Erreur : {e}")
 
-            except Exception:
-                # Image corrompue → supprimer
-                os.remove(path)
-                removed += 1
-                total_removed += 1
+# ═══════════════════════════════════════════════════════════════
+#  RÉSUMÉ
+# ═══════════════════════════════════════════════════════════════
+print("\n" + "=" * 70)
+print("  RÉSUMÉ DE L'ANALYSE")
+print("=" * 70)
+print(f"  Fichiers analysés : {total_files}")
+print(f"  Images valides    : {valid_files}")
+print(f"  Images corrompues : {len(corrupted_files)}")
+print(f"  Fichiers non-image: {len(non_image_files)}")
+print(f"  Fichiers système  : {len(hidden_files)}")
+print("=" * 70)
 
-        if removed > 0:
-            print(f"  {split}/{cls}: {removed} images corrompues supprimées")
+# Liste des problèmes
+problem_files = corrupted_files + [(f, "non-image") for f in non_image_files] + [(f, "système") for f in hidden_files]
 
-print(f"\n✅ Vérification terminée !")
-print(f"   Images vérifiées : {total_checked}")
-print(f"   Images supprimées: {total_removed}")
-print(f"   Images valides   : {total_checked - total_removed}")
+if not problem_files:
+    print("\n✅ Aucun problème détecté ! Dataset prêt pour l'entraînement.")
+    exit(0)
 
-# Afficher le dataset final
-print("\n📁 Dataset après nettoyage :")
-for split in SPLITS:
-    print(f"\n  {split}/")
-    for cls in CLASSES:
-        folder = os.path.join(DATASET_DIR, split, cls)
-        if os.path.exists(folder):
-            n = len([f for f in os.listdir(folder) if f.endswith('.jpg')])
-            print(f"    {cls:15s}: {n} images")
+print(f"\n⚠️  {len(problem_files)} fichier(s) problématique(s) détecté(s)")
+print("\nListe complète :")
+for filepath, reason in problem_files:
+    print(f"  • {filepath}")
+    if isinstance(reason, str) and reason not in ['non-image', 'système']:
+        print(f"    Raison : {reason}")
 
-print("\n🚀 Lance maintenant : python train_cnn.py")
+# Demander confirmation avant suppression
+print("\n" + "=" * 70)
+reponse = input("Voulez-vous supprimer ces fichiers ? (oui / non) : ").strip().lower()
+
+if reponse in ['oui', 'o', 'yes', 'y']:
+    deleted = 0
+    failed = 0
+    for filepath, reason in problem_files:
+        try:
+            os.remove(filepath)
+            print(f"✅ Supprimé : {filepath}")
+            deleted += 1
+        except Exception as e:
+            print(f"❌ Échec suppression {filepath} : {e}")
+            failed += 1
+
+    print(f"\n✅ {deleted} fichier(s) supprimé(s)")
+    if failed > 0:
+        print(f"❌ {failed} suppression(s) échouée(s)")
+    print(f"\n🚀 Dataset nettoyé ! Tu peux relancer train_cnn_corrige.py")
+else:
+    print("\n⏸️  Aucun fichier supprimé.")
+    print("⚠️  L'entraînement échouera tant que ces fichiers ne sont pas retirés.")
+    print("Tu peux les supprimer manuellement dans VS Code.")

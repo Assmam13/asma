@@ -1,66 +1,75 @@
 """
-MONETA — CNN Training Script
-Classification des monnaies archéologiques par époque
-TensorFlow 2.x + Keras + Transfer Learning (MobileNetV2)
+MONETA — CNN Training Script Optimisé
+Objectif : 80%+ accuracy sur 7 classes historiques
+Architecture : EfficientNetB0 + Transfer Learning + Fine-tuning
 """
 
 import os
 import numpy as np
-import matplotlib.pyplot as plt
 import tensorflow as tf
-from tensorflow.keras import layers, models
-from tensorflow.keras.applications import MobileNetV2
+from tensorflow.keras.applications import EfficientNetB0
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import (
+    GlobalAveragePooling2D, Dense, Dropout, BatchNormalization
+)
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.callbacks import (
-    ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
+    EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
 )
+from tensorflow.keras.optimizers import Adam
+from sklearn.utils.class_weight import compute_class_weight
+
+# ══════════════════════════════════════════════════════════════
+#  CONFIGURATION
+# ══════════════════════════════════════════════════════════════
+
+DATASET_DIR  = "dataset"
+MODEL_OUTPUT = "moneta_cnn_model.h5"
+IMG_SIZE     = 224
+BATCH_SIZE   = 16
+EPOCHS_P1    = 20
+EPOCHS_P2    = 30
+CLASSES      = ['Byzantine', 'Islamique', 'Medievale',
+                'Moderne', 'Numide', 'Punique', 'Romaine']
 
 print("=" * 55)
-print("  MONETA — CNN Classification des Monnaies")
+print("  MONETA CNN — Entrainement EfficientNetB0")
 print("=" * 55)
-print(f"  TensorFlow version : {tf.__version__}")
-print(f"  GPU disponible     : {len(tf.config.list_physical_devices('GPU')) > 0}")
-print("=" * 55 + "\n")
+print(f"  GPU disponible : {len(tf.config.list_physical_devices('GPU')) > 0}")
+print(f"  TensorFlow     : {tf.__version__}")
+print()
 
-# ── Configuration ────────────────────────────────────────────
-IMG_SIZE    = 224        # MobileNetV2 attend 224x224
-BATCH_SIZE  = 32
-EPOCHS      = 30
-CLASSES     = ['Punique', 'Romaine', 'Byzantine',
-               'Islamique', 'Numide', 'Medievale', 'Moderne']
-NUM_CLASSES = len(CLASSES)
-
-DATASET_DIR = "dataset"
-MODEL_PATH  = "moneta_cnn_model.h5"
-HISTORY_PATH= "training_history.png"
-
-# ── Data Augmentation ────────────────────────────────────────
-print("📦 Chargement du dataset avec augmentation...")
+# ══════════════════════════════════════════════════════════════
+#  ETAPE 1 — AUGMENTATION DES DONNEES
+# ══════════════════════════════════════════════════════════════
 
 train_datagen = ImageDataGenerator(
-    rescale=1./255,
-    rotation_range=20,
-    width_shift_range=0.15,
-    height_shift_range=0.15,
-    zoom_range=0.2,
+    rescale=1.0 / 255,
+    rotation_range=40,
+    width_shift_range=0.3,
+    height_shift_range=0.3,
+    shear_range=0.3,
+    zoom_range=0.4,
     horizontal_flip=True,
-    brightness_range=[0.8, 1.2],
+    vertical_flip=True,
+    brightness_range=[0.6, 1.4],
     fill_mode='nearest'
 )
 
-val_datagen = ImageDataGenerator(rescale=1./255)
+val_datagen = ImageDataGenerator(rescale=1.0 / 255)
 
 train_generator = train_datagen.flow_from_directory(
-    f"{DATASET_DIR}/train",
+    os.path.join(DATASET_DIR, 'train'),
     target_size=(IMG_SIZE, IMG_SIZE),
     batch_size=BATCH_SIZE,
     class_mode='categorical',
     classes=CLASSES,
-    shuffle=True
+    shuffle=True,
+    seed=42
 )
 
 val_generator = val_datagen.flow_from_directory(
-    f"{DATASET_DIR}/validation",
+    os.path.join(DATASET_DIR, 'validation'),
     target_size=(IMG_SIZE, IMG_SIZE),
     batch_size=BATCH_SIZE,
     class_mode='categorical',
@@ -68,68 +77,118 @@ val_generator = val_datagen.flow_from_directory(
     shuffle=False
 )
 
-test_generator = val_datagen.flow_from_directory(
-    f"{DATASET_DIR}/test",
-    target_size=(IMG_SIZE, IMG_SIZE),
-    batch_size=BATCH_SIZE,
-    class_mode='categorical',
-    classes=CLASSES,
-    shuffle=False
+print(f"Train     : {train_generator.samples} images")
+print(f"Validation: {val_generator.samples} images")
+print(f"Classes   : {train_generator.class_indices}\n")
+
+# ══════════════════════════════════════════════════════════════
+#  ETAPE 2 — CLASS WEIGHTS
+# ══════════════════════════════════════════════════════════════
+
+labels = train_generator.classes
+class_weights_array = compute_class_weight(
+    class_weight='balanced',
+    classes=np.unique(labels),
+    y=labels
 )
+class_weights = dict(enumerate(class_weights_array))
 
-print(f"\n✅ Train      : {train_generator.samples} images")
-print(f"✅ Validation : {val_generator.samples} images")
-print(f"✅ Test       : {test_generator.samples} images")
-print(f"✅ Classes    : {CLASSES}\n")
+print("Class weights :")
+for idx, cls in enumerate(CLASSES):
+    print(f"   {cls:15s} : {class_weights[idx]:.3f}")
 
-# ── Gestion du déséquilibre des classes ──────────────────────
-total = train_generator.samples
-class_weights = {}
-for i, cls in enumerate(CLASSES):
-    n = list(train_generator.classes).count(i)
-    class_weights[i] = total / (NUM_CLASSES * n) if n > 0 else 1.0
-    print(f"  Poids {cls:15s}: {class_weights[i]:.3f} ({n} images)")
+# ══════════════════════════════════════════════════════════════
+#  ETAPE 3 — CONSTRUCTION DU MODELE EfficientNetB0
+# ══════════════════════════════════════════════════════════════
 
-# ── Modèle CNN avec Transfer Learning ────────────────────────
-print("\n🧠 Construction du modèle CNN (MobileNetV2)...")
+def build_model(num_classes=7, trainable_base=False):
+    base = EfficientNetB0(
+        weights='imagenet',
+        include_top=False,
+        input_shape=(IMG_SIZE, IMG_SIZE, 3)
+    )
+    base.trainable = trainable_base
 
-base_model = MobileNetV2(
-    input_shape=(IMG_SIZE, IMG_SIZE, 3),
-    include_top=False,
-    weights='imagenet'
-)
+    x = base.output
+    x = GlobalAveragePooling2D()(x)
+    x = BatchNormalization()(x)
+    x = Dense(512, activation='relu')(x)
+    x = Dropout(0.5)(x)
+    x = Dense(256, activation='relu')(x)
+    x = Dropout(0.3)(x)
+    output = Dense(num_classes, activation='softmax')(x)
 
-# Phase 1 : Geler les couches de base
-base_model.trainable = False
+    return Model(inputs=base.input, outputs=output), base
 
-model = models.Sequential([
-    base_model,
-    layers.GlobalAveragePooling2D(),
-    layers.BatchNormalization(),
-    layers.Dense(512, activation='relu'),
-    layers.Dropout(0.5),
-    layers.Dense(256, activation='relu'),
-    layers.Dropout(0.3),
-    layers.Dense(NUM_CLASSES, activation='softmax')
-])
+# ══════════════════════════════════════════════════════════════
+#  PHASE 1 — BASE GELEE
+# ══════════════════════════════════════════════════════════════
+
+print("\n" + "=" * 55)
+print("  PHASE 1 — Entrainement tete (base gelee)")
+print("=" * 55)
+
+model, base_model = build_model(num_classes=len(CLASSES), trainable_base=False)
 
 model.compile(
-    optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
+    optimizer=Adam(learning_rate=1e-3),
     loss='categorical_crossentropy',
     metrics=['accuracy']
 )
 
-model.summary()
-print(f"\nTotal paramètres : {model.count_params():,}")
-
-# ── Callbacks ────────────────────────────────────────────────
-callbacks = [
-    ModelCheckpoint(
-        MODEL_PATH,
+callbacks_p1 = [
+    EarlyStopping(
         monitor='val_accuracy',
-        save_best_only=True,
+        patience=6,
+        restore_best_weights=True,
         verbose=1
     ),
+    ReduceLROnPlateau(
+        monitor='val_loss',
+        factor=0.3,
+        patience=3,
+        min_lr=1e-7,
+        verbose=1
+    ),
+    ModelCheckpoint(
+        'best_phase1.h5',
+        monitor='val_accuracy',
+        save_best_only=True,
+        verbose=0
+    )
+]
+
+history_p1 = model.fit(
+    train_generator,
+    epochs=EPOCHS_P1,
+    validation_data=val_generator,
+    class_weight=class_weights,
+    callbacks=callbacks_p1,
+    verbose=1
+)
+
+acc_p1 = max(history_p1.history['val_accuracy']) * 100
+print(f"\nPhase 1 terminee — Meilleure val_accuracy : {acc_p1:.1f}%\n")
+
+# ══════════════════════════════════════════════════════════════
+#  PHASE 2 — FINE-TUNING (30 dernieres couches)
+# ══════════════════════════════════════════════════════════════
+
+print("=" * 55)
+print("  PHASE 2 — Fine-tuning (30 dernieres couches)")
+print("=" * 55)
+
+base_model.trainable = True
+for layer in base_model.layers[:-30]:
+    layer.trainable = False
+
+model.compile(
+    optimizer=Adam(learning_rate=1e-5),
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+callbacks_p2 = [
     EarlyStopping(
         monitor='val_accuracy',
         patience=8,
@@ -140,107 +199,83 @@ callbacks = [
         monitor='val_loss',
         factor=0.3,
         patience=4,
-        min_lr=1e-7,
+        min_lr=1e-8,
+        verbose=1
+    ),
+    ModelCheckpoint(
+        MODEL_OUTPUT,
+        monitor='val_accuracy',
+        save_best_only=True,
         verbose=1
     )
 ]
 
-# ── Phase 1 : Entraînement tête uniquement ───────────────────
-print("\n" + "="*55)
-print("  PHASE 1 — Entraînement de la tête (10 epochs)")
-print("="*55)
-
-history1 = model.fit(
+history_p2 = model.fit(
     train_generator,
-    epochs=10,
+    epochs=EPOCHS_P2,
     validation_data=val_generator,
     class_weight=class_weights,
-    callbacks=callbacks,
+    callbacks=callbacks_p2,
     verbose=1
 )
 
-# ── Phase 2 : Fine-tuning ────────────────────────────────────
-print("\n" + "="*55)
-print("  PHASE 2 — Fine-tuning (20 epochs)")
-print("="*55)
+acc_p2 = max(history_p2.history['val_accuracy']) * 100
+print(f"\nPhase 2 terminee — Meilleure val_accuracy : {acc_p2:.1f}%\n")
 
-# Dégeler les 30 dernières couches de MobileNetV2
-base_model.trainable = True
-for layer in base_model.layers[:-30]:
-    layer.trainable = False
+# ══════════════════════════════════════════════════════════════
+#  ETAPE 4 — EVALUATION FINALE SUR LE TEST SET
+# ══════════════════════════════════════════════════════════════
 
-model.compile(
-    optimizer=tf.keras.optimizers.Adam(learning_rate=0.0001),
-    loss='categorical_crossentropy',
-    metrics=['accuracy']
+print("=" * 55)
+print("  EVALUATION FINALE sur le Test Set")
+print("=" * 55)
+
+best_model = tf.keras.models.load_model(MODEL_OUTPUT)
+
+test_datagen = ImageDataGenerator(rescale=1.0 / 255)
+test_generator = test_datagen.flow_from_directory(
+    os.path.join(DATASET_DIR, 'test'),
+    target_size=(IMG_SIZE, IMG_SIZE),
+    batch_size=BATCH_SIZE,
+    class_mode='categorical',
+    classes=CLASSES,
+    shuffle=False
 )
 
-history2 = model.fit(
-    train_generator,
-    epochs=EPOCHS,
-    initial_epoch=10,
-    validation_data=val_generator,
-    class_weight=class_weights,
-    callbacks=callbacks,
-    verbose=1
-)
+test_loss, test_accuracy = best_model.evaluate(test_generator, verbose=1)
 
-# ── Évaluation sur le test set ───────────────────────────────
-print("\n" + "="*55)
-print("  ÉVALUATION FINALE SUR LE TEST SET")
-print("="*55)
+print(f"\n{'=' * 55}")
+print(f"  RESULTATS FINAUX")
+print(f"{'=' * 55}")
+print(f"  Phase 1 val_accuracy : {acc_p1:.1f}%")
+print(f"  Phase 2 val_accuracy : {acc_p2:.1f}%")
+print(f"  Test accuracy        : {test_accuracy * 100:.1f}%")
+print(f"  Test loss            : {test_loss:.4f}")
+print(f"{'=' * 55}")
+print(f"\nModele sauvegarde : {MODEL_OUTPUT}")
 
-test_loss, test_acc = model.evaluate(test_generator, verbose=1)
-print(f"\n✅ Test Accuracy : {test_acc*100:.2f}%")
-print(f"✅ Test Loss     : {test_loss:.4f}")
+# ══════════════════════════════════════════════════════════════
+#  ETAPE 5 — RAPPORT PAR CLASSE
+# ══════════════════════════════════════════════════════════════
 
-# ── Rapport par classe ───────────────────────────────────────
+print("\nRapport de classification par classe :\n")
+
 from sklearn.metrics import classification_report, confusion_matrix
 
-print("\n📊 Rapport de classification par classe:")
-y_pred = np.argmax(model.predict(test_generator), axis=1)
-y_true = test_generator.classes[:len(y_pred)]
+predictions = best_model.predict(test_generator, verbose=0)
+y_pred = np.argmax(predictions, axis=1)
+y_true = test_generator.classes
 
-print(classification_report(y_true, y_pred, target_names=CLASSES))
+print(classification_report(
+    y_true, y_pred,
+    target_names=CLASSES,
+    digits=3
+))
 
-# ── Courbes d'entraînement ───────────────────────────────────
-print("\n📈 Génération des courbes d'entraînement...")
+print("\nMatrice de confusion :")
+cm = confusion_matrix(y_true, y_pred)
+print("         ", "  ".join(f"{c[:4]:>6}" for c in CLASSES))
+for i, row in enumerate(cm):
+    print(f"  {CLASSES[i][:8]:>8} ", "  ".join(f"{v:>6}" for v in row))
 
-acc  = history1.history['accuracy']  + history2.history['accuracy']
-val_acc  = history1.history['val_accuracy'] + history2.history['val_accuracy']
-loss = history1.history['loss']      + history2.history['loss']
-val_loss = history1.history['val_loss']    + history2.history['val_loss']
-
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
-fig.suptitle('MONETA CNN — Courbes d\'entraînement', fontsize=14, fontweight='bold')
-
-ax1.plot(acc,     label='Train Accuracy',      color='#c0392b')
-ax1.plot(val_acc, label='Validation Accuracy', color='#c9a84c')
-ax1.axvline(x=10, color='gray', linestyle='--', label='Fine-tuning start')
-ax1.set_title('Accuracy')
-ax1.set_xlabel('Epoch')
-ax1.set_ylabel('Accuracy')
-ax1.legend()
-ax1.grid(True, alpha=0.3)
-
-ax2.plot(loss,     label='Train Loss',      color='#c0392b')
-ax2.plot(val_loss, label='Validation Loss', color='#c9a84c')
-ax2.axvline(x=10, color='gray', linestyle='--', label='Fine-tuning start')
-ax2.set_title('Loss')
-ax2.set_xlabel('Epoch')
-ax2.set_ylabel('Loss')
-ax2.legend()
-ax2.grid(True, alpha=0.3)
-
-plt.tight_layout()
-plt.savefig(HISTORY_PATH, dpi=120, bbox_inches='tight')
-plt.show()
-print(f"✅ Courbes sauvegardées : {HISTORY_PATH}")
-
-# ── Résumé final ─────────────────────────────────────────────
-print("\n" + "="*55)
-print("  ✅ ENTRAÎNEMENT TERMINÉ !")
-print(f"  Modèle sauvegardé : {MODEL_PATH}")
-print(f"  Accuracy test     : {test_acc*100:.2f}%")
-print("="*55)
-print("\n🚀 Prêt pour l'Étape 3 — API FastAPI !")
+print(f"\nLance l'API : python api_cnn.py")

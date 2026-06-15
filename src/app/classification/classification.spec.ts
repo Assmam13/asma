@@ -1,18 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
-import { Classification } from './classification';
+import { ClassificationComponent } from './classification';
 
-describe('Classification', () => {
-  let component: Classification;
-  let fixture: ComponentFixture<Classification>;
+describe('ClassificationComponent', () => {
+  let component: ClassificationComponent;
+  let fixture: ComponentFixture<ClassificationComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Classification]
+      imports: [ClassificationComponent],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting()
+      ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Classification);
+    fixture = TestBed.createComponent(ClassificationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

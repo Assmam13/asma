@@ -39,7 +39,7 @@
 
     <!-- ══════════════════════════════════════════
          SECTION 1 : Aperçu Général
-         ✅ Admin : tout
+         ✅ Admin : 5 compteurs (Monnaies + 4 rôles)
          ✅ Superviseur : total monnaies seulement
     ══════════════════════════════════════════ -->
     <div class="section-titre">🪙 Aperçu Général</div>
@@ -54,23 +54,25 @@
 
       <!-- Stats utilisateurs — Admin uniquement -->
       @if (isAdmin) {
-        <app-counter label="Utilisateurs" icon="👥" [value]="data.globales.totalUtilisateurs"  color="rouge"></app-counter>
-        <app-counter label="Visiteurs"    icon="👁️" [value]="data.globales.totalVisiteurs"     color="vert"></app-counter>
-        <app-counter label="Superviseurs" icon="🔧" [value]="data.globales.totalSuperviseurs"  color="bleu"></app-counter>
+        <app-counter label="Utilisateurs"    icon="👥" [value]="data.globales.totalUtilisateurs"  color="rouge"></app-counter>
+        <app-counter label="Visiteurs"       icon="👁️" [value]="data.globales.totalVisiteurs"     color="vert"></app-counter>
+        <app-counter label="Superviseurs"    icon="🔧" [value]="data.globales.totalSuperviseurs"  color="bleu"></app-counter>
+        <app-counter label="Administrateurs" icon="👑" [value]="data.globales.totalAdmins"        color="violet"></app-counter>
       }
 
     </div>
 
     <!-- ══════════════════════════════════════════
-         SECTION 2 : Statistiques Visiteurs
+         SECTION 2 : Statistiques de Fréquentation
          🔒 Admin uniquement
+         ✅ "Visites" et non "Visiteurs uniques" car compte les sessions
     ══════════════════════════════════════════ -->
     @if (isAdmin) {
-      <div class="section-titre">👥 Statistiques Visiteurs</div>
+      <div class="section-titre">📈 Statistiques de Fréquentation</div>
       <div class="counters-grid trois">
-        <app-counter label="Visiteurs aujourd'hui" icon="📅" [value]="data.globales.visiteursAujourdhui" color="or"></app-counter>
-        <app-counter label="Visiteurs (7 jours)"   icon="📆" [value]="data.globales.visiteursParSemaine" color="rouge"></app-counter>
-        <app-counter label="Visiteurs (30 jours)"  icon="🗓️" [value]="data.globales.visiteursParMois"    color="bleu"></app-counter>
+        <app-counter label="Visites aujourd'hui" icon="📅" [value]="data.globales.visiteursAujourdhui" color="or"></app-counter>
+        <app-counter label="Visites (7 jours)"   icon="📆" [value]="data.globales.visiteursParSemaine" color="rouge"></app-counter>
+        <app-counter label="Visites (30 jours)"  icon="🗓️" [value]="data.globales.visiteursParMois"    color="bleu"></app-counter>
       </div>
     }
 

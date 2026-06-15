@@ -20,6 +20,7 @@ interface ConversationSession {
 
 interface ChatResponse {
   answer: string;
+  session_id: string;
 }
 
 @Component({
@@ -56,8 +57,12 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     '🗺️ Numidie',
   ];
 
-  // ✅ CORRIGÉ — HTTPS au lieu de HTTP
+  // ✅ Endpoint Flask : génère la réponse IA
   private apiUrl = 'https://localhost:5000/api/chat';
+
+  // ✅ NOUVEAU : Endpoint Spring Boot pour la persistance des conversations
+  // Angular orchestre les 2 appels (Flask puis Spring Boot)
+  private springBootConversationsUrl = 'https://localhost:8443/api/conversations';
 
   private get storageKey(): string {
     if (this.utilisateurConnecte?.email) {
@@ -168,7 +173,12 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     this.callRAGApi(msg);
   }
 
-  // ── Appel API Flask ───────────────────────────────────
+  // ══════════════════════════════════════════════════════════
+  //  ✅ MODIFIE : Angular orchestre maintenant 2 appels
+  //  1) POST Flask -> obtient la reponse IA
+  //  2) POST Spring Boot -> persiste la conversation
+  //  Cette architecture decouple Flask de Spring Boot.
+  // ══════════════════════════════════════════════════════════
   private callRAGApi(question: string): void {
     this.isTyping     = true;
     this.shouldScroll = true;
@@ -180,6 +190,7 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
                 ?? this.utilisateurConnecte?.prenom
                 ?? this.userPrenom.trim();
 
+    // ─── Etape 1 : Appel a Flask pour la reponse IA ───
     this.http.post<ChatResponse>(
       this.apiUrl,
       { question, prenom: this.userPrenom, user_id: userId, session_id: this.sessionId },
@@ -188,9 +199,24 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
       next: (response) => {
         this.isTyping        = false;
         this.showSuggestions = true;
-        // ✅ Utilise TOUJOURS la réponse de Flask/RAG
-        this.addBotMessage(response.answer || 'Je n\'ai pas trouvé de réponse précise.');
+
+        const reponseIA = response.answer || 'Je n\'ai pas trouvé de réponse précise.';
+
+        // Mise a jour du session_id si Flask en a genere un nouveau
+        if (response.session_id) {
+          this.sessionId = response.session_id;
+        }
+
+        // Affichage de la reponse a l'utilisateur
+        this.addBotMessage(reponseIA);
+
+        // ─── Etape 2 : Appel a Spring Boot pour la persistance ───
+        // Angular orchestre la sauvegarde, Flask n'a aucune connaissance de Spring Boot
+        this._sauvegarderConversationSpringBoot(userId, question, reponseIA);
+
+        // Sauvegarde locale (cache navigateur)
         this._sauvegarderHistorique();
+
         this.shouldScroll = true;
         this.cdr.detectChanges();
         setTimeout(() => { this.shouldScroll = true; this.cdr.detectChanges(); }, 200);
@@ -198,7 +224,6 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
       error: (err) => {
         this.isTyping        = false;
         this.showSuggestions = true;
-        // ✅ CORRIGÉ — message d'erreur clair au lieu de réponse hardcodée
         console.error('[Chatbot] Erreur Flask :', err);
         this.addBotMessage(this.getServiceUnavailableMessage());
         this._sauvegarderHistorique();
@@ -209,7 +234,32 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     });
   }
 
-  // ── Historique ────────────────────────────────────────
+  // ══════════════════════════════════════════════════════════
+  //  ✅ NOUVEAU : Sauvegarde de la conversation via Spring Boot
+  //  Appele apres reception de la reponse de Flask.
+  //  Le JWT est ajoute automatiquement par l'interceptor Angular.
+  // ══════════════════════════════════════════════════════════
+  private _sauvegarderConversationSpringBoot(userId: string, question: string, reponse: string): void {
+    const payload = {
+      user_id:    userId,
+      question:   question,
+      reponse:    reponse,
+      session_id: this.sessionId
+    };
+
+    this.http.post(this.springBootConversationsUrl, payload).subscribe({
+      next: () => {
+        console.log('[Chatbot] Conversation sauvegardee dans Spring Boot');
+      },
+      error: (err) => {
+        // Sauvegarde non bloquante : si Spring Boot est indisponible,
+        // la conversation reste affichee dans le chat et en cache local.
+        console.warn('[Chatbot] Sauvegarde Spring Boot echouee :', err);
+      }
+    });
+  }
+
+  // ── Historique local (cache navigateur) ───────────────
   private _sauvegarderHistorique(): void {
     if (!this.userPrenom.trim()) return;
     const idx = this.historique.findIndex(
@@ -270,8 +320,6 @@ export class ChatbotComponent implements OnInit, AfterViewChecked, OnChanges {
     this.cdr.detectChanges();
   }
 
-  // ✅ CORRIGÉ — message d'erreur clair (Flask indisponible)
-  // plus de réponses hardcodées par sujet
   private getServiceUnavailableMessage(): string {
     return `⚠️ Le service IA est temporairement indisponible.<br><br>
             Vérifiez que Flask est bien lancé sur <strong>https://localhost:5000</strong><br><br>
